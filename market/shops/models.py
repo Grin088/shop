@@ -8,6 +8,9 @@ class Shop(models.Model):
     products = models.ManyToManyField("products.Product", through="Offer", related_name="shops",
                                       verbose_name=_("товары в магазине"))
 
+    def __str__(self):
+        return self.name
+
 
 class Offer(models.Model):
     """Предложение магазина"""

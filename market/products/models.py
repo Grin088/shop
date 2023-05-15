@@ -7,10 +7,16 @@ class Product(models.Model):
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
     property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
 
+    def __str__(self):
+        return self.name
+
 
 class Property(models.Model):
     """Свойство продукта"""
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
+
+    def __str__(self):
+        return self.name
 
 
 class ProductProperty(models.Model):
