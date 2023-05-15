@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
-
     """Генерирует путь к картинке"""
 
     return "products/product_{pk}/preview/{filename}".format(
@@ -14,8 +13,8 @@ def product_preview_directory_path(instance: "Product", filename: str) -> str:
 
 
 class Product(models.Model):
-
     """Продукт"""
+
     class Meta:
         verbose_name_plural = _("Продукты")
         verbose_name = _('Продукт')
@@ -30,8 +29,8 @@ class Product(models.Model):
 
 
 class Property(models.Model):
-
     """Свойство продукта"""
+
     class Meta:
         verbose_name_plural = _("Свойства")
         verbose_name = _('Свойство')
@@ -43,8 +42,8 @@ class Property(models.Model):
 
 
 class ProductProperty(models.Model):
-
     """Значение свойства продукта"""
+
     class Meta:
         verbose_name_plural = _("Свойства продуктов")
         verbose_name = _('Свойство продукта')
@@ -55,7 +54,6 @@ class ProductProperty(models.Model):
 
 
 def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
-
     """Генерирует путь к картинке"""
 
     return "products/product_{pk}/images/{filename}".format(

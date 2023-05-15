@@ -6,8 +6,10 @@ from .models import Product, ProductProperty, Property, ProductImage
 class ProductPropertyInline(admin.TabularInline):
     model = Product.property.through
 
+
 class ProductProductImageInline(admin.TabularInline):
     model = ProductImage
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
