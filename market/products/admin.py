@@ -21,5 +21,5 @@ class PropertyAdmin(admin.ModelAdmin):
 
 
 @admin.register(ProductProperty)
-class PropertyAdmin(admin.ModelAdmin):
+class ProductProperty(admin.ModelAdmin):
     list_display = 'product', 'property', 'value',

@@ -17,5 +17,4 @@ class ShopAdmin(admin.ModelAdmin):
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
-
     list_display = 'shop', 'product', 'price',
