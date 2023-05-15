@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
     """Генерирует путь к картинке"""
 
@@ -50,7 +49,6 @@ class ProductProperty(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     property = models.ForeignKey(Property, on_delete=models.PROTECT)
     value = models.CharField(max_length=128, verbose_name=_("значение"))
-
 
 
 def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
