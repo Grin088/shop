@@ -44,7 +44,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "products",
     "shops",
+    "catalog",
+    'cacheops',
+
 ]
+
+INSTALLED_APPS += ('django_jinja',
+                   'mptt')
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -59,6 +65,54 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
+    {
+        "BACKEND": "django_jinja.backend.Jinja2",
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "match_extension": ".jinja",
+            "match_regex": None,
+            "app_dirname": "templates",
+            # Can be set to "jinja2.Undefined" or any other subclass.
+            "undefined": None,
+            "newstyle_gettext": True,
+            "tests": {
+                # "mytest": "path.to.my.test",
+            },
+            "filters": {
+                # "myfilter": "path.to.my.filter",
+            },
+            "globals": {
+                # "myglobal": "path.to.my.globalfunc",
+            },
+            "constants": {
+                # "foo": "bar",
+            },
+            "policies": {
+                # "ext.i18n.trimmed": True,
+            },
+            "extensions": [
+                "jinja2.ext.do",
+                "jinja2.ext.loopcontrols",
+                "jinja2.ext.i18n",
+                "django_jinja.builtins.extensions.CsrfExtension",
+                "django_jinja.builtins.extensions.CacheExtension",
+                "django_jinja.builtins.extensions.DebugExtension",
+                "django_jinja.builtins.extensions.TimezoneExtension",
+                "django_jinja.builtins.extensions.UrlsExtension",
+                "django_jinja.builtins.extensions.StaticFilesExtension",
+                "django_jinja.builtins.extensions.DjangoFiltersExtension",
+            ],
+            "bytecode_cache": {
+                "name": "default",
+                "backend": "django_jinja.cache.BytecodeCache",
+                "enabled": False,
+            },
+            "autoescape": True,
+            "auto_reload": DEBUG,
+            "translation_engine": "django.utils.translation",
+        }
+    },
+
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
@@ -80,9 +134,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.parse(config["DATABASE_URL"])}
+DATABASES = {"default": dj_database_url.parse('postgresql://skillbox:secret@127.0.0.1:5434/market')}
 
-REDIS_URL = config["REDIS_URL"]
+REDIS_URL = 'redis://127.0.0.1:6379/0'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -124,3 +178,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+CACHEOPS_REDIS = REDIS_URL
+
+CACHEOPS = {
+    'catalog.MPTTCatalog': {'ops': 'all', 'timeout': 86400},
+    '*.*': {'timeout': 60*60},
+}
