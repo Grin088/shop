@@ -21,7 +21,7 @@ class Product(models.Model):
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
     preview = models.ImageField(null=True, blank=True, upload_to=product_preview_directory_path,
                                 verbose_name=_('предварительный просмотр'))
-    # property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
+    property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
 
     def __str__(self):
         return self.name
