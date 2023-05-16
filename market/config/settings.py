@@ -134,6 +134,12 @@ DATABASES = {"default": dj_database_url.parse('postgresql://skillbox:secret@127.
 
 REDIS_URL = 'redis://127.0.0.1:6379/0'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
