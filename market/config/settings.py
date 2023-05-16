@@ -130,9 +130,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.parse(config["DATABASE_URL"])}
+DATABASES = {"default": dj_database_url.parse('postgresql://skillbox:secret@127.0.0.1:5434/market')}
 
-REDIS_URL = config["REDIS_URL"]
+REDIS_URL = 'redis://127.0.0.1:6379/0'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -169,6 +169,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
