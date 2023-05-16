@@ -2,9 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
 </head>
-<body>
+<body class="Site">
+    <header class="Header">
+        {% block header %}
+        {% endblock %}
+        {% block banner %}
+        {% endblock %}
+    </header>
 
 </body>
 </html>
