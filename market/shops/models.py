@@ -31,7 +31,6 @@ class Banner(models.Model):
     description = models.TextField(max_length=280, null=True, verbose_name=_('описание баннера'))
     image = models.ImageField(upload_to='banners/',
                               default='banners/image.png',
-                              blank=True, null=True,
                               verbose_name=_('изображение баннера'))
     link = models.URLField()
     start_date = models.DateTimeField(default=timezone.now, verbose_name=_('дата начала показа баннера'))
@@ -40,4 +39,3 @@ class Banner(models.Model):
 
     def __str__(self):
         return self.title
-
