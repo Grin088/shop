@@ -3,12 +3,12 @@ from django.contrib import admin  # noqa F401
 from .models import Product, ProductProperty, Property, ProductImage
 
 
-class ProductPropertyInline(admin.TabularInline):
-    model = Product.property.through
-
-
 class ProductProductImageInline(admin.TabularInline):
     model = ProductImage
+
+
+class ProductPropertyInline(admin.TabularInline):
+    model = Product.property.through
 
 
 @admin.register(Product)
