@@ -130,10 +130,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.parse('postgresql://skillbox:secret@127.0.0.1:5434/market')}
+DATABASES = {"default": dj_database_url.parse(config["DATABASE_URL"])}
 
-REDIS_URL = 'redis://127.0.0.1:6379/0'
-
+REDIS_URL = config["REDIS_URL"]
+CACHE_CONSTANT = 600
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
