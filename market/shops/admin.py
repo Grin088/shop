@@ -26,4 +26,3 @@ class BannerAdmin(admin.ModelAdmin):
     list_filter = ('active',)
     search_fields = ('title', 'link')
     ordering = ('-end_date',)
-
