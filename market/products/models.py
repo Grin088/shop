@@ -41,7 +41,7 @@ class Property(models.Model):
 
 
 class ProductProperty(models.Model):
-    """ Значение свойства продукта """
+    """Значение свойства продукта """
 
     class Meta:
         verbose_name_plural = _("Свойства продуктов")
