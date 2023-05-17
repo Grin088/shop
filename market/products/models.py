@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
-    """Генерирует путь к картинке"""
+    """Генерирует путь к  картинке"""
 
     return "products/product_{pk}/preview/{filename}".format(
         pk=instance.pk,
@@ -12,7 +12,7 @@ def product_preview_directory_path(instance: "Product", filename: str) -> str:
 
 
 class Product(models.Model):
-    """Продукт"""
+    """ Продукт """
 
     class Meta:
         verbose_name_plural = _("продукты")
@@ -28,7 +28,7 @@ class Product(models.Model):
 
 
 class Property(models.Model):
-    """Свойство продукта"""
+    """ Свойство продукта """
 
     class Meta:
         verbose_name_plural = _("свойства")
@@ -41,7 +41,7 @@ class Property(models.Model):
 
 
 class ProductProperty(models.Model):
-    """Значение свойства продукта"""
+    """Значение свойства продукта """
 
     class Meta:
         verbose_name_plural = _("свойства продуктов")
@@ -52,7 +52,7 @@ class ProductProperty(models.Model):
 
 
 def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
-    """Генерирует путь к картинке"""
+    """ Генерирует путь к картинке """
 
     return "products/product_{pk}/images/{filename}".format(
         pk=instance.product.pk,
@@ -61,6 +61,8 @@ def product_images_directory_path(instance: "ProductImage", filename: str) -> st
 
 
 class ProductImage(models.Model):
+    """ Фото продукта"""
+
     class Meta:
         verbose_name_plural = _("изображение продукта")
         verbose_name = _('изображения продуктов')
