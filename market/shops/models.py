@@ -30,7 +30,6 @@ class Banner(models.Model):
     title = models.CharField(max_length=280, verbose_name=_('название баннера'))
     description = models.TextField(max_length=280, null=True, verbose_name=_('описание баннера'))
     image = models.ImageField(upload_to='banners/',
-                              default='banners/image.png',
                               verbose_name=_('изображение баннера'))
     link = models.URLField()
     start_date = models.DateTimeField(default=timezone.now, verbose_name=_('дата начала показа баннера'))
