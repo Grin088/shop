@@ -8,7 +8,7 @@ class Catalog(MPTTModel):
     """Категории каталога"""
     name = models.CharField(max_length=100, help_text=_('наименование'))
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    image = models.FileField(upload_to='/fixtures', verbose_name=_('картинка'))
+    image = models.FileField(upload_to='fixtures/', verbose_name=_('картинка'))
 
     def __str__(self):
         return self.name
