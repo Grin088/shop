@@ -17,5 +17,3 @@ class NewUserAdmin(UserAdmin):
     inlines = [
         ProfileInline
     ]
-
-

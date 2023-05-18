@@ -38,7 +38,7 @@ def validate_image_size(image):
     """Проверка допустимого размера файла"""
     MAX_SIZE = 2 * 1024 ** 2  # 2MB
     if image.size > MAX_SIZE:
-        raise ValidationError(f'Размер файла превышает допустимое значение 2 MB.')
+        raise ValidationError('Размер файла превышает допустимое значение 2 MB.')
 
 
 class Profile(models.Model):

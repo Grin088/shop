@@ -5,12 +5,17 @@ from django.urls import reverse_lazy
 
 class UserProfileTest(TestCase):
     """Создание профиля"""
+
     @classmethod
     def setUpClass(cls):
+        """Создание пользователя"""
+        super().setUpClass()
         cls.user = User.objects.create_user(username='Test_user', password="123")
 
     @classmethod
     def tearDownClass(cls):
+        """ Удаление пользователя"""
+        super().tearDownClass()
         cls.user.delete()
 
     def test_data_profile(self):
@@ -23,6 +28,7 @@ class UserProfileTest(TestCase):
 
 class RegistrationFormTest(TestCase):
     """ Проверка страницы регистрации и входа """
+
     def setUp(self):
         self.user = User.objects.create_user(username='Admin12', password='Pass123456')
         self.url = reverse_lazy('users:users_register')
@@ -47,7 +53,7 @@ class RegistrationFormTest(TestCase):
         }
 
     def test_registration_form(self):
-
+        """Проверка формы регистрации"""
         response = self.client.post(self.url, data=self.data1)
         self.assertEqual(response.status_code, 302)
         user = User.objects.get(username=self.data1['username'])
@@ -62,6 +68,7 @@ class RegistrationFormTest(TestCase):
         self.assertContains(response, '+1234567890 уже используется другим пользователем.')
 
     def test_login(self):
+        """Проверка входа """
         login_data = {'username': 'Admin12',
                       'password': 'Pass123456'
                       }
