@@ -29,8 +29,6 @@ def phone_unique_validator(value):
     """Проверка уникальности номера телефона """
     user = User.objects.select_related('profile').filter(profile__phone_number=value).exists()
     if user and value != '+0000000000':
-        print(value)
-        print(type(value))
         raise ValidationError('%s уже используется другим пользователем.' % value)
 
 
