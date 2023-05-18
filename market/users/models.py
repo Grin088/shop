@@ -25,23 +25,43 @@ class PhoneNumberValidator(validators.RegexValidator):
     flags = 0
 
 
-def phone_unique_validator(value):
-    """Проверка уникальности номера телефона """
-    user = User.objects.select_related('profile').filter(profile__phone_number=value).exists()
-    if user and value != '+0000000000':
-        raise ValidationError('%s уже используется другим пользователем.' % value)
+@deconstructible
+class PhoneUniqueValidator:
+    """
+    Проверка отсутствия номера телефона в базе
+    """
+
+    def __call__(self, value):
+        if User.objects.filter(profile__phone_number=value).exists():
+            raise ValidationError(f'Пользователь с номером {value} уже существует.')
 
 
-def validate_image_size(image):
+@deconstructible
+class ValidateImageSize:
     """Проверка допустимого размера файла"""
-    MAX_SIZE = 2 * 1024 ** 2  # 2MB
-    if image.size > MAX_SIZE:
-        raise ValidationError('Размер файла превышает допустимое значение 2 MB.')
+
+    max_size = 2 * 1024 ** 2  # 2MB
+
+    def __call__(self, image):
+        if image.size > self.max_size:
+            raise ValidationError('Размер файла превышает допустимое значение 2 MB.')
+
+
+@deconstructible
+class EmailUniqueValidator:
+    """Проверка уникальности адреса электронной почты"""
+
+    def __call__(self, value):
+        if User.objects.select_related('profile').filter(email=value).exists():
+            raise ValidationError(f'Email {value} уже используется другим пользователем.')
 
 
 class Profile(models.Model):
     """ Модель профиля пользователя"""
     phone_number_validator = PhoneNumberValidator()
+    phone_unique_validator = PhoneUniqueValidator()
+    validate_image_size = ValidateImageSize()
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='user')
     avatar = models.ImageField(
         null=False,

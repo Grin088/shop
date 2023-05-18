@@ -1,20 +1,17 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
 from django.core import validators
-from .models import PhoneNumberValidator, validate_image_size, phone_unique_validator
-
-
-def email_unique_validator(value):
-    """Проверка уникальности адреса электронной почты"""
-    if User.objects.select_related('profile').filter(email=value).exists():
-        raise ValidationError('Email %s уже используется другим пользователем.' % value)
+from .models import PhoneNumberValidator, ValidateImageSize, PhoneUniqueValidator, EmailUniqueValidator
 
 
 class RegisterForm(UserCreationForm):
 
     """Форма для регистрации пользователя"""
+    phone_number_validator = PhoneNumberValidator()
+    phone_unique_validator = PhoneUniqueValidator()
+    validate_image_size = ValidateImageSize()
+    email_unique_validator = EmailUniqueValidator()
 
     avatar = forms.ImageField(required=False,
                               label='Фото профиля',
@@ -26,7 +23,7 @@ class RegisterForm(UserCreationForm):
                                    min_length=8,
                                    required=True,
                                    label='Телефон',
-                                   validators=[PhoneNumberValidator,
+                                   validators=[phone_number_validator,
                                                phone_unique_validator
                                                ],
                                    help_text='Номер телефона должен начинаться с "+" и  содержать только цифры'

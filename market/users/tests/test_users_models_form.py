@@ -65,7 +65,7 @@ class RegistrationFormTest(TestCase):
 
         response = self.client.post(self.url, data=self.data2)
         self.assertContains(response, 'Email test_user@example.com уже используется другим пользователем.')
-        self.assertContains(response, '+1234567890 уже используется другим пользователем.')
+        self.assertContains(response, 'Пользователь с номером +1234567890 уже существует.')
 
     def test_login(self):
         """Проверка входа """
@@ -83,3 +83,8 @@ class RegistrationFormTest(TestCase):
         response = self.client.post(reverse_lazy('users:users_login'), login_data2)
         self.assertContains(response, 'Please enter a correct username and password. '
                                       'Note that both fields may be case-sensitive.')
+
+    def test_logout(self):
+        """Проверка url выхода пользователя"""
+        response = self.client.post(reverse_lazy('users:users_logout'))
+        self.assertEqual(response.status_code, 302)
