@@ -1,6 +1,10 @@
 from django.contrib import admin  # noqa F401
 
-from .models import Product, ProductProperty, Property
+from .models import Product, ProductProperty, Property, ProductImage
+
+
+class ProductProductImageInline(admin.TabularInline):
+    model = ProductImage
 
 
 class ProductPropertyInline(admin.TabularInline):
@@ -10,9 +14,10 @@ class ProductPropertyInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     inlines = [
+        ProductProductImageInline,
         ProductPropertyInline,
     ]
-    list_display = 'name',
+    list_display = 'name', 'preview'
 
 
 @admin.register(Property)
