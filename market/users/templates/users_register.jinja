@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+<title>
+{% block title %}
+   Регистрация
+{% endblock %}
+</title>
+<body>
+{% block body %}
+    <h2>Регистрация</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+       <p> <button type="submit">Зарегистрировать пользователя</button> </p>
+
+    </form>
+{% endblock %}
+</body>
