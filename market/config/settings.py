@@ -20,7 +20,6 @@ config = dotenv_values(os.path.join("..", ".env"))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -42,11 +41,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django_jinja',
     "products",
     "shops",
 ]
-
-INSTALLED_APPS += ('django_jinja',)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -63,9 +61,10 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django_jinja.backend.Jinja2",
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
-            "match_extension": ".jinja",
+            "match_extension": ".jinja2",
             "match_regex": None,
             "app_dirname": "templates",
             # Can be set to "jinja2.Undefined" or any other subclass.
@@ -130,9 +129,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.parse(config["DATABASE_URL"])}
+DATABASES = {"default": dj_database_url.parse("postgresql://skillbox:secret@127.0.0.1:5434/market")}
 
-REDIS_URL = config["REDIS_URL"]
+REDIS_URL = "redis://127.0.0.1:6379/0"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -168,7 +167,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, '/static')
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
