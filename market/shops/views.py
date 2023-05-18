@@ -13,4 +13,4 @@ def home(request):
     context = {
         'random_banners': random_banners,
     }
-    return render(request, 'banner.html', context)
+    return render(request, 'base.html', context)  # пока нет шаблона banner, тут будет base
