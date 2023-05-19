@@ -20,7 +20,6 @@ config = dotenv_values(os.path.join("..", ".env"))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django_jinja',
     "products",
     "shops",
     "catalog",
@@ -61,6 +61,55 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
+    {
+        "BACKEND": "django_jinja.backend.Jinja2",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "match_extension": ".jinja2",
+            "match_regex": None,
+            "app_dirname": "templates",
+            # Can be set to "jinja2.Undefined" or any other subclass.
+            "undefined": None,
+            "newstyle_gettext": True,
+            "tests": {
+                # "mytest": "path.to.my.test",
+            },
+            "filters": {
+                # "myfilter": "path.to.my.filter",
+            },
+            "globals": {
+                # "myglobal": "path.to.my.globalfunc",
+            },
+            "constants": {
+                # "foo": "bar",
+            },
+            "policies": {
+                # "ext.i18n.trimmed": True,
+            },
+            "extensions": [
+                "jinja2.ext.do",
+                "jinja2.ext.loopcontrols",
+                "jinja2.ext.i18n",
+                "django_jinja.builtins.extensions.CsrfExtension",
+                "django_jinja.builtins.extensions.CacheExtension",
+                "django_jinja.builtins.extensions.DebugExtension",
+                "django_jinja.builtins.extensions.TimezoneExtension",
+                "django_jinja.builtins.extensions.UrlsExtension",
+                "django_jinja.builtins.extensions.StaticFilesExtension",
+                "django_jinja.builtins.extensions.DjangoFiltersExtension",
+            ],
+            "bytecode_cache": {
+                "name": "default",
+                "backend": "django_jinja.cache.BytecodeCache",
+                "enabled": False,
+            },
+            "autoescape": True,
+            "auto_reload": DEBUG,
+            "translation_engine": "django.utils.translation",
+        }
+    },
+
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
@@ -85,6 +134,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {"default": dj_database_url.parse(config["DATABASE_URL"])}
 
 REDIS_URL = config["REDIS_URL"]
+CACHE_CONSTANT = 600
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -120,7 +175,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, '/static')
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
