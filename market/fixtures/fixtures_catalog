@@ -1,1 +1,0 @@
-[{"model": "catalog.catalog", "pk": 1, "fields": {"name": "Мобильные телефоны", "parent": null, "image": "fixtures/test.png", "lft": 1, "rght": 2, "tree_id": 1, "level": 0}}]
