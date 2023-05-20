@@ -22,7 +22,7 @@ class UserProfileTest(TestCase):
         self.client.login(username='Test_user', password="123")
         avatar = self.user.profile.avatar
         phone = self.user.profile.phone_number
-        self.assertEqual(avatar, "users/avatars/default/default_avatar1.png")
+        self.assertEqual(avatar, "users/uploads/avatars/default/default_avatar1.png")
         self.assertEqual(phone, '+0000000000')
 
 
@@ -61,7 +61,7 @@ class RegistrationFormTest(TestCase):
         self.assertEqual(user.last_name, self.data1['last_name'])
         self.assertEqual(user.email, self.data1['email'])
         self.assertEqual(user.profile.phone_number, self.data1['phone_number'])
-        self.assertEqual(user.profile.avatar, "users/avatars/default/default_avatar1.png")
+        self.assertEqual(user.profile.avatar, "users/uploads/avatars/default/default_avatar1.png")
 
         response = self.client.post(self.url, data=self.data2)
         self.assertContains(response, 'Email test_user@example.com уже используется другим пользователем.')

@@ -2,14 +2,20 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core import validators
-from .models import PhoneNumberValidator, ValidateImageSize, PhoneUniqueValidator, EmailUniqueValidator
+from .models import PhoneNumberValidator, ValidateImageSize, EmailUniqueValidator
+from django.core.exceptions import ValidationError
+
+
+def unique_phone_number(value):
+    if User.objects.filter(profile__phone_number=value):
+        raise ValidationError(f'Пользователь с номером {value} уже существует.')
 
 
 class RegisterForm(UserCreationForm):
 
     """Форма для регистрации пользователя"""
     phone_number_validator = PhoneNumberValidator()
-    phone_unique_validator = PhoneUniqueValidator()
+
     validate_image_size = ValidateImageSize()
     email_unique_validator = EmailUniqueValidator()
 
@@ -24,7 +30,7 @@ class RegisterForm(UserCreationForm):
                                    required=True,
                                    label='Телефон',
                                    validators=[phone_number_validator,
-                                               phone_unique_validator
+                                               unique_phone_number
                                                ],
                                    help_text='Номер телефона должен начинаться с "+" и  содержать только цифры'
                                    )

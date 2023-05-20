@@ -9,12 +9,12 @@ from django.core.exceptions import ValidationError
 
 def user_avatar_directory_path(instance: User, filename: str) -> str:
     """ Путь для сохранения аватара пользователя"""
-    return f"users/avatars/user_{instance.pk}/{filename}"
+    return f"users/uploads/avatars/user_{instance.pk}/{filename}"
 
 
 def get_default_avatar_path():
     """ Путь к аватару пользователя по умолчанию"""
-    return "users/avatars/default/default_avatar1.png"
+    return "users/uploads/avatars/default/default_avatar1.png"
 
 
 @deconstructible
@@ -23,17 +23,6 @@ class PhoneNumberValidator(validators.RegexValidator):
     regex = r'^\+\d+$'
     message = 'Номер телефона должен начинаться с + и содержать только цифры'
     flags = 0
-
-
-@deconstructible
-class PhoneUniqueValidator:
-    """
-    Проверка отсутствия номера телефона в базе
-    """
-
-    def __call__(self, value):
-        if User.objects.filter(profile__phone_number=value).exists():
-            raise ValidationError(f'Пользователь с номером {value} уже существует.')
 
 
 @deconstructible
@@ -56,10 +45,14 @@ class EmailUniqueValidator:
             raise ValidationError(f'Email {value} уже используется другим пользователем.')
 
 
+# class CustomUser(AbstractUser):
+#     email = models.EmailField(unique=True, blank=False)
+
+
 class Profile(models.Model):
     """ Модель профиля пользователя"""
+
     phone_number_validator = PhoneNumberValidator()
-    phone_unique_validator = PhoneUniqueValidator()
     validate_image_size = ValidateImageSize()
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='user')
@@ -76,26 +69,24 @@ class Profile(models.Model):
     phone_number = models.CharField(max_length=20,
                                     verbose_name='phone number',
                                     help_text='Номер телефона должен начинаться с + и содержать только цифры',
-                                    error_messages={'unique': 'Данный номер уже зарегистрирован'},
                                     validators=[phone_number_validator,
-                                                phone_unique_validator
                                                 ],
                                     null=False,
                                     default='+0000000000'
                                     )
 
-    class Meta:
-        verbose_name = 'User profile'
+    def clean(self):
+        super().clean()
+        profile = Profile.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
+        if profile:
+            exist_phone_number = profile.phone_number
+            if exist_phone_number and exist_phone_number != '+0000000000':
+                raise ValidationError(f'Пользователь с номером {exist_phone_number} уже существует.')
 
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    """ Создание профиля пользователя при создании нового пользователя """
-    if created:
-        Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    """Сохранение профиля пользователя """
-    instance.profile.save()
+    @staticmethod
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        """ Создание профиля пользователя при создании нового пользователя """
+        if created and not hasattr(instance, 'profile'):
+            Profile.objects.create(user=instance)
+        instance.profile.save()
