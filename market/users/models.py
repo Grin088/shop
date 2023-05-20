@@ -9,12 +9,12 @@ from django.core.exceptions import ValidationError
 
 def user_avatar_directory_path(instance: User, filename: str) -> str:
     """ Путь для сохранения аватара пользователя"""
-    return f"users/uploads/avatars/user_{instance.pk}/{filename}"
+    return f"uploads/users/avatars/user_{instance.pk}/{filename}"
 
 
 def get_default_avatar_path():
     """ Путь к аватару пользователя по умолчанию"""
-    return "users/uploads/avatars/default/default_avatar1.png"
+    return "uploads/users/avatars/default/default_avatar1.png"
 
 
 @deconstructible
@@ -72,6 +72,7 @@ class Profile(models.Model):
                                     )
 
     def clean(self):
+        """Валидация данных """
         super().clean()
         profile = Profile.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
         if profile:

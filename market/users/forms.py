@@ -2,18 +2,25 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core import validators
-from .models import PhoneNumberValidator, ValidateImageSize, EmailUniqueValidator
 from django.core.exceptions import ValidationError
+from .models import PhoneNumberValidator, ValidateImageSize, EmailUniqueValidator
 
 
 def unique_phone_number(value):
+    """Проверка уникальности номера телефона"""
     if User.objects.filter(profile__phone_number=value):
         raise ValidationError(f'Пользователь с номером {value} уже существует.')
 
 
-class RegisterForm(UserCreationForm):
+def emai_existed_validator(value):
+    """Проверка уникальности email """
+    if not User.objects.filter(email__exact=value).first():
+        raise ValidationError(f'Пользователя с email {value} не существует.')
 
-    """Форма для регистрации пользователя"""
+
+class RegisterForm(UserCreationForm):
+    """Форма регистрации пользователя"""
+
     phone_number_validator = PhoneNumberValidator()
 
     validate_image_size = ValidateImageSize()
@@ -52,6 +59,9 @@ class RegisterForm(UserCreationForm):
 
 
 class RestorePasswordForm(forms.Form):
-    """ Форма для восстановления пароля"""
+    """ Форма восстановления пароля"""
 
-    email = forms.EmailField()
+    email = forms.EmailField(required=True,
+                             help_text='Укажите email пользователя',
+                             validators=[emai_existed_validator]
+                             )

@@ -1,18 +1,20 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import BaseUserCreationForm, UserChangeForm
 from django import forms
-from .models import EmailUniqueValidator
+from .models import Profile, EmailUniqueValidator
+
 
 
 class CustomUserCreationForm(BaseUserCreationForm):
+    """Форма для создания нового пользователя"""
     email_unique_validator = EmailUniqueValidator()
     email = forms.EmailField(required=True, validators=[email_unique_validator])
 
 
 class CustomUserChangeForm(UserChangeForm):
+    """ Форма обновления данных пользователя"""
     email_unique_validator = EmailUniqueValidator()
     email = forms.EmailField(required=True, validators=[email_unique_validator])
 
