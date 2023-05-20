@@ -187,5 +187,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # EMAIL_PORT = 587
 # EMAIL_HOST_USER = 'email'
 # EMAIL_HOST_PASSWORD = 'password'
-
-# AUTH_USER_MODEL = 'users.CustomUser'

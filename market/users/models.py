@@ -45,10 +45,6 @@ class EmailUniqueValidator:
             raise ValidationError(f'Email {value} уже используется другим пользователем.')
 
 
-# class CustomUser(AbstractUser):
-#     email = models.EmailField(unique=True, blank=False)
-
-
 class Profile(models.Model):
     """ Модель профиля пользователя"""
 
