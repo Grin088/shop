@@ -18,6 +18,15 @@ def emai_existed_validator(value):
         raise ValidationError(f'Пользователя с email {value} не существует.')
 
 
+class LowerEmailField(forms.EmailField):
+    """ Запись email в нижнем регистре"""
+    def to_python(self, value):
+        value = super().to_python(value)
+        if value is not None:
+            value = value.lower()
+        return value
+
+
 class RegisterForm(UserCreationForm):
     """Форма регистрации пользователя"""
 
@@ -30,7 +39,8 @@ class RegisterForm(UserCreationForm):
                               label='Фото профиля',
                               validators=[validators.validate_image_file_extension,
                                           validate_image_size
-                                          ]
+                                          ],
+                              help_text='Размер файла не должен превышать 2МВ'
                               )
     phone_number = forms.CharField(max_length=20,
                                    min_length=8,
@@ -43,7 +53,7 @@ class RegisterForm(UserCreationForm):
                                    )
     first_name = forms.CharField(max_length=30, required=True, label='Имя')
     last_name = forms.CharField(max_length=30, required=True, label='Фамилия')
-    email = forms.EmailField(required=True, validators=[email_unique_validator], label='Email')
+    email = LowerEmailField(required=True, validators=[email_unique_validator], label='Email')
 
     class Meta:
         model = User
@@ -61,7 +71,7 @@ class RegisterForm(UserCreationForm):
 class RestorePasswordForm(forms.Form):
     """ Форма восстановления пароля"""
 
-    email = forms.EmailField(required=True,
-                             help_text='Укажите email пользователя',
-                             validators=[emai_existed_validator]
-                             )
+    email = LowerEmailField(required=True,
+                            validators=[emai_existed_validator],
+                            help_text='Укажите email пользователя',
+                            )
