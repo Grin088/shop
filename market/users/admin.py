@@ -6,7 +6,6 @@ from django import forms
 from .models import Profile, EmailUniqueValidator
 
 
-
 class CustomUserCreationForm(BaseUserCreationForm):
     """Форма для создания нового пользователя"""
     email_unique_validator = EmailUniqueValidator()
