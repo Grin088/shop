@@ -9,12 +9,12 @@ from django.core.exceptions import ValidationError
 
 def user_avatar_directory_path(instance: User, filename: str) -> str:
     """ Путь для сохранения аватара пользователя"""
-    return f"uploads/users/avatars/user_{instance.pk}/{filename}"
+    return f"users/avatars/user_{instance.pk}/{filename}"
 
 
 def get_default_avatar_path():
     """ Путь к аватару пользователя по умолчанию"""
-    return "uploads/users/avatars/default/default_avatar1.png"
+    return "users/avatars/default/default_avatar1.png"
 
 
 @deconstructible

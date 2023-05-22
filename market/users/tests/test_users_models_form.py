@@ -10,7 +10,7 @@ class UserProfileTest(TestCase):
     def setUpClass(cls):
         """Создание пользователя"""
         super().setUpClass()
-        cls.user = User.objects.create_user(username='Test_user', password="123", email='test_user@example.com')
+        cls.user = User.objects.create_user(username='Test_user', password="123", email='Test@mail.ru')
 
     @classmethod
     def tearDownClass(cls):
@@ -23,7 +23,7 @@ class UserProfileTest(TestCase):
         self.client.login(username='Test_user', password="123")
         avatar = self.user.profile.avatar
         phone = self.user.profile.phone_number
-        self.assertEqual(avatar, "uploads/users/avatars/default/default_avatar1.png")
+        self.assertEqual(avatar, "users/avatars/default/default_avatar1.png")
         self.assertEqual(phone, '+0000000000')
 
 
@@ -47,7 +47,7 @@ class RegistrationFormTest(TestCase):
             'username': 'test_user1',
             'first_name': 'Test1',
             'last_name': 'User1',
-            'email': 'test_user@example.com',
+            'email': 'Test_user@example.com',
             'password1': 'Pass123456',
             'password2': 'Pass123456',
             'phone_number': '+1234567890'
@@ -62,7 +62,7 @@ class RegistrationFormTest(TestCase):
         self.assertEqual(user.last_name, self.data1['last_name'])
         self.assertEqual(user.email, self.data1['email'])
         self.assertEqual(user.profile.phone_number, self.data1['phone_number'])
-        self.assertEqual(user.profile.avatar, "uploads/users/avatars/default/default_avatar1.png")
+        self.assertEqual(user.profile.avatar, "users/avatars/default/default_avatar1.png")
 
         response = self.client.post(self.url, data=self.data2)
         self.assertContains(response, 'Email test_user@example.com уже используется другим пользователем.')
