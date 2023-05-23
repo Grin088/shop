@@ -1,32 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import BaseUserCreationForm, UserChangeForm
-# from .models import Profile, EmailUniqueValidator
-# from .forms import LowerEmailField
-from .models import User, BasedAccountManager
-from django import forms
+from .models import User
 from django.utils.translation import gettext_lazy as _
+from .forms import CustomUserCreationForm
 
-
-class AccountCreationForm(BaseUserCreationForm):
-    """Форма для создания нового пользователя"""
-    email = forms.EmailField(required=True)
-
-#
-#
-# class CustomUserChangeForm(UserChangeForm):
-#     """ Форма обновления данных пользователя"""
-#     email_unique_validator = EmailUniqueValidator()
-#     email = LowerEmailField(required=True, validators=[email_unique_validator])
-#
-#
-# class ProfileInline(admin.StackedInline):
-#     model = Profile
-#     can_delete = False
-#
-#
-# admin.site.register(Account)
 
 @admin.register(User)
 class AccountAdmin(UserAdmin):
@@ -48,7 +25,7 @@ class AccountAdmin(UserAdmin):
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
 
-    add_form = AccountCreationForm
+    add_form = CustomUserCreationForm
     add_fieldsets = (
         (
             None,

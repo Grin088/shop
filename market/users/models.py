@@ -1,6 +1,6 @@
 import re
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import gettext_lazy as _
 from django.core import validators
 from django.utils.deconstruct import deconstructible
@@ -36,27 +36,17 @@ class ValidateImageSize:
             raise ValidationError('Размер файла превышает допустимое значение 2 MB.')
 
 
-# @deconstructible
-# class EmailUniqueValidator:
-#     """Проверка уникальности адреса электронной почты"""
-#
-#     def __call__(self, value):
-#         if User.objects.select_related('profile').filter(email=value).exists():
-#             raise ValidationError(f'Email {value} уже используется другим пользователем.')
-
-
-class BasedAccountManager(UserManager):
+class CustomUserManager(UserManager):
 
     @classmethod
     def validate_email(cls, email):
+        """Проверка корректности ввода email"""
         regex = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(regex, email) is not None
 
     @classmethod
     def normalize_email(cls, email):
-        """
-        Проверка правильности ввода email и перевод email в нижний регистр
-        """
+        """Перевод email в нижний регистр"""
         email = email or ""
         if cls.validate_email(email):
             email = email.lower()
@@ -66,11 +56,11 @@ class BasedAccountManager(UserManager):
 
 
 class User(AbstractUser):
-
+    """Класс пользователя"""
     validate_image_size = ValidateImageSize()
     phone_number_validator = PhoneNumberValidator()
 
-    objects = BasedAccountManager()
+    objects = CustomUserManager()
 
     email = models.EmailField(
         _("email address"),
@@ -101,4 +91,9 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-
+    def clean(self):
+        """Валидация данных и проверка отсутствия номера телефона в базе данных"""
+        super().clean()
+        user = User.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
+        if user and user.phone_number != '+0000000000':
+            raise ValidationError(f'Пользователь с номером {user.phone_number} уже существует.')
