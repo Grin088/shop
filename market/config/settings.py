@@ -19,6 +19,7 @@ config = dotenv_values(os.path.join("..", ".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+AUTH_USER_MODEL = 'users.User'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -35,6 +36,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "users",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,7 +46,6 @@ INSTALLED_APPS = [
     'django_jinja',
     "products",
     "shops",
-    "users",
 ]
 
 MIDDLEWARE = [
@@ -194,3 +195,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # EMAIL_PORT = 587
 # EMAIL_HOST_USER = 'email'
 # EMAIL_HOST_PASSWORD = 'password'
+
