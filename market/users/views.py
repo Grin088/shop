@@ -1,46 +1,36 @@
-# from django.shortcuts import redirect
-# from django.urls import reverse_lazy
-# from django.core.mail import send_mail
-# from django.contrib.auth.models import User
-# from django.contrib.auth.views import LoginView, LogoutView, FormView
-# from django.views.generic import CreateView
-# from django.contrib.auth import authenticate, login
-# # from .forms import RegisterForm, RestorePasswordForm
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.core.mail import send_mail
+from django.contrib.auth.views import LoginView, LogoutView, FormView
+from django.views.generic import CreateView
+from django.contrib.auth import authenticate, login
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .models import CustomUser
+# from .forms import RegisterForm, RestorePasswordForm
+
+
+class UserRegistrationView(CreateView):
+    """ Регистрация нового пользователя """
+
+    form_class = CustomUserCreationForm
+    model = CustomUser
+    template_name = 'users_register.jinja2'
+    success_url = '/'
+
+
+class MyLoginView(LoginView):
+    """Вход пользователя"""
+    LoginView.next_page = reverse_lazy('users:users_register')
+    redirect_authenticated_user = True
+    template_name = 'user_login.jinja2'
+    authentication_form = CustomAuthenticationForm
+
+
 #
 #
-# class UserRegistrationView(CreateView):
-#     """ Регистрация нового пользователя """
-#
-#     form_class = RegisterForm
-#     queryset = User.objects.select_related('profile')
-#     template_name = 'users_register.jinja2'
-#     success_url = '/'
-#
-#     def form_valid(self, form):
-#         """Проверка валидности формы"""
-#         response = super().form_valid(form)
-#         avatar = form.cleaned_data.get('avatar')
-#         self.object.profile.phone_number = form.cleaned_data.get('phone_number')
-#         if avatar:
-#             self.object.profile.avatar = avatar
-#         self.object.save()
-#         username = form.cleaned_data.get('username')
-#         raw_password = form.cleaned_data.get('password1')
-#         user = authenticate(username=username, password=raw_password)
-#         login(self.request, user)
-#         return response
-#
-#
-# class MyLoginView(LoginView):
-#     """Вход пользователя"""
-#     LoginView.next_page = reverse_lazy('users:users_register')
-#     redirect_authenticated_user = True
-#     template_name = 'user_login.jinja2'
-#
-#
-# class UserLogoutView(LogoutView):
-#     """Выход пользователя"""
-#     next_page = reverse_lazy("users:users_login")
+class UserLogoutView(LogoutView):
+    """Выход пользователя"""
+    next_page = reverse_lazy("users:users_login")
 #
 #
 # class RestorePasswordView(FormView):

@@ -38,6 +38,8 @@ class ValidateImageSize:
 
 class CustomUserManager(UserManager):
 
+    use_in_migrations = True
+
     @classmethod
     def validate_email(cls, email):
         """Проверка корректности ввода email"""
@@ -55,7 +57,7 @@ class CustomUserManager(UserManager):
             raise ValidationError(_('Enter validate email address'))
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     """Класс пользователя"""
     validate_image_size = ValidateImageSize()
     phone_number_validator = PhoneNumberValidator()
@@ -94,6 +96,10 @@ class User(AbstractUser):
     def clean(self):
         """Валидация данных и проверка отсутствия номера телефона в базе данных"""
         super().clean()
-        user = User.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
+        user = CustomUser.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
         if user and user.phone_number != '+0000000000':
             raise ValidationError(f'Пользователь с номером {user.phone_number} уже существует.')
+
+    class Meta:
+        verbose_name = _("customer_user")
+        verbose_name_plural = _("customer_users")

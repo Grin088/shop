@@ -1,17 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import BaseUserCreationForm
-from django.core import validators
+from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
-from .models import PhoneNumberValidator, ValidateImageSize
+from .models import CustomUser
+from django.contrib.auth import authenticate
 
 
-# def unique_phone_number(value):
-#     """Проверка уникальности номера телефона"""
-#     if User.objects.filter(profile__phone_number=value):
-#         raise ValidationError(f'Пользователь с номером {value} уже существует.')
-#
-#
 def emai_existed_validator(value):
     """Проверка существования пользователя по email """
     if not User.objects.filter(email__exact=value).first():
@@ -31,6 +25,10 @@ class CustomUserCreationForm(BaseUserCreationForm):
     """Форма для создания нового пользователя"""
     email = forms.EmailField(required=True)
 
+    class Meta:
+        model = CustomUser
+        fields = 'email', 'username'
+
 
 class RestorePasswordForm(forms.Form):
     """ Форма восстановления пароля"""
@@ -39,3 +37,24 @@ class RestorePasswordForm(forms.Form):
                             validators=[emai_existed_validator],
                             help_text='Укажите email пользователя',
                             )
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    print('hello')
+
+    def clean(self):
+        username = self.cleaned_data.get("username")
+        username = username.lower()
+        password = self.cleaned_data.get("password")
+
+        if username is not None and password:
+            self.user_cache = authenticate(
+                self.request, username=username, password=password
+            )
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+            else:
+                self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
+
