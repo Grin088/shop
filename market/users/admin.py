@@ -5,6 +5,7 @@ from django.contrib.auth.forms import BaseUserCreationForm, UserChangeForm
 from .models import Profile, EmailUniqueValidator
 from .forms import LowerEmailField
 
+
 class CustomUserCreationForm(BaseUserCreationForm):
     """Форма для создания нового пользователя"""
     email_unique_validator = EmailUniqueValidator()

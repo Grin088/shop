@@ -25,4 +25,3 @@ class BannerAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'image', 'active')
     list_filter = ('active',)
     search_fields = ('title',)
-
