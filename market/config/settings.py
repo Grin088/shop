@@ -38,9 +38,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
 
     # custom apps
-    "users",
     "products",
     "shops",
+    "users",
+    "catalog",
+    'mptt',
 
     # django apps
     "django.contrib.admin",
@@ -49,7 +51,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'django_jinja',
+    "django_extensions",
+    "django_jinja",
+
 
 ]
 
@@ -201,3 +205,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # EMAIL_HOST_USER = 'email'
 # EMAIL_HOST_PASSWORD = 'password'
 
+# Always use IPython for shell_plus
+SHELL_PLUS = "ipython"
+SHELL_PLUS_PRINT_SQL = True
