@@ -2,6 +2,7 @@ from django.shortcuts import render  # noqa F401
 from .models import Banner
 from django.conf import settings
 from django.views.decorators.cache import cache_page
+from django.views.generic import TemplateView
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -14,3 +15,7 @@ def home(request):
         'random_banners': random_banners,
     }
     return render(request, 'market/banner.jinja2', context)  # пока нет шаблона banner, тут будет base
+
+
+class BaseView(TemplateView):
+    template_name = 'market/base.jinja2'
