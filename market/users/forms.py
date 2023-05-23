@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 from .models import CustomUser
@@ -8,8 +7,8 @@ from django.contrib.auth import authenticate
 
 def emai_existed_validator(value):
     """Проверка существования пользователя по email """
-    if not User.objects.filter(email__exact=value).first():
-        raise ValidationError(f'Пользователя с email {value} не существует.')
+    if not CustomUser.objects.filter(email__exact=value).first():
+        raise ValidationError(f'Пользователя {value} не существует.')
 
 
 class LowerEmailField(forms.EmailField):
@@ -28,15 +27,6 @@ class CustomUserCreationForm(BaseUserCreationForm):
     class Meta:
         model = CustomUser
         fields = 'email', 'username'
-
-
-class RestorePasswordForm(forms.Form):
-    """ Форма восстановления пароля"""
-
-    email = LowerEmailField(required=True,
-                            validators=[emai_existed_validator],
-                            help_text='Укажите email пользователя',
-                            )
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -58,3 +48,11 @@ class CustomAuthenticationForm(AuthenticationForm):
 
         return self.cleaned_data
 
+
+class RestorePasswordForm(forms.Form):
+    """ Форма восстановления пароля"""
+
+    email = LowerEmailField(required=True,
+                            validators=[emai_existed_validator],
+                            help_text='Укажите email пользователя',
+                            )
