@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', views.MyLoginView.as_view(), name='users_login'),
     path('logout/', views.UserLogoutView.as_view(), name='users_logout'),
     path('password/', views.RestorePasswordView.as_view(), name='users_restore_password'),
-#     # path('profile/<int:id>/', , name='user_profile'),
-#     # path('<id>/orders-history/'),
-#     # path('<id>/product-browsing-history/'),
+    # path('profile/<int:id>/', , name='user_profile'),
+    # path('<id>/orders-history/'),
+    # path('<id>/product-browsing-history/'),
 ]

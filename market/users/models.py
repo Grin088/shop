@@ -53,8 +53,8 @@ class CustomUserManager(UserManager):
         if cls.validate_email(email):
             email = email.lower()
             return email
-        else:
-            raise ValidationError(_('Enter validate email address'))
+
+        raise ValidationError(_('Enter validate email address'))
 
 
 class CustomUser(AbstractUser):

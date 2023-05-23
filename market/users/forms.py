@@ -30,9 +30,10 @@ class CustomUserCreationForm(BaseUserCreationForm):
 
 
 class CustomAuthenticationForm(AuthenticationForm):
-    print('hello')
+    """ Форма для входа пользователя"""
 
     def clean(self):
+        """Перевод имени пользователя в нижний регистр """
         username = self.cleaned_data.get("username")
         username = username.lower()
         password = self.cleaned_data.get("password")
@@ -43,8 +44,8 @@ class CustomAuthenticationForm(AuthenticationForm):
             )
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
-            else:
-                self.confirm_login_allowed(self.user_cache)
+
+            self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
 
