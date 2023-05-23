@@ -22,7 +22,7 @@ class OfferAdmin(admin.ModelAdmin):
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'image', 'link', 'start_date', 'end_date', 'active')
+    list_display = ('title', 'description', 'image', 'active')
     list_filter = ('active',)
-    search_fields = ('title', 'link')
-    ordering = ('-end_date',)
+    search_fields = ('title',)
+
