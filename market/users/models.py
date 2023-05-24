@@ -21,7 +21,7 @@ def get_default_avatar_path():
 class PhoneNumberValidator(validators.RegexValidator):
     """Проверка формата номера телефона"""
     regex = r'^\+\d+$'
-    message = 'Номер телефона должен начинаться с + и содержать только цифры'
+    message = _('Номер телефона должен начинаться с + и содержать только цифры')
     flags = 0
 
 
@@ -33,7 +33,7 @@ class ValidateImageSize:
 
     def __call__(self, image):
         if image.size > self.max_size:
-            raise ValidationError('Размер файла превышает допустимое значение 2 MB.')
+            raise ValidationError(_('Размер файла превышает допустимое значение 2 MB.'))
 
 
 class CustomUserManager(UserManager):
@@ -54,7 +54,7 @@ class CustomUserManager(UserManager):
             email = email.lower()
             return email
 
-        raise ValidationError(_('Enter validate email address'))
+        raise ValidationError(_('Введите корректный email адрес'))
 
 
 class CustomUser(AbstractUser):
@@ -65,7 +65,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     email = models.EmailField(
-        _("email address"),
+        _("Электронная почта"),
         blank=False,
         null=False,
         unique=True
@@ -79,15 +79,15 @@ class CustomUser(AbstractUser):
             validators.validate_image_file_extension,
             validate_image_size
            ],
-        verbose_name=_("avatar")
+        verbose_name=_("Фото профиля")
     )
     phone_number = models.CharField(
         max_length=20,
-        help_text='Номер телефона должен начинаться с + и содержать только цифры',
+        help_text=_('Номер телефона должен начинаться с + и содержать только цифры'),
         validators=[phone_number_validator],
         null=False,
         default='+0000000000',
-        verbose_name=_("phone number")
+        verbose_name=_("Номер телефона")
     )
 
     USERNAME_FIELD = 'email'
@@ -101,5 +101,5 @@ class CustomUser(AbstractUser):
             raise ValidationError(f'Пользователь с номером {user.phone_number} уже существует.')
 
     class Meta:
-        verbose_name = _("Custom_user")
-        verbose_name_plural = _("Custom_users")
+        verbose_name = _("Пользователь")
+        verbose_name_plural = _("Пользователи")
