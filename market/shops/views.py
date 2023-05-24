@@ -19,3 +19,12 @@ def home(request):
 
 class BaseView(TemplateView):
     template_name = 'market/base.jinja2'
+
+
+def seller_detail(request, seller_id):
+    """Детальная страница продавца"""
+    seller = Seller.objects.get(id=seller_id)
+    context = {
+        'seller': seller,
+    }
+    return render(request, 'seller_detail.jinja2', context)  # пока не сделал шаблон

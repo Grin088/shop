@@ -1,6 +1,6 @@
 from django.contrib import admin  # noqa F401
 
-from .models import Shop, Offer, Banner
+from .models import Shop, Offer, Banner, Sellers
 
 
 class ShopProductInline(admin.TabularInline):
@@ -26,3 +26,8 @@ class BannerAdmin(admin.ModelAdmin):
     list_filter = ('active',)
     search_fields = ('title', 'link')
     ordering = ('-end_date',)
+
+
+@admin.register(Sellers)
+class SellersAdmin(admin.ModelAdmin):
+    list_display = 'first_name', 'last_name', 'user', 'avatar', 'phone_number', 'email',

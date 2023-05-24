@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
@@ -8,6 +9,7 @@ class Shop(models.Model):
     name = models.CharField(max_length=512, verbose_name=_("название"))
     products = models.ManyToManyField("products.Product", through="Offer", related_name="shops",
                                       verbose_name=_("товары в магазине"))
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
 
     def __str__(self):
         return self.name
@@ -38,3 +40,19 @@ class Banner(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Sellers(models.Model):
+    """Модель продавцов"""
+
+    class Meta:
+        verbose_name = _('продавец')
+        verbose_name_plural = _('продавцы')
+
+    first_name = models.CharField(max_length=512, verbose_name=_('имя'))
+    last_name = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('фамилия'))
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
+    avatar = models.ImageField(upload_to='avatars/', default='users/avatars/default/default_avatar1.png', null=True,
+                               blank=True)
+    phone_number = models.CharField(max_length=13, verbose_name=_('номер телефона'))
+    email = models.EmailField(max_length=100, verbose_name=_('почта'))
