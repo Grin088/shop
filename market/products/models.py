@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import CustomUser
 from django.utils.translation import gettext_lazy as _
 
 
@@ -16,12 +17,18 @@ class Product(models.Model):
 
     class Meta:
         verbose_name_plural = _("продукты")
-        verbose_name = _('продукт')
+        verbose_name = _("продукт")
 
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
-    preview = models.ImageField(null=True, blank=True, upload_to=product_preview_directory_path,
-                                verbose_name=_('предварительный просмотр'))
-    property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
+    preview = models.ImageField(
+        null=True,
+        blank=True,
+        upload_to=product_preview_directory_path,
+        verbose_name=_("предварительный просмотр"),
+    )
+    property = models.ManyToManyField(
+        "Property", through="ProductProperty", verbose_name=_("характеристики")
+    )
 
     def __str__(self):
         return self.name
@@ -32,7 +39,7 @@ class Property(models.Model):
 
     class Meta:
         verbose_name_plural = _("свойства")
-        verbose_name = _('свойство')
+        verbose_name = _("свойство")
 
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
 
@@ -45,7 +52,8 @@ class ProductProperty(models.Model):
 
     class Meta:
         verbose_name_plural = _("свойства продуктов")
-        verbose_name = _('свойство продукта')
+        verbose_name = _("свойство продукта")
+
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     property = models.ForeignKey(Property, on_delete=models.PROTECT)
     value = models.CharField(max_length=128, verbose_name=_("значение"))
@@ -55,16 +63,56 @@ def product_images_directory_path(instance: "ProductImage", filename: str) -> st
     """Генерирует путь к картинке"""
 
     return "products/product_{pk}/images/{filename}".format(
-        pk=instance.product.pk,
-        filename=filename
+        pk=instance.product.pk, filename=filename
     )
 
 
 class ProductImage(models.Model):
     class Meta:
         verbose_name_plural = _("изображение продукта")
-        verbose_name = _('изображения продуктов')
+        verbose_name = _("изображения продуктов")
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name=_('продукт'))
-    image = models.ImageField(upload_to=product_images_directory_path, verbose_name=_('Изображение'))
-    description = models.CharField(max_length=200, null=False, blank=True, verbose_name=_('Описание'))
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name=_("продукт")
+    )
+    image = models.ImageField(
+        upload_to=product_images_directory_path, verbose_name=_("Изображение")
+    )
+    description = models.CharField(
+        max_length=200, null=False, blank=True, verbose_name=_("Описание")
+    )
+
+
+class Review(models.Model):
+    """Модель отзывов о товаре и его оценка"""
+
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.DO_NOTHING, verbose_name=_("Пользователь")
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.DO_NOTHING, verbose_name=_("Продукт")
+    )
+    rate = models.ForeignKey(
+        "Ratings", on_delete=models.DO_NOTHING, verbose_name=_("Оценка")
+    )
+    text = models.TextField(max_length=500, verbose_name=_("Текст отзыва"))
+
+    def __str__(self):
+        return f"{self.user, self.product}"
+
+    class Meta:
+        verbose_name = _('Отзыв')
+        verbose_name_plural = _('Отзывы')
+
+
+class Ratings(models.Model):
+    """Модель оценок для товара"""
+
+    rate = models.PositiveIntegerField(unique=True, verbose_name=_("Оценка"))
+
+    def __str__(self):
+        return f"{self.rate}"
+
+    class Meta:
+        verbose_name = _('Оценка')
+        verbose_name_plural = _('Оценки')
