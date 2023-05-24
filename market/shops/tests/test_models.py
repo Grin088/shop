@@ -1,6 +1,7 @@
 from django.test import TestCase
 from shops.models import Shop, Offer
 from products.models import Product, Property
+from users.models import CustomUser
 
 
 class ShopModelTest(TestCase):
@@ -14,7 +15,8 @@ class ShopModelTest(TestCase):
             name='тестовый продукт',
         )
         cls.product.property.set([cls.property])
-        cls.shop = Shop.objects.create(name='тестовый магазин')
+        cls.user = CustomUser.objects.create(username='User_test', password="123")
+        cls.shop = Shop.objects.create(name='тестовый магазин', user=cls.user)
         cls.offer = Offer.objects.create(shop=cls.shop, product=cls.product, price=25)
 
     @classmethod
@@ -24,12 +26,14 @@ class ShopModelTest(TestCase):
         ShopModelTest.product.delete()
         ShopModelTest.shop.delete()
         ShopModelTest.offer.delete()
+        ShopModelTest.user.delete()
 
     def test_verbose_name(self):
         shop = ShopModelTest.shop
         field_verboses = {
             'name': 'название',
             'products': 'товары в магазине',
+            'user': 'пользователь',
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
@@ -50,7 +54,8 @@ class OfferModelTest(TestCase):
         cls.product = Product.objects.create(
             name='тестовый продукт',
         )
-        cls.shop = Shop.objects.create(name='тестовый магазин')
+        cls.user = CustomUser.objects.create(username='User_test', password="123")
+        cls.shop = Shop.objects.create(name='тестовый магазин', user=cls.user)
         cls.offer = Offer.objects.create(shop=cls.shop, product=cls.product, price=35)
 
     @classmethod
@@ -59,6 +64,7 @@ class OfferModelTest(TestCase):
         OfferModelTest.product.delete()
         OfferModelTest.shop.delete()
         OfferModelTest.offer.delete()
+        OfferModelTest.user.delete()
 
     def test_verbose_name(self):
         offer = OfferModelTest.offer
