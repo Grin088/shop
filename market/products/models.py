@@ -3,7 +3,6 @@ from django.utils.translation import gettext_lazy as _
 from mptt.models import TreeForeignKey
 
 
-
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
     """Генерирует путь к картинке"""
 
@@ -26,7 +25,6 @@ class Product(models.Model):
     property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
     category_id = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='category',
                                  verbose_name='категория')
-
 
     def __str__(self):
         return self.name
