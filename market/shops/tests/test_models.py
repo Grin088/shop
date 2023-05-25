@@ -85,5 +85,3 @@ class OfferModelTest(TestCase):
         offer = OfferModelTest.offer
         decimal_places = offer._meta.get_field('price').decimal_places
         self.assertEqual(decimal_places, 2)
-
-
