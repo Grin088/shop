@@ -4,6 +4,8 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 
+from .models import Sellers
+
 
 @cache_page(settings.CACHE_CONSTANT)
 def home(request):
@@ -23,7 +25,7 @@ class BaseView(TemplateView):
 
 def seller_detail(request, seller_id):
     """Детальная страница продавца"""
-    seller = Seller.objects.get(id=seller_id)
+    seller = Sellers.objects.get(id=seller_id)
     context = {
         'seller': seller,
     }

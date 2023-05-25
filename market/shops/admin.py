@@ -12,7 +12,7 @@ class ShopAdmin(admin.ModelAdmin):
     inlines = [
         ShopProductInline,
     ]
-    list_display = 'name',
+    list_display = 'name', 'user',
 
 
 @admin.register(Offer)
