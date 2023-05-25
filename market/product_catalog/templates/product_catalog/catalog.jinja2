@@ -1,0 +1,9 @@
+{% extends 'market/base.jinja2' %}
+
+
+{% block middle %}
+    {% for product in products %}
+        {{ product }}
+    {% endfor %}
+
+{% endblock %}
