@@ -52,7 +52,7 @@ class ProductProperty(models.Model):
         verbose_name_plural = _("свойства продуктов")
         verbose_name = _('свойство продукта')
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    property = models.ForeignKey(Property, on_delete=models.PROTECT)
+    property = models.ForeignKey(Property, on_delete=models.PROTECT, verbose_name='свойство')
     value = models.CharField(max_length=128, verbose_name=_("значение"))
 
 
