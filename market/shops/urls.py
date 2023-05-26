@@ -9,5 +9,5 @@ urlpatterns = [
     path('', BaseView.as_view(), name='comparison'),
     path('', BaseView.as_view(), name='cart'),
     path('', BaseView.as_view(), name='account'),
-    path('seller/<int:seller_id>/', seller_detail, name='seller_detail'),
+    path('seller/', seller_detail, name='seller_detail'),
 ]

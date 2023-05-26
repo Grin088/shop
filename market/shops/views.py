@@ -3,8 +3,9 @@ from .models import Banner
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import user_passes_test
 
-from .models import Sellers
+from .models import Shop
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -23,10 +24,20 @@ class BaseView(TemplateView):
     template_name = 'market/base.jinja2'
 
 
-def seller_detail(request, seller_id):
+def is_seller(user):
+    return user.groups.filter(name='Sellers').exists()
+
+
+@user_passes_test(is_seller)
+def seller_detail(request):
     """Детальная страница продавца"""
-    seller = Sellers.objects.get(id=seller_id)
+    shop = Shop.objects.filter(user=request.user.id)
     context = {
-        'seller': seller,
+        'shop': shop,
     }
-    return render(request, 'seller_detail.jinja2', context)  # пока не сделал шаблон
+    return render(request, 'seller_detail.jinja2', context)
+
+
+@user_passes_test(lambda u: not is_seller(u))
+def user_view(request):
+    pass

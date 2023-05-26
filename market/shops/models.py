@@ -10,6 +10,8 @@ class Shop(models.Model):
     products = models.ManyToManyField("products.Product", through="Offer", related_name="shops",
                                       verbose_name=_("товары в магазине"))
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
+    phone_number = models.CharField(max_length=13, verbose_name=_('номер телефона'))
+    email = models.EmailField(max_length=100, verbose_name=_('почта'))
 
     def __str__(self):
         return self.name
@@ -40,26 +42,3 @@ class Banner(models.Model):
 
     def __str__(self):
         return self.title
-
-
-def sellers_avatar_directory_path(instance: User, filename: str) -> str:
-    """ Путь для сохранения аватара пользователя"""
-    return f"uploads/shops/sellers/seller_{instance.pk}/{filename}"
-
-
-class Sellers(models.Model):
-    """Модель продавцов"""
-
-    class Meta:
-        verbose_name = _('продавец')
-        verbose_name_plural = _('продавцы')
-
-    first_name = models.CharField(max_length=512, verbose_name=_('имя'))
-    last_name = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('фамилия'))
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
-    avatar = models.ImageField(upload_to=sellers_avatar_directory_path,
-                               default='users/avatars/default/default_avatar1.png',
-                               null=True,
-                               blank=True)
-    phone_number = models.CharField(max_length=13, verbose_name=_('номер телефона'))
-    email = models.EmailField(max_length=100, verbose_name=_('почта'))
