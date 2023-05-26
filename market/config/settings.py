@@ -19,6 +19,7 @@ config = dotenv_values(os.path.join("..", ".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -35,6 +36,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
+    # custom apps
+    "products",
+    "shops",
+    "users",
+    "catalog",
+    'mptt',
+    'product_catalog',
+
+
+    # django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -43,11 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django_jinja",
-    "products",
-    "shops",
-    "users",
-    "catalog",
-    'mptt',
+
 
 ]
 

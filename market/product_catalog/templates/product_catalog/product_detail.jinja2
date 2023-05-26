@@ -1,0 +1,14 @@
+{% extends 'market/base.jinja2' %}
+
+{% block middle %}
+     <p>Наименование: {{ offer.product.name }}</p>
+    <p><img src="{{ offer.product.preview.url }}"></p>
+    <p>Описание: #В разработке#</p>
+    <p>Цена: {{ offer.price }}</p>
+    <p><button type="submit" value="buy">Купить</button></p>
+    <p><button type="submit" value="comparison">Добавить к сравнению</button></p><br>
+
+    <p id="reviews">Отзывы: #В разработке#</p>
+
+    <a href="{{ url('show_product') }}">Назад</a>
+{% endblock %}

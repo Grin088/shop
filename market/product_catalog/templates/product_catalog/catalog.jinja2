@@ -1,0 +1,18 @@
+{% extends 'market/base.jinja2' %}
+
+
+{% block middle %}
+        <h1>{{ shops }}</h1>
+    {% for offer in offers %}
+        <a href="{{ url('product_detail' ,pk=offer.pk)}}"><img src="{{ offer.product.preview.url }}"></a>
+
+        <p>Товар: <a href="{{ url('product_detail' ,pk=offer.pk)}}">{{ offer.product.name }}</a></p>
+        <p>Описание: <a href="{{ url('product_detail' ,pk=offer.pk)}}">#В разработке#</a></p>
+        <p>Цена: {{ offer.price }}</p>
+        <p>Кол-во продавцов: #В разработке#</p>
+        <p>Отзывы: <a href="{{ url('product_detail' ,pk=offer.pk)}}#reviews">#Здесь будет кол-во отзывов#</a></p>
+        <p><button type="submit" value="buy">Купить</button></p>
+        <p><button type="submit" value="comparison">Добавить к сравнению</button></p><br>
+    {% endfor %}
+
+{% endblock %}
