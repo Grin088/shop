@@ -26,4 +26,3 @@ urlpatterns = [
     path("", include('shops.urls')),
     path("catalog/", include('product_catalog.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
