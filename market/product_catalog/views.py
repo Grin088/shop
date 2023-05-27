@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 
@@ -21,7 +22,11 @@ class ViewShows(View):
                 product = product.filter(price__lte=form.cleaned_data['max_price'])
             if form.cleaned_data['ordering']:
                 product = product.order_by(form.cleaned_data['ordering'])
-        return render(request, 'product_catalog/catalog.jinja2', {'offers': product, 'form': form})
+        paginator = Paginator(product, 2)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'product_catalog/catalog.jinja2', {'page_obj': page_obj, 'offers': product,
+                                                                  'form': form})
 
 
 class ProductDetailView(View):
