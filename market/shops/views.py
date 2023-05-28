@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
 
 from .models import Shop
+from .services import is_member_of_group
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -24,12 +25,7 @@ class BaseView(TemplateView):
     template_name = 'market/base.jinja2'
 
 
-def is_seller(user):
-    """Проверка на принадлежность к группе продавцов"""
-    return user.groups.filter(name='Sellers').exists()
-
-
-@user_passes_test(is_seller)
+@user_passes_test(is_member_of_group('Sellers'))
 def seller_detail(request):
     """Детальная страница продавца"""
     if request.method == 'GET':
@@ -38,8 +34,3 @@ def seller_detail(request):
             'shop': shop,
         }
         return render(request, 'seller_detail.jinja2', context)
-
-
-@user_passes_test(lambda u: not is_seller(u))
-def user_view(request):
-    pass
