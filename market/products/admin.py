@@ -1,13 +1,6 @@
 from django.contrib import admin  # noqa F401
 
-from .models import (
-    Product,
-    ProductProperty,
-    Property,
-    ProductImage,
-    Review,
-    Ratings
-)
+from .models import Product, ProductProperty, Property, ProductImage, Review
 
 
 class ProductProductImageInline(admin.TabularInline):
@@ -24,24 +17,24 @@ class ProductAdmin(admin.ModelAdmin):
         ProductProductImageInline,
         ProductPropertyInline,
     ]
-    list_display = 'name', 'preview'
+    list_display = "name", "preview"
 
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = 'name',
+    list_display = ("name",)
 
 
 @admin.register(ProductProperty)
 class ProductProperty(admin.ModelAdmin):
-    list_display = 'product', 'property', 'value',
+    list_display = (
+        "product",
+        "property",
+        "value",
+    )
 
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = 'product', 'user', 'rate'
+    list_display = "product", "customer", "rating"
 
-
-@admin.register(Ratings)
-class RatingsAdmin(admin.ModelAdmin):
-    ...
