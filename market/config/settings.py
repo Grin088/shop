@@ -37,15 +37,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 
-    # custom apps
-    "products",
-    "shops",
-    "users",
-    "catalog",
-    'mptt',
-    'product_catalog',
-
-
     # django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -56,6 +47,13 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_jinja",
 
+    # custom apps
+    "products",
+    "shops",
+    "users",
+    "catalog",
+    "product_catalog",
+    "mptt",
 
 ]
 
