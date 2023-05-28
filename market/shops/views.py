@@ -25,17 +25,19 @@ class BaseView(TemplateView):
 
 
 def is_seller(user):
+    """Проверка на принадлежность к группе продавцов"""
     return user.groups.filter(name='Sellers').exists()
 
 
 @user_passes_test(is_seller)
 def seller_detail(request):
     """Детальная страница продавца"""
-    shop = Shop.objects.filter(user=request.user.id)
-    context = {
-        'shop': shop,
-    }
-    return render(request, 'seller_detail.jinja2', context)
+    if request.method == 'GET':
+        shop = Shop.objects.filter(user=request.user.id)
+        context = {
+            'shop': shop,
+        }
+        return render(request, 'seller_detail.jinja2', context)
 
 
 @user_passes_test(lambda u: not is_seller(u))
