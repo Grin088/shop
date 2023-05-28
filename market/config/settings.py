@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "users",
     "catalog",
     'mptt',
+    'product_catalog',
+
 
     # django apps
     "django.contrib.admin",
