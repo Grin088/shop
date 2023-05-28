@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 def emai_existed_validator(value):
     """Проверка существования пользователя по email """
     if not CustomUser.objects.filter(email__exact=value).first():
-        raise ValidationError(f'Пользователя {value} не существует.')
+        raise ValidationError(f'Пользователь {value} не найден.')
 
 
 class LowerEmailField(forms.EmailField):
