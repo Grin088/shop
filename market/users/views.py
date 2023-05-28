@@ -12,7 +12,7 @@ class UserRegistrationView(CreateView):
 
     form_class = CustomUserCreationForm
     model = CustomUser
-    template_name = 'users_register.jinja2'
+    template_name = 'market/users/register.jinja2'
     success_url = '/'
 
 
@@ -20,7 +20,7 @@ class MyLoginView(LoginView):
     """Вход пользователя"""
     LoginView.next_page = reverse_lazy('users:users_register')
     redirect_authenticated_user = True
-    template_name = 'user_login.jinja2'
+    template_name = 'market/users/login.jinja2'
     authentication_form = CustomAuthenticationForm
 
 
@@ -32,7 +32,7 @@ class UserLogoutView(LogoutView):
 class RestorePasswordView(FormView):
     """Восстановление пароля пользователя"""
     form_class = RestorePasswordForm
-    template_name = 'user_restore_password.jinja2'
+    template_name = 'market/users/password.jinja2'
     success_url = reverse_lazy('users:users_restore_password')
 
     def form_valid(self, form):
