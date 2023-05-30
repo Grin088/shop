@@ -23,7 +23,7 @@ class Product(models.Model):
     preview = models.ImageField(null=True, blank=True, upload_to=product_preview_directory_path,
                                 verbose_name=_('предварительный просмотр'))
     property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
-    category_id = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='category',
+    category = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='products',
                                  verbose_name='категория')
 
     def __str__(self):
