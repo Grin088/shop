@@ -24,7 +24,7 @@ class Product(models.Model):
                                 verbose_name=_('предварительный просмотр'))
     property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
     category = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='products',
-                                 verbose_name='категория')
+                              verbose_name='категория')
 
     def __str__(self):
         return self.name
