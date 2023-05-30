@@ -210,3 +210,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Always use IPython for shell_plus
 SHELL_PLUS = "ipython"
 SHELL_PLUS_PRINT_SQL = True
+
+# transferring session storage to Redis
+SESSION_ENGINE = 'redis_sessions.session'
+
+# maximum comparison list length
+MAX_COMP_LIST_LEN = 3
