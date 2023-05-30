@@ -65,7 +65,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     email = models.EmailField(
-        _("Электронная почта"),
+        _("email"),
         blank=False,
         null=False,
         unique=True
