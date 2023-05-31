@@ -22,7 +22,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = 'parameter',
+    list_display = 'name',
 
 
 @admin.register(ProductProperty)
