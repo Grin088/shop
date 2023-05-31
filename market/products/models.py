@@ -38,7 +38,7 @@ class Property(models.Model):
     parameter = models.CharField(max_length=512, verbose_name=_("параметр"))
 
     def __str__(self):
-        return self.name
+        return self.parameter
 
 
 class ProductProperty(models.Model):
