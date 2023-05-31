@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import dotenv_values
+from urllib.parse import urlparse
 
 import dj_database_url
 
@@ -213,9 +214,10 @@ SHELL_PLUS_PRINT_SQL = True
 
 # transferring session storage to Redis
 SESSION_ENGINE = 'redis_sessions.session'
+url = urlparse(REDIS_URL)
 SESSION_REDIS = {
-    'host': '127.0.0.1',
-    'port': 6379,
+    'host': url.hostname,
+    'port': url.port,
     'db': 0,
     'password': None,
     'prefix': 'redis://',
