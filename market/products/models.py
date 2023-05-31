@@ -35,6 +35,10 @@ class Product(models.Model):
 class Property(models.Model):
     """Свойство продукта"""
 
+    class Meta:
+        verbose_name_plural = _("свойство")
+        verbose_name = _('свойства')
+
     parameter = models.CharField(max_length=512, verbose_name=_("параметр"))
 
     def __str__(self):
