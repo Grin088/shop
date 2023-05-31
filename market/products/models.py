@@ -35,7 +35,7 @@ class Product(models.Model):
 class Property(models.Model):
     """Свойство продукта"""
 
-    name = models.CharField(max_length=512, verbose_name=_("наименование"))
+    name = models.CharField(max_length=512, verbose_name=_("характеристика"))
 
     def __str__(self):
         return self.name
