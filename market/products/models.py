@@ -25,6 +25,7 @@ class Product(models.Model):
     property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
     category_id = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='category',
                                  verbose_name='категория')
+    limited_edition = models.BooleanField(default=False, verbose_name=_('ограниченный тираж'))
 
     def __str__(self):
         return self.name
