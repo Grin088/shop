@@ -26,7 +26,7 @@ class Product(models.Model):
                                       through_fields=('product', 'property'),
                                       verbose_name=_("характеристики"))
     category = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='products',
-                              verbose_name='категория')
+                              verbose_name=_('категория'))
 
     def __str__(self):
         return self.name
@@ -34,6 +34,10 @@ class Product(models.Model):
 
 class Property(models.Model):
     """Свойство продукта"""
+
+    class Meta:
+        verbose_name_plural = _("свойства")
+        verbose_name = _('свойство')
 
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
 
@@ -50,7 +54,7 @@ class ProductProperty(models.Model):
         unique_together = (("product", "property"),)
 
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    property = models.ForeignKey(Property, on_delete=models.PROTECT, verbose_name='свойство')
+    property = models.ForeignKey(Property, on_delete=models.PROTECT, verbose_name=_('свойство'))
     value = models.CharField(max_length=128, verbose_name=_("значение"))
 
 
