@@ -225,6 +225,5 @@ SESSION_REDIS = {
     'retry_on_timeout': False
     }
 
-
 # maximum comparison list length
 MAX_COMP_LIST_LEN = 3
