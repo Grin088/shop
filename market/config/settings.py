@@ -213,6 +213,16 @@ SHELL_PLUS_PRINT_SQL = True
 
 # transferring session storage to Redis
 SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS = {
+    'host': REDIS_URL,
+    'port': 6379,
+    'db': 0,
+    'password': None,
+    'prefix': None,
+    'socket_timeout': 1,
+    'retry_on_timeout': False
+    }
+
 
 # maximum comparison list length
 MAX_COMP_LIST_LEN = 3
