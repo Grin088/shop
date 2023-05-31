@@ -1,0 +1,32 @@
+[
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "ноутбук 1",
+    "preview": "products/product_None/preview/bigGoods.png",
+    "category_id": 1,
+    "limited_edition": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "ноутбук 2",
+    "preview": "products/product_None/preview/card.jpg",
+    "category_id": 1,
+    "limited_edition": false
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "ноутбук 3",
+    "preview": "products/product_None/preview/bigGoods2.jpg",
+    "category_id": 1,
+    "limited_edition": true
+  }
+}
+]
