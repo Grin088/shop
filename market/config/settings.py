@@ -214,11 +214,11 @@ SHELL_PLUS_PRINT_SQL = True
 # transferring session storage to Redis
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS = {
-    'host': 'redis://127.0.0.1',
-    'port': 6379,
+    'host': '127.0.0.1',
+    'port': '6379/0',
     'db': 0,
     'password': None,
-    'prefix': None,
+    'prefix': 'redis://',
     'socket_timeout': 1,
     'retry_on_timeout': False
     }
