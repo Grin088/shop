@@ -24,7 +24,7 @@ class Product(models.Model):
                                 verbose_name=_('предварительный просмотр'))
     property = models.ManyToManyField("Property", through="ProductProperty",
                                       through_fields=('product', 'property'),
-                                      )
+                                      verbose_name=_("характеристики"))
     category = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='products',
                               verbose_name='категория')
 
@@ -35,7 +35,7 @@ class Product(models.Model):
 class Property(models.Model):
     """Свойство продукта"""
 
-    name = models.CharField(max_length=512, verbose_name=_("характеристики"))
+    parameter = models.CharField(max_length=512, verbose_name=_("параметр"))
 
     def __str__(self):
         return self.name
