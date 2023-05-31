@@ -215,7 +215,7 @@ SHELL_PLUS_PRINT_SQL = True
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS = {
     'host': '127.0.0.1',
-    'port': '6379/0',
+    'port': 6379,
     'db': 0,
     'password': None,
     'prefix': 'redis://',
