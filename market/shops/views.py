@@ -26,7 +26,6 @@ class BaseView(TemplateView):
     template_name = 'market/base.jinja2'
 
 
-
 @user_passes_test(
     is_member_of_group('Sellers'),
     login_url=reverse_lazy('account')
