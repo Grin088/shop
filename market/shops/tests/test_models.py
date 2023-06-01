@@ -1,8 +1,8 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 
 from shops.models import Shop, Offer
 from products.models import Product, Property
+from users.models import CustomUser
 
 
 class ShopModelTest(TestCase):
@@ -16,7 +16,7 @@ class ShopModelTest(TestCase):
             name='тестовый продукт',
         )
         cls.product.property.set([cls.property])
-        cls.user = User.objects.create_user(username='User_test', password="123")
+        cls.user = CustomUser.objects.create(username='User_test', password="123")
         cls.shop = Shop.objects.create(name='тестовый магазин', user=cls.user)
         cls.offer = Offer.objects.create(shop=cls.shop, product=cls.product, price=25)
 
@@ -55,7 +55,7 @@ class OfferModelTest(TestCase):
         cls.product = Product.objects.create(
             name='тестовый продукт',
         )
-        cls.user = User.objects.create(username='User_test', password="123")
+        cls.user = CustomUser.objects.create(username='User_test', password="123")
         cls.shop = Shop.objects.create(name='тестовый магазин', user=cls.user)
         cls.offer = Offer.objects.create(shop=cls.shop, product=cls.product, price=35)
 
