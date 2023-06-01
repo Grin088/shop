@@ -2,7 +2,7 @@ from config.settings import MAX_COMP_LIST_LEN
 
 
 def compare_list_check(session, id_offer) -> None:
-    """Добавление/удаление id товаров в список сравнения "comp_list" в сессии."""
+    """Добавление/удаление id товаров в список сравнения "comp_list" в сессии. """
 
     value = session.get("comp_list", [])
 
