@@ -1,13 +1,13 @@
+import re
 from django.db import models
-from django.contrib.auth.models import User
-from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.utils.translation import gettext_lazy as _
 from django.core import validators
 from django.utils.deconstruct import deconstructible
 from django.core.exceptions import ValidationError
 
 
-def user_avatar_directory_path(instance: User, filename: str) -> str:
+def user_avatar_directory_path(instance, filename: str) -> str:
     """ Путь для сохранения аватара пользователя"""
     return f"users/avatars/user_{instance.pk}/{filename}"
 
@@ -36,54 +36,70 @@ class ValidateImageSize:
             raise ValidationError('Размер файла превышает допустимое значение 2 MB.')
 
 
-@deconstructible
-class EmailUniqueValidator:
-    """Проверка уникальности адреса электронной почты"""
+class CustomUserManager(UserManager):
 
-    def __call__(self, value):
-        if User.objects.select_related('profile').filter(email=value).exists():
-            raise ValidationError(f'Email {value} уже используется другим пользователем.')
+    use_in_migrations = True
+
+    @classmethod
+    def validate_email(cls, email):
+        """Проверка корректности ввода email"""
+        regex = r'^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        return re.match(regex, email) is not None
+
+    @classmethod
+    def normalize_email(cls, email):
+        """Перевод email в нижний регистр"""
+        email = email or ""
+        if cls.validate_email(email):
+            email = email.lower()
+            return email
+
+        raise ValidationError(_('Enter validate email address'))
 
 
-class Profile(models.Model):
-    """ Модель профиля пользователя"""
-
-    phone_number_validator = PhoneNumberValidator()
+class CustomUser(AbstractUser):
+    """Класс пользователя"""
     validate_image_size = ValidateImageSize()
+    phone_number_validator = PhoneNumberValidator()
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='user')
+    objects = CustomUserManager()
+
+    email = models.EmailField(
+        _("email address"),
+        blank=False,
+        null=False,
+        unique=True
+    )
     avatar = models.ImageField(
         null=False,
         blank=False,
         upload_to=user_avatar_directory_path,
         default=get_default_avatar_path,
-        validators=[validators.validate_image_file_extension,
-                    validate_image_size
-                    ],
-        help_text='Максимальный размер фала 2MB'
+        validators=[
+            validators.validate_image_file_extension,
+            validate_image_size
+           ],
+        verbose_name=_("avatar")
     )
-    phone_number = models.CharField(max_length=20,
-                                    verbose_name='phone number',
-                                    help_text='Номер телефона должен начинаться с + и содержать только цифры',
-                                    validators=[phone_number_validator,
-                                                ],
-                                    null=False,
-                                    default='+0000000000'
-                                    )
+    phone_number = models.CharField(
+        max_length=20,
+        help_text='Номер телефона должен начинаться с + и содержать только цифры',
+        validators=[phone_number_validator],
+        null=False,
+        default='+0000000000',
+        verbose_name=_("phone number")
+    )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def clean(self):
-        """Валидация данных """
+        """Валидация данных и проверка отсутствия номера телефона в базе данных"""
         super().clean()
-        profile = Profile.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
-        if profile:
-            exist_phone_number = profile.phone_number
-            if exist_phone_number and exist_phone_number != '+0000000000':
-                raise ValidationError(f'Пользователь с номером {exist_phone_number} уже существует.')
+        user = CustomUser.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
+        if user and user.phone_number != '+0000000000':
+            raise ValidationError(f'Пользователь с номером {user.phone_number} уже существует.')
 
-    @staticmethod
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        """ Создание профиля пользователя при создании нового пользователя """
-        if created and not hasattr(instance, 'profile'):
-            Profile.objects.create(user=instance)
-        instance.profile.save()
+    class Meta:
+        verbose_name = _("Custom_user")
+        verbose_name_plural = _("Custom_users")

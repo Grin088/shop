@@ -1,7 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
 
 
 class Shop(models.Model):
@@ -9,7 +7,7 @@ class Shop(models.Model):
     name = models.CharField(max_length=512, verbose_name=_("название"))
     products = models.ManyToManyField("products.Product", through="Offer", related_name="shops",
                                       verbose_name=_("товары в магазине"))
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('пользователь'))
+    user = models.OneToOneField("users.CustomUser", on_delete=models.CASCADE, verbose_name=_('пользователь'))
     phone_number = models.CharField(max_length=13, verbose_name=_('номер телефона'))
     email = models.EmailField(max_length=100, verbose_name=_('почта'))
 
@@ -33,11 +31,9 @@ class Banner(models.Model):
 
     title = models.CharField(max_length=280, verbose_name=_('название баннера'))
     description = models.TextField(max_length=280, null=True, verbose_name=_('описание баннера'))
-    image = models.ImageField(upload_to='banners/',
+    image = models.ImageField(upload_to='media/banners/',
                               verbose_name=_('изображение баннера'))
-    link = models.URLField()
-    start_date = models.DateTimeField(default=timezone.now, verbose_name=_('дата начала показа баннера'))
-    end_date = models.DateTimeField(verbose_name=_('дата окончания показа баннера'))
+
     active = models.BooleanField(default=True, verbose_name=_('статус активности баннера'))
 
     def __str__(self):

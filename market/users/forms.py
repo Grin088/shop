@@ -1,21 +1,14 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from django.core import validators
+from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
-from .models import PhoneNumberValidator, ValidateImageSize, EmailUniqueValidator
-
-
-def unique_phone_number(value):
-    """Проверка уникальности номера телефона"""
-    if User.objects.filter(profile__phone_number=value):
-        raise ValidationError(f'Пользователь с номером {value} уже существует.')
+from .models import CustomUser
+from django.contrib.auth import authenticate
 
 
 def emai_existed_validator(value):
-    """Проверка уникальности email """
-    if not User.objects.filter(email__exact=value).first():
-        raise ValidationError(f'Пользователя с email {value} не существует.')
+    """Проверка существования пользователя по email """
+    if not CustomUser.objects.filter(email__exact=value).first():
+        raise ValidationError(f'Пользователь {value} не найден.')
 
 
 class LowerEmailField(forms.EmailField):
@@ -27,45 +20,34 @@ class LowerEmailField(forms.EmailField):
         return value
 
 
-class RegisterForm(UserCreationForm):
-    """Форма регистрации пользователя"""
-
-    phone_number_validator = PhoneNumberValidator()
-
-    validate_image_size = ValidateImageSize()
-    email_unique_validator = EmailUniqueValidator()
-
-    avatar = forms.ImageField(required=False,
-                              label='Фото профиля',
-                              validators=[validators.validate_image_file_extension,
-                                          validate_image_size
-                                          ],
-                              help_text='Размер файла не должен превышать 2МВ'
-                              )
-    phone_number = forms.CharField(max_length=20,
-                                   min_length=8,
-                                   required=True,
-                                   label='Телефон',
-                                   validators=[phone_number_validator,
-                                               unique_phone_number
-                                               ],
-                                   help_text='Номер телефона должен начинаться с "+" и  содержать только цифры'
-                                   )
-    first_name = forms.CharField(max_length=30, required=True, label='Имя')
-    last_name = forms.CharField(max_length=30, required=True, label='Фамилия')
-    email = LowerEmailField(required=True, validators=[email_unique_validator], label='Email')
+class CustomUserCreationForm(BaseUserCreationForm):
+    """Форма для создания нового пользователя"""
+    email = forms.EmailField(required=True)
 
     class Meta:
-        model = User
-        fields = ('avatar',
-                  'username',
-                  'first_name',
-                  'last_name',
-                  'password1',
-                  'password2',
-                  'email',
-                  'phone_number'
-                  )
+        model = CustomUser
+        fields = 'email', 'username'
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    """ Форма для входа пользователя"""
+
+    def clean(self):
+        """Перевод имени пользователя в нижний регистр """
+        username = self.cleaned_data.get("username")
+        username = username.lower()
+        password = self.cleaned_data.get("password")
+
+        if username is not None and password:
+            self.user_cache = authenticate(
+                self.request, username=username, password=password
+            )
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+
+            self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
 
 
 class RestorePasswordForm(forms.Form):

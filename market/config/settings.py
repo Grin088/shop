@@ -19,6 +19,7 @@ config = dotenv_values(os.path.join("..", ".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -35,6 +36,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
+    # django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -43,11 +46,14 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django_jinja",
+
+    # custom apps
     "products",
     "shops",
     "users",
     "catalog",
-    'mptt',
+    "product_catalog",
+    "mptt",
 
 ]
 
@@ -193,11 +199,12 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'email'
-# EMAIL_HOST_PASSWORD = 'password'
+# settings for send email
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'email'
+EMAIL_HOST_PASSWORD = 'password'
 
 # Always use IPython for shell_plus
 SHELL_PLUS = "ipython"

@@ -1,45 +1,37 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import BaseUserCreationForm, UserChangeForm
-from .models import Profile, EmailUniqueValidator
-from .forms import LowerEmailField
+from .models import CustomUser
+from django.utils.translation import gettext_lazy as _
+from .forms import CustomUserCreationForm
 
 
-class CustomUserCreationForm(BaseUserCreationForm):
-    """Форма для создания нового пользователя"""
-    email_unique_validator = EmailUniqueValidator()
-    email = LowerEmailField(required=True, validators=[email_unique_validator])
+@admin.register(CustomUser)
+class AccountAdmin(UserAdmin):
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email", "avatar", "phone_number")}),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+    )
 
-
-class CustomUserChangeForm(UserChangeForm):
-    """ Форма обновления данных пользователя"""
-    email_unique_validator = EmailUniqueValidator()
-    email = LowerEmailField(required=True, validators=[email_unique_validator])
-
-
-class ProfileInline(admin.StackedInline):
-    model = Profile
-    can_delete = False
-
-
-admin.site.unregister(User)
-
-
-@admin.register(User)
-class CustomUserAdmin(UserAdmin):
-
-    inlines = [
-        ProfileInline
-    ]
-    form = CustomUserChangeForm
     add_form = CustomUserCreationForm
     add_fieldsets = (
         (
             None,
             {
                 "classes": ("wide",),
-                "fields": ("username", "email", "password1", "password2"),
+                "fields": ("email", "username", "password1", "password2"),
             },
         ),
     )
