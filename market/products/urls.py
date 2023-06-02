@@ -1,12 +1,13 @@
 from django.urls import path
-from .views import BaseView
+from products.views import ProductDetailView
 
 urlpatterns = [
-    path('', BaseView.as_view(), name='index'),
-    path('', BaseView.as_view(), name='login'),
-    path('', BaseView.as_view(), name='registr'),
-    path('', BaseView.as_view(), name='catalog'),
-    path('', BaseView.as_view(), name='comparison'),
-    path('', BaseView.as_view(), name='cart'),
-    path('', BaseView.as_view(), name='account'),
+    path('<int:pk>', ProductDetailView.as_view(), name='product_detail'),
+    path('', ProductDetailView.as_view(), name='index'),
+    path('', ProductDetailView.as_view(), name='login'),
+    path('', ProductDetailView.as_view(), name='registr'),
+    path('', ProductDetailView.as_view(), name='catalog'),
+    path('', ProductDetailView.as_view(), name='comparison'),
+    path('', ProductDetailView.as_view(), name='cart'),
+    path('', ProductDetailView.as_view(), name='account'),
 ]
