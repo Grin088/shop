@@ -7,6 +7,9 @@ class Shop(models.Model):
     name = models.CharField(max_length=512, verbose_name=_("название"))
     products = models.ManyToManyField("products.Product", through="Offer", related_name="shops",
                                       verbose_name=_("товары в магазине"))
+    user = models.OneToOneField("users.CustomUser", on_delete=models.CASCADE, verbose_name=_('пользователь'))
+    phone_number = models.CharField(max_length=13, verbose_name=_('номер телефона'))
+    email = models.EmailField(max_length=100, verbose_name=_('почта'))
 
     def __str__(self):
         return self.name

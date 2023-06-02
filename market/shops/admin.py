@@ -1,4 +1,4 @@
-from django.contrib import admin  # noqa F401
+from django.contrib import admin# noqa F401
 
 from .models import Shop, Offer, Banner
 
@@ -12,7 +12,7 @@ class ShopAdmin(admin.ModelAdmin):
     inlines = [
         ShopProductInline,
     ]
-    list_display = 'name',
+    list_display = 'name', 'user', 'phone_number', 'email',
 
 
 @admin.register(Offer)
