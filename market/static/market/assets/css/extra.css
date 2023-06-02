@@ -6491,6 +6491,8 @@ input[type="submit"] {
     right: 0;
 }
 
+/*#################### Настройки для отображения рейтинга в ★ ####################*/
+
 .rating-area {
   overflow: hidden;
   width: 265px;
@@ -6543,7 +6545,7 @@ input[type="submit"] {
 .rating-result {
   width: 265px;
   margin: 0;
-  padding: 0;
+   padding-left: 5px;
 }
 
 .rating-result span {
@@ -6562,6 +6564,38 @@ input[type="submit"] {
 .rating-result > span.active {
   color: gold;
   text-shadow: 1px 1px #c60;
+}
+
+.review-text{
+     padding-left: 20px;
+     font-family: Arial, sans-serif;
+}
+
+.review-author{
+    padding-left: 20px;
+}
+
+
+/*#################### Настройки для автара в отзывах ####################*/
+
+.Comment-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.Comment-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*#################### Кнопка для загрузки отзывов пользователей ####################*/
+
+#load-more-btn {
+  background-color: #3498db;
+  width: 250px;
 }
 
 .error-message {

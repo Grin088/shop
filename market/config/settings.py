@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django_jinja",
-
+    'rest_framework',
 
 ]
 

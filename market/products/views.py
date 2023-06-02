@@ -5,6 +5,14 @@ from django.http import JsonResponse
 from products.models import Review, Product
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from .forms import ReviewFrom
+from .serializers import AuthorsSerializer
+from rest_framework.generics import ListAPIView
+
+
+class AuthorView(ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = AuthorsSerializer
+    ordering_fields = ['name']
 
 
 class ReviewsAPI(APIView):
@@ -14,7 +22,7 @@ class ReviewsAPI(APIView):
         offset = int(request.GET.get("offset", 0))
         limit = int(request.GET.get("limit", 3))
         reviews = Review.objects.exclude(customer=request.user.id).filter(product_id=product_id)[offset:offset + limit]
-        data = [{"user": r.customer.email, "product": r.product.name, "rating": r.rating, "text": r.review_text} for r in reviews]
+        data = [{"number": n + 1, "user": {"id": r.customer.id, "username": r.customer.username, "firstname": r.customer.first_name, "lastname": r.customer.last_name, 'avatar': r.customer.avatar.url}, "product": r.product.name, "rating": r.rating, "text": r.review_text, "created": r.created_at} for n, r in enumerate(reviews)]
         return JsonResponse({"data": data})
 
 
