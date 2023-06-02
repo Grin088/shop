@@ -4,8 +4,7 @@
   "pk": 3,
   "fields": {
     "name": "Nokia n98+",
-    "preview": "products/product_None/preview/test.png",
-    "category_id": 1
+    "preview": "products/product_None/preview/test.png"
   }
 },
 {
@@ -13,22 +12,21 @@
   "pk": 4,
   "fields": {
     "name": "Sumsung a30",
-    "preview": "products/product_None/preview/test3.png",
-    "category_id": 1
+    "preview": "products/product_None/preview/test3.png"
   }
 },
 {
   "model": "products.property",
   "pk": 1,
   "fields": {
-    "name": "Свойство1"
+    "name": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ1"
   }
 },
 {
   "model": "products.property",
   "pk": 2,
   "fields": {
-    "name": "Свойство2"
+    "name": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ2"
   }
 },
 {
@@ -37,7 +35,7 @@
   "fields": {
     "product": 3,
     "property": 1,
-    "value": "Диагональ 16px"
+    "value": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 16px"
   }
 },
 {
@@ -46,7 +44,7 @@
   "fields": {
     "product": 4,
     "property": 2,
-    "value": "Диагональ 26px"
+    "value": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 26px"
   }
 },
 {
