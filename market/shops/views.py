@@ -9,6 +9,8 @@ from django.urls import reverse_lazy
 from .models import Shop
 from .services.is_member_of_group import is_member_of_group
 
+from .models import Sellers
+
 
 @cache_page(settings.CACHE_CONSTANT)
 def home(request):
