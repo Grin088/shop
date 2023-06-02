@@ -22,9 +22,11 @@ class Product(models.Model):
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
     preview = models.ImageField(null=True, blank=True, upload_to=product_preview_directory_path,
                                 verbose_name=_('предварительный просмотр'))
-    property = models.ManyToManyField("Property", through="ProductProperty", verbose_name=_("характеристики"))
-    category_id = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='category',
-                                 verbose_name='категория')
+    property = models.ManyToManyField("Property", through="ProductProperty",
+                                      through_fields=('product', 'property'),
+                                      verbose_name=_("характеристики"))
+    category = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='products',
+                              verbose_name=_('категория'))
 
     def __str__(self):
         return self.name
@@ -49,8 +51,10 @@ class ProductProperty(models.Model):
     class Meta:
         verbose_name_plural = _("свойства продуктов")
         verbose_name = _('свойство продукта')
+        unique_together = (("product", "property"),)
+
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    property = models.ForeignKey(Property, on_delete=models.PROTECT, verbose_name='свойство')
+    property = models.ForeignKey(Property, on_delete=models.PROTECT, verbose_name=_('свойство'))
     value = models.CharField(max_length=128, verbose_name=_("значение"))
 
 
