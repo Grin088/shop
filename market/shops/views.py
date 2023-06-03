@@ -24,6 +24,7 @@ def home(request):
             'update_time': update_time,  # пока не может использоваться из-за celery
             'limited_products': limited_products,
         }
+        print()
         return render(request, 'market/index.jinja2', context=context)
 
 
