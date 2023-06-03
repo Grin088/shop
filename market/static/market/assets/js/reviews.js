@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+
     const product_id = document.getElementById("load-more-btn").getAttribute("data-product-id");
     const container = document.getElementById("reviews-container");
     const loadMoreBtn = document.getElementById("load-more-btn");
@@ -51,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function() {
           console.log("Username:", name);
           const formattedDate = formatDate(review.created);
           const html = `
-          <div class="Tabs-block" id="reviews">
             <header class="Section-header">
                 <h3 class="Section-title"> ${review.number + offset - limit} отзыв
                 </h3>
