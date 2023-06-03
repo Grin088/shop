@@ -1,5 +1,6 @@
 import random
 from datetime import timedelta
+from django.utils import timezone
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from products.models import Product
@@ -16,13 +17,16 @@ def get_random_limited_edition_product():
         return None
 
 
-def time_left():  # пока не может использоваться из-за celery
+def time_left():
     limited_products = cache.get('limited_products')
     if not limited_products:
         update_product_of_the_day.delay()
         limited_products = Product.objects.none()
-
-    time_left = (cache.ttl('limited_products') or 0) - 86000  # 23 часа + отклонения
+    now = timezone.now()
+    expires_at = cache.get('limited_products.cache_timeout')
+    if not expires_at:
+        expires_at = now + timedelta(hours=23)  # Начальное значение
+    time_left = (expires_at - now).total_seconds()
     time_left = max(time_left, 0)  # Удаляем отрицательное значение
     time_left = timedelta(seconds=time_left)
 
@@ -30,6 +34,8 @@ def time_left():  # пока не может использоваться из-�
         'limited_products': limited_products,
         'time_left': time_left,
     }
+
+
 
 
 def get_offer_of_the_day_cache_key():
