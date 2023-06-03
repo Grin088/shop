@@ -3,4 +3,13 @@
 
 {% block middle %}
     {% include 'market/home_categories.jinja2' %}
+    <div class="Section Section_column Section_columnLeft Section_columnDesktop">
+    <div class="wrap">
+        {% if limited_products %}
+        {% block limited_products %}
+            {% include 'market/limited_products.jinja2' %}
+        {% endblock %}
+        {% endif %}
+    </div>
+    </div>
 {% endblock %}
