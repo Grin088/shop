@@ -6,7 +6,7 @@ from products.models import Product
 
 
 @shared_task
-def update_product_of_the_day():
+def update_product_of_the_day(name="Task time left"):
     now = datetime.now()
     midnight = datetime.combine(now.date(), time.min)
     time_left = (midnight + timedelta(days=1) - now).seconds
