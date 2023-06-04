@@ -1,11 +1,9 @@
 from django.urls import path
-from . import views
-from .views import ProductReviewsView, ReviewsAPI, AuthorView
+from .views import ProductView, ReviewsAPI
 
 app_name = "products"
 
 urlpatterns = [
     path("api/reviews/", ReviewsAPI.as_view(), name="review_api"),
-    path("review/<int:product_id>/", ProductReviewsView.as_view(), name="product_review"),
-    path("a", AuthorView.as_view(), name="pr_review"),
+    path("product/<int:product_id>/", ProductView.as_view(), name="product_detail"),
 ]

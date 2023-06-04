@@ -36,5 +36,4 @@ class ProductProperty(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = "product", "customer", "rating"
-
+    list_display = "product", "user", "rating"
