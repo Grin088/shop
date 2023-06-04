@@ -74,6 +74,7 @@ class ProductProperty(models.Model):
 
     class Meta:
         verbose_name_plural = _("свойства продуктов")
+        unique_together = (("product", "property"),)
         verbose_name = _("свойство продукта")
 
     product = models.ForeignKey(Product, on_delete=models.PROTECT)

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import dotenv_values
+from urllib.parse import urlparse
 
 import dj_database_url
 
@@ -37,15 +38,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 
-    # custom apps
-    "products",
-    "shops",
-    "users",
-    "catalog",
-    'mptt',
-    'product_catalog',
-
-
     # django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -56,6 +48,14 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_jinja",
     'rest_framework',
+
+    # custom apps
+    "products",
+    "shops",
+    "users",
+    "catalog",
+    "product_catalog",
+    "mptt",
 
 ]
 
@@ -211,3 +211,19 @@ EMAIL_HOST_PASSWORD = 'password'
 # Always use IPython for shell_plus
 SHELL_PLUS = "ipython"
 SHELL_PLUS_PRINT_SQL = True
+
+# transferring session storage to Redis
+SESSION_ENGINE = 'redis_sessions.session'
+url = urlparse(REDIS_URL)
+SESSION_REDIS = {
+    'host': url.hostname,
+    'port': url.port,
+    'db': 0,
+    'password': None,
+    'prefix': 'redis://',
+    'socket_timeout': 1,
+    'retry_on_timeout': False
+    }
+
+# maximum comparison list length
+MAX_COMP_LIST_LEN = 3
