@@ -1,0 +1,13 @@
+{% extends 'base.jinja2' %}
+
+{% block middle %}
+    <div>
+        {% for inf_shop in shop %}
+            <p>Имя: {{ inf_shop.user.username}}</p>
+            <p>Магазин: {{ inf_shop.name }}</p>
+        <div>
+            <p>Телефон: {{ inf_shop.phone_number }}</p>
+            <p>Email: {{ inf_shop.email }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}

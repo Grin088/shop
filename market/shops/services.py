@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from config.settings import MAX_COMP_LIST_LEN
 
 
