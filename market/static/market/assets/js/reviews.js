@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
   const loadReviews = () => {
-    fetch(`/product/api/reviews/?product_id=${product_id}&offset=${offset}&limit=${limit}`)
+    fetch(`/products/api/reviews/?product_id=${product_id}&offset=${offset}&limit=${limit}`)
       .then(response => response.json())
       .then(reviews => {
         offset += limit;
