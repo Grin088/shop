@@ -23,8 +23,8 @@ class ReviewServices:
 
     def get_context(self, form):
         """Получение необходимого контекста для шаблона"""
-        reviews_quantity = self.product.count_reviews()
-        rating = round(self.product.average_rating(), 2)
+        reviews_quantity = self.product.get_count_reviews()
+        rating = round(self.product.get_average_rating(), 2)
 
         context = {
             "user": self.user,

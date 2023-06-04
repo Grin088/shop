@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from mptt.models import TreeForeignKey
 from users.models import CustomUser as User
-from django.db.models import Avg
+from django.db.models import Avg, ManyToManyField
 
 
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
@@ -28,7 +28,7 @@ class Product(models.Model):
         upload_to=product_preview_directory_path,
         verbose_name=_("предварительный просмотр"),
     )
-    property = models.ManyToManyField(
+    property: ManyToManyField = models.ManyToManyField(
         "Property", through="ProductProperty", verbose_name=_("характеристики")
     )
     category_id = TreeForeignKey(
@@ -36,17 +36,18 @@ class Product(models.Model):
         on_delete=models.PROTECT,
         null=True,
         related_name="category",
-        verbose_name="категория",
+        verbose_name=_("категория"),
     )
 
     def __str__(self):
         return self.name
 
-    def count_reviews(self):
+    def get_count_reviews(self) -> int:
         """Вывод количества отзывов о продукте"""
         return Review.objects.filter(product=self).count()
 
-    def average_rating(self):
+    def get_average_rating(self) -> float:
+
         """Вывод средней оценки продукта"""
         return (
             Review.objects.filter(product=self)
@@ -79,7 +80,7 @@ class ProductProperty(models.Model):
 
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     property = models.ForeignKey(
-        Property, on_delete=models.PROTECT, verbose_name="свойство"
+        Property, on_delete=models.PROTECT, verbose_name=_("свойство")
     )
     value = models.CharField(max_length=128, verbose_name=_("значение"))
 
@@ -98,7 +99,7 @@ class ProductImage(models.Model):
         verbose_name = _("изображения продуктов")
 
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name=_("продукт")
+        Product, on_delete=models.CASCADE, related_name="product_images"
     )
     image = models.ImageField(
         upload_to=product_images_directory_path, verbose_name=_("Изображение")
@@ -113,8 +114,8 @@ class Review(models.Model):
 
     class Meta:
         unique_together = ("user", "product")
-        verbose_name = _("Отзыв")
-        verbose_name_plural = _("Отзывы")
+        verbose_name = _("отзыв")
+        verbose_name_plural = _("отзывы")
 
     user = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, verbose_name=_("Покупатель")

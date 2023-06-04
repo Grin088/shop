@@ -101,5 +101,5 @@ class CustomUser(AbstractUser):
             raise ValidationError(f'Пользователь с номером {user.phone_number} уже существует.')
 
     class Meta:
-        verbose_name = _("Пользователь")
-        verbose_name_plural = _("Пользователи")
+        verbose_name = _("пользователь")
+        verbose_name_plural = _("пользователи")
