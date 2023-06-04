@@ -21,14 +21,14 @@
   "model": "products.property",
   "pk": 1,
   "fields": {
-    "name": "Свойство1"
+    "name": "РЎРІРѕР№СЃС‚РІРѕ1"
   }
 },
 {
   "model": "products.property",
   "pk": 2,
   "fields": {
-    "name": "Свойство2"
+    "name": "РЎРІРѕР№СЃС‚РІРѕ2"
   }
 },
 {
@@ -37,7 +37,7 @@
   "fields": {
     "product": 3,
     "property": 1,
-    "value": "Диагональ 16px"
+    "value": "Р”РёР°РіРѕРЅР°Р»СЊ 16px"
   }
 },
 {
@@ -46,7 +46,7 @@
   "fields": {
     "product": 4,
     "property": 2,
-    "value": "Диагональ 26px"
+    "value": "Р”РёР°РіРѕРЅР°Р»СЊ 26px"
   }
 },
 {

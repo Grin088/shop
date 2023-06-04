@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import dotenv_values
+from urllib.parse import urlparse
 
 import dj_database_url
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django_jinja",
+    'rest_framework',
 
     # custom apps
     "products",
@@ -190,7 +192,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, '/static')
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
 MEDIA_URL = '/media/'
@@ -222,3 +224,19 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_DEFAULT_QUEUE = 'default'
+
+# transferring session storage to Redis
+SESSION_ENGINE = 'redis_sessions.session'
+url = urlparse(REDIS_URL)
+SESSION_REDIS = {
+    'host': url.hostname,
+    'port': url.port,
+    'db': 0,
+    'password': None,
+    'prefix': 'redis://',
+    'socket_timeout': 1,
+    'retry_on_timeout': False
+    }
+
+# maximum comparison list length
+MAX_COMP_LIST_LEN = 3

@@ -32,6 +32,12 @@ python -m venv venv
 . venv/bin/activate
 pip install -r requirements/base.txt
 ```  
+
+Загрузить все фикстуры
+```shell
+python run_fixtures.py
+```
+
 ### Как удалить контейнеры
 СУБД Postgres  
 ```

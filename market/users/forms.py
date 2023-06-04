@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 from .models import CustomUser
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
 
 
@@ -55,5 +56,5 @@ class RestorePasswordForm(forms.Form):
 
     email = LowerEmailField(required=True,
                             validators=[emai_existed_validator],
-                            help_text='Укажите email пользователя',
+                            help_text=_('Укажите email пользователя'),
                             )
