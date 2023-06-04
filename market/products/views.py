@@ -8,11 +8,15 @@ from .services.product_services import ReviewServices
 
 
 class ReviewsAPI(APIView):
-    def get(self, request):
+    """Класс для отправки данных об отзывах через API"""
+
+    @classmethod
+    def get(cls, request):
+        """Создание JSON для модели Review"""
         product_id = request.GET.get("product_id")
         offset = int(request.GET.get("offset", 0))
         limit = int(request.GET.get("limit", 3))
-        reviews = Review.get_review(product_id=product_id)[offset: offset + limit]
+        reviews = Review.get_review(product_id=product_id)[offset : offset + limit]
         data = [
             {
                 "number": n + 1,
@@ -34,10 +38,13 @@ class ReviewsAPI(APIView):
 
 
 class ProductView(TemplateView):
+    """Класс для отображения деталей продукта"""
+
     template_name = "market/products/product.jinja2"
     form_class = ReviewFrom
 
     def get_context_data(self, **kwargs):
+        """Получение необходимого контекста"""
         services = ReviewServices(
             request=self.request, product_id=self.kwargs.get("product_id")
         )
@@ -46,6 +53,7 @@ class ProductView(TemplateView):
         return context
 
     def post(self, request, product_id):
+        """Обработка добавления отзыва"""
         form = self.form_class(request.POST)
 
         if form.is_valid():
@@ -54,7 +62,7 @@ class ProductView(TemplateView):
             review.product_id = product_id
             review.save()
             return redirect("/")
-        else:
-            context = self.get_context_data(product_id=product_id)
-            context["form"] = form
-            return self.render_to_response(context)
+
+        context = self.get_context_data(product_id=product_id)
+        context["form"] = form
+        return self.render_to_response(context)

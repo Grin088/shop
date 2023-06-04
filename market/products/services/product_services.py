@@ -40,6 +40,7 @@ class ReviewServices:
         return context
 
     def can_create_review(self):
+        """Проверка возможности добавления отзыва пользователем"""
         return (
             self.customer.orders.filter(
                 status="payed",

@@ -137,6 +137,7 @@ class Review(models.Model):
 
     @classmethod
     def get_review(cls, user_id=None, product_id=None):
+        """Функция для получения отзывов"""
         reviews = (
             Review.objects.select_related("user")
             .select_related("product")
