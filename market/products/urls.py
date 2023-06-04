@@ -1,12 +1,9 @@
 from django.urls import path
-from .views import BaseView
+from .views import ProductView, ReviewsAPI
+
+app_name = "products"
 
 urlpatterns = [
-    path('', BaseView.as_view(), name='index'),
-    path('', BaseView.as_view(), name='login'),
-    path('', BaseView.as_view(), name='registr'),
-    path('', BaseView.as_view(), name='catalog'),
-    path('', BaseView.as_view(), name='comparison'),
-    path('', BaseView.as_view(), name='cart'),
-    path('', BaseView.as_view(), name='account'),
+    path("api/reviews/", ReviewsAPI.as_view(), name="review_api"),
+    path("product/<int:product_id>/", ProductView.as_view(), name="product_detail"),
 ]

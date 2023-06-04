@@ -2402,11 +2402,18 @@ a.Cart-title {
     line-height: 1.5em;
 }
 
-.Comment-avatar {
-    width: 99px;
-    height: 99px;
-    border-radius: 100px;
-    background: #0063d1 url("../img/icons/user_icon.svg") center center no-repeat;
+.Product .Tabs-block .Comment-avatar img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+Comment-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .Comment-rating {
@@ -6489,4 +6496,112 @@ input[type="submit"] {
     left: 0;
     bottom: 0rem;
     right: 0;
+}
+
+/*#################### Настройки для отображения рейтинга в ★ ####################*/
+
+.rating-area {
+  overflow: hidden;
+  width: 265px;
+  margin: 0;
+  padding: 0;
+}
+
+.rating-area:not(:checked) > input {
+  display: none;
+}
+
+.rating-area:not(:checked) > label {
+  float: right;
+  width: 42px;
+  padding: 0;
+  cursor: pointer;
+  font-size: 32px;
+  line-height: 32px;
+  color: lightgrey;
+  text-shadow: 1px 1px #bbb;
+}
+
+.rating-area:not(:checked) > label:before {
+  content: '★';
+}
+
+.rating-area > input:checked ~ label {
+  color: gold;
+  text-shadow: 1px 1px #c60;
+}
+
+.rating-area:not(:checked) > label:hover,
+.rating-area:not(:checked) > label:hover ~ label {
+  color: gold;
+}
+
+.rating-area > input:checked + label:hover,
+.rating-area > input:checked + label:hover ~ label,
+.rating-area > input:checked ~ label:hover,
+.rating-area > input:checked ~ label:hover ~ label,
+.rating-area > label:hover ~ input:checked ~ label {
+  color: gold;
+  text-shadow: 1px 1px goldenrod;
+}
+
+.rate-area > label:active {
+  position: relative;
+}
+
+.rating-result {
+  width: 265px;
+  margin: 0;
+   padding-left: 5px;
+}
+
+.rating-result span {
+  padding: 0;
+  font-size: 32px;
+  margin: 0 3px;
+  line-height: 1;
+  color: lightgrey;
+  text-shadow: 1px 1px #bbb;
+}
+
+.rating-result > span:before {
+  content: '★';
+}
+
+.rating-result > span.active {
+  color: gold;
+  text-shadow: 1px 1px #c60;
+}
+
+.review-text{
+     padding-left: 20px;
+     font-family: Arial, sans-serif;
+}
+
+.review-author{
+    padding-left: 20px;
+}
+
+
+/*#################### Кнопка для загрузки отзывов пользователей ####################*/
+
+.error-message {
+  color: #504245;
+}
+
+/*#################### Звезды в поле для оценки товара ####################*/
+
+.Tabs-addComment .rating-area {
+    margin-left: -50px;
+
+}
+
+/*#################### Средний рейтинг товара ####################*/
+
+.Product .Tabs-block .average-rating {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.5;
+  margin-top: 10px;
 }
