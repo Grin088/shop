@@ -7,6 +7,22 @@ from products.models import Product
 from ..tasks import update_product_of_the_day
 
 
+def get_limited_edition():
+    edition = Product.objects.filter(limited_edition=True)
+    if edition:
+        return edition
+    else:
+        return None
+
+
+def get_top_products():
+    products = Product.objects.order_by('-index')[:8]
+    if products:
+        return products
+    else:
+        return None
+
+
 def get_random_limited_edition_product():
     """Получает список всех товаров с флагом limited_edition"""
     products = Product.objects.filter(limited_edition=True)
@@ -34,8 +50,6 @@ def time_left():
         'limited_products': limited_products,
         'time_left': time_left,
     }
-
-
 
 
 def get_offer_of_the_day_cache_key():
