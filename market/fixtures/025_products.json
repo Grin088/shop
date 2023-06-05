@@ -1,10 +1,34 @@
 [
 {
   "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "ноутбук 1",
+    "limited_edition": true,
+    "index": 0,
+    "preview": "products/product_None/preview/bigGoods.png",
+    "category_id": 1
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "ноутбук 2",
+    "limited_edition": false,
+    "index": 1,
+    "preview": "products/product_None/preview/card.jpg",
+    "category_id": 1
+  }
+},
+{
+  "model": "products.product",
   "pk": 3,
   "fields": {
-    "name": "Nokia n98+",
-    "preview": "products/product_None/preview/test.png",
+    "name": "ноутбук 3",
+    "limited_edition": true,
+    "index": 2,
+    "preview": "products/product_None/preview/bigGoods2.jpg",
     "category_id": 1
   }
 },
@@ -12,77 +36,33 @@
   "model": "products.product",
   "pk": 4,
   "fields": {
-    "name": "Sumsung a30",
-    "preview": "products/product_None/preview/test3.png",
+    "name": "ноутбук 4",
+    "limited_edition": true,
+    "index": 3,
+    "preview": "products/product_None/preview/ноут4.jpg",
     "category_id": 1
   }
 },
 {
-  "model": "products.property",
-  "pk": 1,
+  "model": "products.product",
+  "pk": 5,
   "fields": {
-    "name": "Свойство1"
+    "name": "ноутбук 5",
+    "limited_edition": true,
+    "index": 4,
+    "preview": "products/product_None/preview/ноут5.jpg",
+    "category_id": 1
   }
 },
 {
-  "model": "products.property",
-  "pk": 2,
+  "model": "products.product",
+  "pk": 6,
   "fields": {
-    "name": "Свойство2"
-  }
-},
-{
-  "model": "products.productproperty",
-  "pk": 3,
-  "fields": {
-    "product": 3,
-    "property": 1,
-    "value": "Диагональ 16px"
-  }
-},
-{
-  "model": "products.productproperty",
-  "pk": 4,
-  "fields": {
-    "product": 4,
-    "property": 2,
-    "value": "Диагональ 26px"
-  }
-},
-{
-  "model": "products.productimage",
-  "pk": 7,
-  "fields": {
-    "product": 3,
-    "image": "products/product_3/images/test2.png",
-    "description": ""
-  }
-},
-{
-  "model": "products.productimage",
-  "pk": 8,
-  "fields": {
-    "product": 3,
-    "image": "products/product_3/images/test2_Bd4BfQI.png",
-    "description": ""
-  }
-},
-{
-  "model": "products.productimage",
-  "pk": 9,
-  "fields": {
-    "product": 4,
-    "image": "products/product_4/images/test3.png",
-    "description": ""
-  }
-},
-{
-  "model": "products.productimage",
-  "pk": 10,
-  "fields": {
-    "product": 4,
-    "image": "products/product_4/images/test2.png",
-    "description": ""
+    "name": "ноутбук 6",
+    "limited_edition": true,
+    "index": 5,
+    "preview": "products/product_None/preview/ноут6.jfif",
+    "category_id": 1
   }
 }
 ]
