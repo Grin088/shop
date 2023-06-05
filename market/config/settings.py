@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     "catalog",
     "product_catalog",
     "mptt",
+    'django_celery_beat',
+    'django_celery_results',
 
 ]
 
@@ -211,6 +213,17 @@ EMAIL_HOST_PASSWORD = 'password'
 # Always use IPython for shell_plus
 SHELL_PLUS = "ipython"
 SHELL_PLUS_PRINT_SQL = True
+
+# CELERY
+CELERY_BROKER_URL = REDIS_URL
+CELERY_TASK_TRACK_STARTED = True
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_TRANSPORT_OPTION = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_DEFAULT_QUEUE = 'default'
 
 # transferring session storage to Redis
 SESSION_ENGINE = 'redis_sessions.session'
