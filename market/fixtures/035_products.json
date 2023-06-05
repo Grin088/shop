@@ -4,9 +4,10 @@
   "pk": 1,
   "fields": {
     "name": "ноутбук 1",
+    "limited_edition": true,
+    "index": 0,
     "preview": "products/product_None/preview/bigGoods.png",
-    "category_id": 1,
-    "limited_edition": true
+    "category_id": 1
   }
 },
 {
@@ -14,9 +15,10 @@
   "pk": 2,
   "fields": {
     "name": "ноутбук 2",
+    "limited_edition": false,
+    "index": 1,
     "preview": "products/product_None/preview/card.jpg",
-    "category_id": 1,
-    "limited_edition": false
+    "category_id": 1
   }
 },
 {
@@ -24,9 +26,43 @@
   "pk": 3,
   "fields": {
     "name": "ноутбук 3",
+    "limited_edition": true,
+    "index": 2,
     "preview": "products/product_None/preview/bigGoods2.jpg",
-    "category_id": 1,
-    "limited_edition": true
+    "category_id": 1
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "name": "ноутбук 4",
+    "limited_edition": true,
+    "index": 3,
+    "preview": "products/product_None/preview/ноут4.jpg",
+    "category_id": 1
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "name": "ноутбук 5",
+    "limited_edition": true,
+    "index": 4,
+    "preview": "products/product_None/preview/ноут5.jpg",
+    "category_id": 1
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "name": "ноутбук 6",
+    "limited_edition": true,
+    "index": 5,
+    "preview": "products/product_None/preview/ноут6.jfif",
+    "category_id": 1
   }
 }
 ]
