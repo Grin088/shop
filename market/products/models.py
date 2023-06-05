@@ -23,7 +23,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
     limited_edition = models.BooleanField(default=False, verbose_name=_('ограниченный тираж'))
-    index = models.PositiveIntegerField(default=0)
+    index = models.PositiveIntegerField(default=0, verbose_name=_('индекс сортировки'))
     preview = models.ImageField(
         null=True,
         blank=True,
