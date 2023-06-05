@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 from .services import banner
 from .services.catalog import get_featured_categories
-from .services.limited_products import get_random_limited_edition_product
+from .services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse_lazy
@@ -17,18 +17,21 @@ def home(request):
     if request.method == "GET":
         featured_categories = get_featured_categories()
         random_banners = banner.banner()
+        top_products = get_top_products()
         # time_and_products = time_left()  # пока не может использоваться из-за celery
         # update_time = time_and_products['time_left']  # пока не может использоваться из-за celery
         # limited_products = time_and_products['limited_products']  # пока не может использоваться из-за celery
-        limited_products = get_random_limited_edition_product()
-
+        limited_product = get_random_limited_edition_product()
+        limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
         context = {
             'featured_categories': featured_categories,
             'random_banners': random_banners,
             # 'update_time': update_time,  # пока не может использоваться из-за celery
-            'limited_products': limited_products,
+            'limited_product': limited_product,
+            'top_products': top_products,
+            'limited_edition': limited_edition,
         }
-        print()
+        print(limited_product.id)
         return render(request, 'market/index.jinja2', context=context)
 
 
