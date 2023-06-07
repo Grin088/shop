@@ -31,7 +31,9 @@
     "preview": "products/product_None/preview/bigGoods2.jpg",
     "category": 1
   }
-},  "model": "products.product",
+},
+{
+  "model": "products.product",
   "pk": 4,
   "fields": {
     "name": "ноутбук 4",
