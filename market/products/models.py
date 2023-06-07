@@ -33,13 +33,8 @@ class Product(models.Model):
     property: ManyToManyField = models.ManyToManyField(
         "Property", through="ProductProperty", verbose_name=_("характеристики")
     )
-    category_id = TreeForeignKey(
-        "catalog.Catalog",
-        on_delete=models.PROTECT,
-        null=True,
-        related_name="category",
-        verbose_name=_("категория"),
-    )
+    category = TreeForeignKey("catalog.Catalog", on_delete=models.PROTECT, null=True, related_name='products',
+                             verbose_name=_('категория'))
 
     def __str__(self):
         return self.name
