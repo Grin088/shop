@@ -32,12 +32,13 @@ class Product(models.Model):
     )
     property: ManyToManyField = models.ManyToManyField("Property",
                                                        through="ProductProperty",
-                                                       verbose_name=_("характеристики")
+                                                       verbose_name=_("характеристики"),
     )
     category = TreeForeignKey("catalog.Catalog",
                               on_delete=models.PROTECT,
                               null=True, related_name='products',
-                              verbose_name=_('категория'))
+                              verbose_name=_('категория'),
+                              )
 
     def __str__(self):
         return self.name
@@ -128,7 +129,9 @@ class Review(models.Model):
         choices=((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5")),
         verbose_name=_("Оценка"),
     )
-    review_text = models.TextField(        max_length=500, blank=False, null=True, verbose_name=_("Текст отзыва"))
+    review_text = models.TextField(
+        max_length=500, blank=False, null=True, verbose_name=_("Текст отзыва")
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
