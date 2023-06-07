@@ -123,12 +123,11 @@ class Review(models.Model):
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))
     rating = models.PositiveSmallIntegerField(
         choices=((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5")),
-        verbose_name=_("Оценка"),
+        verbose_name=_("Оценка")
     )
-    review_text = models.TextField(max_length=500,
-                                   lank=False, null=True,
-                                   verbose_name=_("Текст отзыва"),
-                                   )
+    review_text = models.TextField(
+        max_length=500, blank=False, null=True, verbose_name=_("Текст отзыва")
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
