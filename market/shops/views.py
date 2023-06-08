@@ -1,25 +1,38 @@
 from django.shortcuts import render  # noqa F401
-from .models import Banner
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
+from .services import banner
+from .services.catalog import get_featured_categories
+from .services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
+# from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse_lazy
-
 from .models import Shop
 from .services.is_member_of_group import is_member_of_group
 
 
 @cache_page(settings.CACHE_CONSTANT)
 def home(request):
-    """Функция для главной страницы для вывода трёх случайных активных баннеров.
-     Баннеры закешированы на десять минут"""
-    random_banners = Banner.objects.filter(active=True).order_by('?')[:3]
-
-    context = {
-        'random_banners': random_banners,
-    }
-    return render(request, 'market/base.jinja2', context)
+    if request.method == "GET":
+        featured_categories = get_featured_categories()
+        random_banners = banner.banner()
+        top_products = get_top_products()
+        # time_and_products = time_left()  # пока не может использоваться из-за celery
+        # update_time = time_and_products['time_left']  # пока не может использоваться из-за celery
+        # limited_products = time_and_products['limited_products']  # пока не может использоваться из-за celery
+        limited_product = get_random_limited_edition_product()
+        limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
+        context = {
+            'featured_categories': featured_categories,
+            'random_banners': random_banners,
+            # 'update_time': update_time,  # пока не может использоваться из-за celery
+            'limited_product': limited_product,
+            'top_products': top_products,
+            'limited_edition': limited_edition,
+        }
+        print(limited_product.id)
+        return render(request, 'market/index.jinja2', context=context)
 
 
 class BaseView(TemplateView):
