@@ -170,4 +170,3 @@ class Review(models.Model):
             reviews = reviews.filter(product_id=product_id)
 
         return reviews
-

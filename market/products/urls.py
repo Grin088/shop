@@ -7,7 +7,9 @@ app_name = "products"
 
 urlpatterns = [
     path("api/reviews/", ReviewsAPI.as_view(), name="review_api"),
-    path("product/<int:product_id>/", cache_page(settings.CACHE_CONSTANT)(ProductView.as_view()), name="product_detail"),
+    path("product/<int:product_id>/",
+         cache_page(settings.CACHE_CONSTANT)(ProductView.as_view()),
+         name="product_detail"),
 ]
 
-#TODO реализация сброса кэша после обновления товара
+# TODO реализация сброса кэша после обновления товара
