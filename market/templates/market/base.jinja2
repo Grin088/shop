@@ -37,16 +37,13 @@
     <header class="Header">
     {% block header %}
         {% include "market/header.jinja2" %}
+        {% block header_slider %}
+            {% include "market/banner.jinja2" %}
+        {% endblock %}
     {% endblock %}
-
     </header>
-    {% block banner %}
-        {% include "market/banner.jinja2" %}
-    {% endblock %}
-
     {% block middle %}
     {% endblock %}
-
     <footer class="Footer">
     {% block footer %}
         {% include "market/footer.jinja2" %}
