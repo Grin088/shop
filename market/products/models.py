@@ -23,7 +23,10 @@ class Product(models.Model):
         verbose_name_plural = _("продукты")
         verbose_name = _("продукт")
 
-    name = models.CharField(max_length=512, verbose_name=_("наименование"))
+    name = models.CharField(
+        max_length=512,
+        verbose_name=_("наименование")
+    )
     preview = models.ImageField(
         null=True,
         blank=True,
@@ -31,7 +34,9 @@ class Product(models.Model):
         verbose_name=_("предварительный просмотр"),
     )
     property: ManyToManyField = models.ManyToManyField(
-        "Property", through="ProductProperty", verbose_name=_("характеристики")
+        "Property",
+        through="ProductProperty",
+        verbose_name=_("характеристики")
     )
     category_id = TreeForeignKey(
         "catalog.Catalog",
@@ -39,6 +44,10 @@ class Product(models.Model):
         null=True,
         related_name="category",
         verbose_name=_("категория"),
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name=_("описание"),
     )
 
     def __str__(self):
@@ -110,6 +119,14 @@ class ProductImage(models.Model):
         max_length=200, null=False, blank=True, verbose_name=_("Описание")
     )
 
+    @classmethod
+    def get_image(cls, product_id=None):
+        """Функция для получения изображения"""
+        images = (ProductImage.objects.prefetch_related('product'))
+        if product_id is not None:
+            images = images.filter(product_id=product_id)
+        return images
+
 
 class Review(models.Model):
     """Модель отзывов о товаре и его оценка"""
@@ -153,3 +170,4 @@ class Review(models.Model):
             reviews = reviews.filter(product_id=product_id)
 
         return reviews
+
