@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from mptt.models import TreeForeignKey
 from users.models import CustomUser as User
 from django.db.models import Avg, ManyToManyField
+from taggit.managers import TaggableManager
 
 
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
@@ -16,6 +17,7 @@ def product_preview_directory_path(instance: "Product", filename: str) -> str:
 
 class Product(models.Model):
     """Продукт"""
+    tags = TaggableManager()
 
     class Meta:
         verbose_name_plural = _("продукты")
