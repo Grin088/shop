@@ -8,12 +8,13 @@
                 <div class="Product">
                     <div class="ProductCard">
                         <div class="ProductCard-look">
+                         {% if images %}
                             <div class="ProductCard-photo">
-                                <img src="{{ images[0].image.url }}" alt="bigGoods.png" />
+                                <img src="{{ images.first().image.url }}" alt="bigGoods.png" />
                             </div>
                             <div class="ProductCard-picts">
                                 {% for image in images %}
-                                    {% if image.image == images[0].image %}
+                                    {% if image.image == images.first().image %}
                                     <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.image.url }}">
                                         <img src="{{ image.image.url }}" alt="bigGoods.png" />
                                     </a>
@@ -24,7 +25,13 @@
                                     {% endif %}
                                 {% endfor %}
                             </div>
+                         {% else %}
+                             <div class="ProductCard-photo">
+                                <img class="logo-image" src="{{ static('/market/assets/img/no-image.png') }}" alt="logo.png" width="200" height="200" />
+                            </div>
+                         {% endif %}
                         </div>
+
                         <div class="ProductCard-desc">
                             <div class="ProductCard-header">
                                 <h2 class="ProductCard-title">{{ product.name }}</h2>
