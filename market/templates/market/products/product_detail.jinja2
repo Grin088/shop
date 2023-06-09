@@ -99,7 +99,7 @@
                                 <span>Характеристика</span>
                             </a>
                             <a class="Tabs-link" href="#reviews">
-                                <span>Отзывы ({{ product.review_set.count() }})</span>
+                                <span>Отзывы {{reviews_quantity}} </span>
                             </a>
                         </div>
                         <div class="Tabs-wrap">
@@ -180,47 +180,43 @@
                                 </div>
                             </div>
                             <div class="Tabs-block" id="reviews">
-                                {% for review in product.review_set.filter(product=product) %}
-                                <header class="Section-header">
-                                <!-- TODO использовать loop.index или из services reviews_quantity -->
-                                    <h3 class="Section-title">{{ loop.index }} отзыв</h3>
-                                </header>
-                                <div class="Comments">
-                                    <div class="Comment">
-                                        <div class="Comment-column Comment-column_pict">
-                                            <div class="Comment-avatar">
-                                            </div>
-                                        </div>
-                                        <div class="Comment-column">
-                                            <header class="Comment-header">
-                                                <div>
-                                                    {% if review.user.first_name and review.user.last_name %}
-                                                        <strong class="Comment-title">{{ review.user.first_name }} {{ review.user.last_name }}</strong>
-                                                    {% else %}
-                                                        <strong class="Comment-title">{{ review.user.username }}</strong>
-                                                    {% endif %}
-                                                    <!-- TODO реализовать метод который будет возвращать буквенный месяц-->
-                                                    <span class="Comment-date">Декабрь 25&#32;&#32;/&#32;&#32;2017&#32;&#32;/&#32;&#32;22:50</span>
-                                                </div>
-                                            </header>
-                                            <div class="Comment-content">{{ review.review_text }}</div>
-                                        </div>
-                                    </div>
+                                <p class="average-rating"> Средний рейтинг товара: {{ rating }} </p>
+                                <div
+                                    id="reviews-container">
                                 </div>
-                                {% endfor %}
-                                <header class="Section-header Section-header_product">
-                                    <h3 class="Section-title">Добавить отзыв
-                                    </h3>
-                                </header>
-                                <div class="Tabs-addComment">
-                                    <form class="form" action="#" method="post">
-                                        <div class="form-group">
-                                            <textarea class="form-textarea" name="review" id="review" placeholder="Отзыв"></textarea>
-                                        </div>
 
+                                <button class="btn btn_muted" id="load-more-btn" data-product-id="{{ product_id }}">Загрузить еще отзывы</button>
+                                <script src="{{ static('/market/assets/js/reviews.js') }}"></script>
+                                <div class="Tabs-addComment">
+                                    {% if user.is_authenticated and not review_exist %}
+                                    <form class="form" method="post">
+                                     {% csrf_token %}
+                                        <div class="rating-area">
+                                            <input type="radio" id="star-5" name="rating" value="5">
+                                            <label for="star-5" title="Оценка «5»"></label>
+                                            <input type="radio" id="star-4" name="rating" value="4">
+                                            <label for="star-4" title="Оценка «4»"></label>
+                                            <input type="radio" id="star-3" name="rating" value="3">
+                                            <label for="star-3" title="Оценка «3»"></label>
+                                            <input type="radio" id="star-2" name="rating" value="2">
+                                            <label for="star-2" title="Оценка «2»"></label>
+                                            <input type="radio" id="star-1" name="rating" value="1">
+                                            <label for="star-1" title="Оценка «1»"></label>
+                                        </div>
+                                        <br>
+                                        {% if form.rating.errors %}
+                                        <p class="error-message">{{ form.rating.errors }}</p>
+                                        {% endif %}
                                         <div class="form-group">
-                                            <button class="btn btn_muted" type="submit">Отправить отзыв
+                                            <textarea class="form-textarea" name="review_text" id="review" placeholder="Отзыв"></textarea>
+                                        </div>
+                                        {% if form.review_text.errors %}
+                                            <p class="error-message">{{ form.review_text.errors }}</p>
+                                        {% endif %}
+                                            <button class="btn btn_muted" type="submit">
+                                                Отправить отзыв
                                             </button>
+                                     {% endif %}
                                         </div>
                                     </form>
                                 </div>
