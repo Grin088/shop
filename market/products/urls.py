@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import ProductView, ReviewsAPI
-from django.conf import settings
-from django.views.decorators.cache import cache_page
+from django.conf import settings  # noqa F401
+from django.views.decorators.cache import cache_page  # noqa F401
 
 app_name = "products"
 
