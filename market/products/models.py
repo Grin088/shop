@@ -37,7 +37,7 @@ class Product(models.Model):
         through="ProductProperty",
         verbose_name=_("характеристики")
     )
-    category_id = TreeForeignKey(
+    category = TreeForeignKey(
         "catalog.Catalog",
         on_delete=models.PROTECT,
         null=True,
