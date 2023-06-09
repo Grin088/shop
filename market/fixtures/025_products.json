@@ -7,7 +7,7 @@
     "limited_edition": true,
     "index": 0,
     "preview": "products/product_None/preview/bigGoods.png",
-    "category_id": 1
+    "category": 1
   }
 },
 {
@@ -18,7 +18,7 @@
     "limited_edition": false,
     "index": 1,
     "preview": "products/product_None/preview/card.jpg",
-    "category_id": 1
+    "category": 1
   }
 },
 {
@@ -29,7 +29,7 @@
     "limited_edition": true,
     "index": 2,
     "preview": "products/product_None/preview/bigGoods2.jpg",
-    "category_id": 1
+    "category": 1
   }
 },
 {
@@ -40,7 +40,7 @@
     "limited_edition": true,
     "index": 3,
     "preview": "products/product_None/preview/ноут4.jpg",
-    "category_id": 1
+    "category": 1
   }
 },
 {
@@ -51,7 +51,7 @@
     "limited_edition": true,
     "index": 4,
     "preview": "products/product_None/preview/ноут5.jpg",
-    "category_id": 1
+    "category": 1
   }
 },
 {
@@ -62,7 +62,7 @@
     "limited_edition": true,
     "index": 5,
     "preview": "products/product_None/preview/ноут6.jfif",
-    "category_id": 1
+    "category": 1
   }
 }
 ]

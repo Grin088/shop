@@ -30,16 +30,15 @@ class Product(models.Model):
         upload_to=product_preview_directory_path,
         verbose_name=_("предварительный просмотр"),
     )
-    property: ManyToManyField = models.ManyToManyField(
-        "Property", through="ProductProperty", verbose_name=_("характеристики")
-    )
-    category_id = TreeForeignKey(
-        "catalog.Catalog",
-        on_delete=models.PROTECT,
-        null=True,
-        related_name="category",
-        verbose_name=_("категория"),
-    )
+    property: ManyToManyField = models.ManyToManyField("Property",
+                                                       through="ProductProperty",
+                                                       verbose_name=_("характеристики"),
+                                                       )
+    category = TreeForeignKey("catalog.Catalog",
+                              on_delete=models.PROTECT,
+                              null=True, related_name='products',
+                              verbose_name=_('категория'),
+                              )
 
     def __str__(self):
         return self.name
