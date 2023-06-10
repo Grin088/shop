@@ -1,4 +1,4 @@
-from products.models import Review, Product, ProductImage
+from products.models import Review, Product
 
 
 class ProductsServices:
