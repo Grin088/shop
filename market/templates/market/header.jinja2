@@ -1,5 +1,6 @@
 {% block header %}
-<div class="ControlPanel">
+    {% block  control_panel %}
+        <div class="ControlPanel">
     <div class="wrap">
         <div class="row ControlPanel-row">
             <div class="row-block">
@@ -41,7 +42,9 @@
 block
 -->
 </div>
-<div class="wrap">
+    {% endblock %}
+    {% block wrap %}
+        <div class="wrap">
     <div class="row Header-rowMain">
         <div class="row-block Header-logo"><a class="logo" href="{{ url('index') }}"><img class="logo-image" src="{{ static('/market/assets/img/logo.png') }}" alt="logo.png" /></a>
         </div>
@@ -83,7 +86,9 @@ block
         </div>
     </div>
 </div>
-<div class="Header-searchWrap">
+    {% endblock %}
+    {% block header_search_wrap %}
+        <div class="Header-searchWrap">
     <div class="wrap">
         <div class="Header-categories">
             <div class="CategoriesButton">
@@ -189,4 +194,7 @@ block
         </div>
     </div>
 </div>
+    {% endblock %}
+    {% block header_slider %}
+    {% endblock %}
 {% endblock %}

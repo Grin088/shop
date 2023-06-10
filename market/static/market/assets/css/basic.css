@@ -470,7 +470,6 @@ textarea {
     letter-spacing: 0.8px;
     padding-left: 38px;
     padding-right: 38px;
-    margin-top: 20px;
 }
 
 .btn.btn_outline {
@@ -2698,7 +2697,7 @@ a {
 
 @media screen and (min-width: 990px) {
     a:hover {
-        
+
         border-bottom: 1px solid #0063d1;
         transition: border 0.4s;
     }
