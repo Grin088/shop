@@ -36,29 +36,28 @@ class MixinGetPost:
 
     def post(self, request):
         product = Offer.objects.all()
-        if request.method == 'POST':
-            if 'filter' in request.POST:
-                q = request.POST
-                price = q.get('price').split(';')
-                title = q.getlist('title')
-                for name in title:
-                    if name != '':
-                        title = name
-                in_stock = q.getlist('in_stock')
-                free_delivery = q.getlist('free_delivery')
-                request.session['search_filter'] = {'price': price,
-                                                    'title': title,
-                                                    'in_stock': in_stock,
-                                                    'free_delivery': free_delivery}
-                if title != ['']:
-                    product = Offer.objects.filter(product__name__icontains=title,
-                                                   price__range=(price[0],
-                                                                 price[1]))
-                else:
-                    product = Offer.objects.filter(price__range=(price[0],
-                                                                 price[1]))
-                context = get_paginator(request, product)
-                return render(request, 'product_catalog/catalog.jinja2', context=context)
+        if 'filter' in request.POST:
+            q = request.POST
+            price = q.get('price').split(';')
+            title = q.getlist('title')
+            for name in title:
+                if name != '':
+                    title = name
+            in_stock = q.getlist('in_stock')
+            free_delivery = q.getlist('free_delivery')
+            request.session['search_filter'] = {'price': price,
+                                                'title': title,
+                                                'in_stock': in_stock,
+                                                'free_delivery': free_delivery}
+            if title != ['']:
+                product = Offer.objects.filter(product__name__icontains=title,
+                                               price__range=(price[0],
+                                                             price[1]))
+            else:
+                product = Offer.objects.filter(price__range=(price[0],
+                                                             price[1]))
+            context = get_paginator(request, product)
+            return render(request, 'product_catalog/catalog.jinja2', context=context)
 
         context = get_paginator(request, product)
         return render(request, 'product_catalog/catalog.jinja2', context=context)
