@@ -118,14 +118,6 @@ class ProductImage(models.Model):
         max_length=200, null=False, blank=True, verbose_name=_("Описание")
     )
 
-    @classmethod
-    def get_image(cls, product_id=None):
-        """Функция для получения изображения"""
-        images = (ProductImage.objects.prefetch_related('product'))
-        if product_id is not None:
-            images = images.filter(product_id=product_id)
-        return images
-
 
 class Review(models.Model):
     """Модель отзывов о товаре и его оценка"""

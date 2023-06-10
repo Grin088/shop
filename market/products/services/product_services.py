@@ -9,7 +9,7 @@ class ProductsServices:
         self.user = request.user
         self.product_id = product_id
         self.reviews = Review.get_review(user_id=request.user.id, product_id=product_id)
-        self.images = ProductImage.get_image(product_id=product_id)
+        self.images = self.product.product_images.all()
 
     @classmethod
     def customer_can_write_review(cls, request, product_id):
