@@ -1,32 +1,11 @@
-from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from django.views import View
-
-from product_catalog.forms import ProductFilterForm
 from shops.models import Offer
+from product_catalog import services
 
 
-class ViewShows(View):
-    def get(self, request):
-        if 'q' in request.GET:
-            q = request.GET['q']
-            product = Offer.objects.filter(product__name__icontains=q)
-        else:
-            product = Offer.objects.all()
-        form = ProductFilterForm(request.GET)
-
-        if form.is_valid():
-            if form.cleaned_data['min_price']:
-                product = product.filter(price__gte=form.cleaned_data['min_price'])
-            if form.cleaned_data['max_price']:
-                product = product.filter(price__lte=form.cleaned_data['max_price'])
-            if form.cleaned_data['ordering']:
-                product = product.order_by(form.cleaned_data['ordering'])
-        paginator = Paginator(product, 2)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        return render(request, 'product_catalog/catalog.jinja2', {'page_obj': page_obj, 'offers': product,
-                                                                  'form': form})
+class ViewShows(services.MixinGetPost, View):
+    pass
 
 
 class ProductDetailView(View):
