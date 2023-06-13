@@ -3,15 +3,13 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
-
-from .services import banner
-from .services.catalog import get_featured_categories
-from .services.compare import compare_list_check, splitting_into_groups_by_category, compare_list_add, \
-    get_comparison_lists_and_properties
-from .services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
-# from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse_lazy
+from .services import banner
+from .services.catalog import get_featured_categories
+from .services.compare import compare_list_check, splitting_into_groups_by_category, get_comparison_lists_and_properties
+from .services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
+# from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from .models import Shop
 from .services.is_member_of_group import is_member_of_group
 
@@ -59,7 +57,9 @@ def seller_detail(request):
 
 class ComparePageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
-        compare_list_check(request.session, 4)
+        """Страница сравнения"""
+
+        # compare_list_check(request.session, 4)
         comp_list = request.session.get("comp_list", [])
 
         if comp_list and len(comp_list) > 1:
@@ -72,10 +72,12 @@ class ComparePageView(View):
                 "list_property": list_property
             }
             return render(request, "shops/comparison.jinja2", context=context)
-        else:
-            return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
+
+        return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
 
     def post(self, request: HttpRequest) -> HttpResponse:
+        """Переключение категории сравнения и удаление из списка сравнений"""
+
         delete_id = request.POST.get('delete_id')
         if delete_id:
             compare_list_check(request.session, int(delete_id))
@@ -93,5 +95,5 @@ class ComparePageView(View):
                        "list_property": list_property,
                        }
             return render(request, 'shops/comparison.jinja2', context=context)
-        else:
-            return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
+
+        return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})

@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from typing import Dict, Union
 
 from config.settings import MAX_COMP_LIST_LEN
