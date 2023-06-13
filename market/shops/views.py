@@ -94,7 +94,7 @@ class ComparePageView(View):
 
             context = {"category_offer_dict": sorted([(name, len(count))
                                                       for name, count in category_offer_dict.items()],
-                                                      key=lambda x: x[1], reverse=True),
+                                                     key=lambda x: x[1], reverse=True),
                        "list_compare": list_compare,
                        "list_property": list_property,
                        }
