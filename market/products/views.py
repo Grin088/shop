@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect  # noqa F401
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from django.http import JsonResponse
-from products.models import Review
+from products.models import Review, Browsing_history
 from .forms import ReviewFrom
 from .services.product_services import ProductsServices
 

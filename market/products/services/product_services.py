@@ -1,4 +1,5 @@
 from products.models import Review, Product
+from products.services import browsing_history
 
 
 class ProductsServices:
@@ -10,6 +11,14 @@ class ProductsServices:
         self.product_id = product_id
         self.reviews = Review.get_review(user_id=request.user.id, product_id=product_id)
         self.images = self.product.product_images.all()
+
+    # def views_history(self):
+    #     """Добовление к истории просмотра"""
+    #     # print('Тут я')
+    #     # browsing_history.is_valid_history(user_id=self.user.id,
+    #     #                                   product_id=self.product_id)
+    #     # browsing_history.browsing_history(user_id=self.user.id,
+    #     #                                   product_id=self.product_id)
 
     @classmethod
     def customer_can_write_review(cls, request, product_id):
@@ -26,7 +35,10 @@ class ProductsServices:
         """Получение необходимого контекста для шаблона"""
         reviews_quantity = self.product.get_count_reviews()
         rating = round(self.product.get_average_rating(), 2)
-
+        if not browsing_history.is_valid_history(user_id=self.user.id,
+                                                 product_id=self.product_id):
+            browsing_history.browsing_history(user_id=self.user.id,
+                                              product_id=self.product_id)
         context = {
             "user": self.user,
             "product": self.product,
@@ -38,7 +50,6 @@ class ProductsServices:
             "images": self.images,
             # "can_add_review": self.can_create_review()
         }
-
         return context
 
     def can_create_review(self):

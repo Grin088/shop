@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import BrowsingHistory
 
 app_name = "users"
 
@@ -11,4 +12,6 @@ urlpatterns = [
     # path('profile/<int:id>/', , name='user_profile'),
     # path('<id>/orders-history/'),
     # path('<id>/product-browsing-history/'),
+    path('browsing-history/', BrowsingHistory.as_view(), name='browsing-history'),
+
 ]

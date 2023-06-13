@@ -161,3 +161,9 @@ class Review(models.Model):
             reviews = reviews.filter(product_id=product_id)
 
         return reviews
+
+
+class Browsing_history(models.Model):
+    """Подсчет просмотра товаров"""
+    users = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)

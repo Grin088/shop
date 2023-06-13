@@ -1,8 +1,11 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, LogoutView, FormView
+from django.views import View
 from django.views.generic import CreateView
+
+from products.models import Browsing_history
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, RestorePasswordForm
 from .models import CustomUser
 
@@ -49,3 +52,15 @@ class RestorePasswordView(FormView):
                   recipient_list=[form.cleaned_data['email']])
         success_message = f'Новый пароль успешно отправлен на {user_email} '
         return redirect(reverse_lazy('users:users_restore_password') + '?success_message=' + success_message)
+
+
+class BrowsingHistory(View):
+    def get(self, request):
+        """В будущем добавить фильтер для пользователя"""
+        history = Browsing_history.objects.all()[:20]
+        history_count = Browsing_history.objects.count()
+        contex = {
+            'count': history_count,
+            'history': history
+        }
+        return render(request, 'browsing_history.jinja2', context=contex)
