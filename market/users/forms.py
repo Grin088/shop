@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from .models import CustomUser
 from django.utils.translation import gettext_lazy as _
@@ -58,3 +58,17 @@ class RestorePasswordForm(forms.Form):
                             validators=[emai_existed_validator],
                             help_text=_('Укажите email пользователя'),
                             )
+
+
+class UserProfileForm(UserChangeForm):
+    """Форма редактирования профиля"""
+
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
+    phone_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
+    avatar = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'Profile-file form-input'}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
+
+    class Meta:
+        model = CustomUser
+        fields = ('first_name', 'last_name', 'phone_number', 'email', 'password', 'avatar')
