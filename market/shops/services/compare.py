@@ -3,8 +3,8 @@ from typing import Dict, Union
 from config.settings import MAX_COMP_LIST_LEN
 from shops.models import Offer
 
+ListCompare = list[Dict[str, Union[str, float, Dict[str, list[str, bool]], int,]]]
 
-ListCompare = list[Dict[str, Union[str, float, Dict[str,list[str, bool]], int,]]]
 
 def compare_list_check(session, id_offer) -> None:
     """Добавление/удаление id товаров в список сравнения "comp_list" в сессии. """
@@ -84,7 +84,7 @@ def _generating_a_comparison_dictionary(list_offer: list[int]) -> ListCompare:
 
 
 def _adding_missing_properties(list_property: list[str],
-                              list_compare: ListCompare) -> ListCompare:
+                               list_compare: ListCompare) -> ListCompare:
     """"Добавление отсутствующих свойств к продуктам в список сравнения"""
 
     for property_i in list_property:
@@ -95,7 +95,7 @@ def _adding_missing_properties(list_property: list[str],
     return list_compare
 
 
-def _comparison_of_product_properties(list_compare: ListCompare, list_property: list[str] ) -> ListCompare:
+def _comparison_of_product_properties(list_compare: ListCompare, list_property: list[str]) -> ListCompare:
     """Сравнение свойств продуктов в списке сравнения"""
 
     for property_i in list_property:
