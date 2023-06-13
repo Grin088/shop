@@ -9,9 +9,9 @@ from django.urls import reverse_lazy
 from .services import banner
 from .services.catalog import get_featured_categories
 from .services.compare import (compare_list_check,
-                              splitting_into_groups_by_category,
-                              get_comparison_lists_and_properties,
-                              )
+                               splitting_into_groups_by_category,
+                               get_comparison_lists_and_properties,
+                               )
 from .services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from .models import Shop
