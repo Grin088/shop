@@ -57,7 +57,7 @@ class RestorePasswordView(FormView):
 class BrowsingHistory(View):
     def get(self, request):
         """В будущем добавить фильтр для пользователя"""
-        history = Browsing_history.objects.all()[:20]
+        history = Browsing_history.objects.all().order_by('-data_at')[:20]
         history_count = Browsing_history.objects.count()
         contex = {
             'count': history_count,
@@ -67,7 +67,7 @@ class BrowsingHistory(View):
 
     def post(self, request):
         product_id = self.request.POST.get('delete')
-        history = Browsing_history.objects.all()[:20]
+        history = Browsing_history.objects.all().order_by('-data_at')[:20]
         if 'delete' in request.POST:
             Browsing_history.objects.filter(product_id=product_id).delete()
         history_count = Browsing_history.objects.count()

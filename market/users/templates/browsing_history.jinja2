@@ -24,12 +24,18 @@
     <div class="Section-content">
         <div class="Cards">
             {% for offer in history %}
-                <div class="Card"><a class="Card-picture" href="#"><img src="{{ offer.product.preview.url }}" alt="#" /></a>
+                {% set score = [] %}
+                {% for p in offer.product.offers.all() %}
+                    {% if score.append(p.price) %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="Card"><a class="Card-picture" href="#"><img src="{{ offer.product.preview.url }}" alt="{{ offer.product.preview }}" /></a>
                     <div class="Card-content">
                         <strong class="Card-title"><a href="#">Corsair Carbide Series Arctic White Steel</a>
                         </strong>
                         <div class="Card-description">
-                            <div class="Card-cost"><span class="Card-price">Тут цена</span>
+                            <div class="Card-cost"><span class="Card-price">От {{ (score | min ) | round }} руб.</span>
                             </div>
                             <div class="Card-category">{{ offer.product.category.name }}
                             </div>
