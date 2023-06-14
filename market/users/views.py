@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView, FormView
 from django.views import View
 from django.views.generic import CreateView
 
-from products.models import Browsing_history
+from products.models import Browsing_history, Product
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, RestorePasswordForm
 from .models import CustomUser
 
@@ -56,8 +56,20 @@ class RestorePasswordView(FormView):
 
 class BrowsingHistory(View):
     def get(self, request):
-        """В будущем добавить фильтер для пользователя"""
+        """В будущем добавить фильтр для пользователя"""
         history = Browsing_history.objects.all()[:20]
+        history_count = Browsing_history.objects.count()
+        contex = {
+            'count': history_count,
+            'history': history
+        }
+        return render(request, 'browsing_history.jinja2', context=contex)
+
+    def post(self, request):
+        product_id = self.request.POST.get('delete')
+        history = Browsing_history.objects.all()[:20]
+        if 'delete' in request.POST:
+            Browsing_history.objects.filter(product_id=product_id).delete()
         history_count = Browsing_history.objects.count()
         contex = {
             'count': history_count,

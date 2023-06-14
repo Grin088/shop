@@ -12,14 +12,6 @@ class ProductsServices:
         self.reviews = Review.get_review(user_id=request.user.id, product_id=product_id)
         self.images = self.product.product_images.all()
 
-    # def views_history(self):
-    #     """Добовление к истории просмотра"""
-    #     # print('Тут я')
-    #     # browsing_history.is_valid_history(user_id=self.user.id,
-    #     #                                   product_id=self.product_id)
-    #     # browsing_history.browsing_history(user_id=self.user.id,
-    #     #                                   product_id=self.product_id)
-
     @classmethod
     def customer_can_write_review(cls, request, product_id):
         """Проверка может ли пользователь оставлять отзыв о товаре"""
