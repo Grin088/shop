@@ -142,5 +142,14 @@
       "product": 6,
       "price": "50.00"
     }
+  },
+  {
+    "model": "shops.offer",
+    "pk": 17,
+    "fields": {
+      "shop": 2,
+      "product": 7,
+      "price": "500.00"
+    }
   }
 ]
