@@ -49,7 +49,7 @@ def _get_a_complete_list_of_property_names(list_offer: list[int]) -> list[str]:
     if None in list_name_property:
         list_name_property.remove(None)
 
-    return list_name_property
+    return sorted(list_name_property)
 
 
 def _generating_a_comparison_dictionary(list_offer: list[int]) -> ListCompare:
