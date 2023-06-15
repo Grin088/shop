@@ -71,28 +71,28 @@ class CompareTestCase(TestCase):
         self.assertEqual(result, expected_result)
 
     def test_adding_missing_properties_success(self):
-        test_list = [{"property":{"Вес": ['5кг', False]}},
-                     {"property":{"Высота": ['5кг', False]}},
-                     {"property":{"Ширина": ['5кг', False]}},
+        test_list = [{"property": {"Вес": ['5кг', False]}},
+                     {"property": {"Высота": ['5кг', False]}},
+                     {"property": {"Ширина": ['5кг', False]}},
                      ]
         test_list_property = ["Вес", "Высота", "Ширина"]
-        expected_result = [{"property":{"Вес": ['5кг', False], "Высота": ['-', False], "Ширина": ['-', False]}},
-                           {"property":{"Высота": ['5кг', False], "Вес": ['-', False], "Ширина": ['-', False]}},
-                           {"property":{"Ширина": ['5кг', False], "Вес": ['-', False], "Высота": ['-', False]}},
+        expected_result = [{"property": {"Вес": ['5кг', False], "Высота": ['-', False], "Ширина": ['-', False]}},
+                           {"property": {"Высота": ['5кг', False], "Вес": ['-', False], "Ширина": ['-', False]}},
+                           {"property": {"Ширина": ['5кг', False], "Вес": ['-', False], "Высота": ['-', False]}},
                            ]
         result = _adding_missing_properties(test_list_property, test_list)
         self.assertEqual(result, expected_result)
 
     def test_comparison_of_product_properties_success(self):
-        test_list = [{"property":{"Вес": ['5кг', False], "Высота": ['7 м', False], "Ширина": ['-', False]}},
-                     {"property":{"Высота": ['7 м', False], "Вес": ['-', False], "Ширина": ['-', False]}},
-                     {"property":{"Ширина": ['5кг', False], "Вес": ['-', False], "Высота": ['7 м', False]}},
+        test_list = [{"property": {"Вес": ['5кг', False], "Высота": ['7 м', False], "Ширина": ['-', False]}},
+                     {"property": {"Высота": ['7 м', False], "Вес": ['-', False], "Ширина": ['-', False]}},
+                     {"property": {"Ширина": ['5кг', False], "Вес": ['-', False], "Высота": ['7 м', False]}},
                      ]
         test_list_property = ["Вес", "Высота", "Ширина"]
         result = _comparison_of_product_properties(test_list, test_list_property)
-        expected_result = [{"property":{"Вес": ['5кг', False], "Высота": ['7 м', True], "Ширина": ['-', False]}},
-                           {"property":{"Высота": ['7 м', True], "Вес": ['-', False], "Ширина": ['-', False]}},
-                           {"property":{"Ширина": ['5кг', False], "Вес": ['-', False], "Высота": ['7 м', True]}},
+        expected_result = [{"property": {"Вес": ['5кг', False], "Высота": ['7 м', True], "Ширина": ['-', False]}},
+                           {"property": {"Высота": ['7 м', True], "Вес": ['-', False], "Ширина": ['-', False]}},
+                           {"property": {"Ширина": ['5кг', False], "Вес": ['-', False], "Высота": ['7 м', True]}},
                            ]
         self.assertEqual(result, expected_result)
 
@@ -118,7 +118,6 @@ class CompareTestCase(TestCase):
         expected_result_2 = ['Вес', 'Гарантия от производителя', 'Страна-производитель']
         self.assertEqual(result_1, expected_result_1)
         self.assertEqual(result_2, expected_result_2)
-
 
     def test_compare_page_view_success(self):
         response = self.client.get(reverse("comparison"))
