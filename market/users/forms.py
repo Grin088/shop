@@ -1,9 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm, UserChangeForm
 from django.core.exceptions import ValidationError
-from .models import CustomUser
+from .models import CustomUser, PhoneNumberValidator, ValidateImageSize
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
+from django.core import validators
+from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import password_validation
 
 
 def emai_existed_validator(value):
@@ -14,6 +17,7 @@ def emai_existed_validator(value):
 
 class LowerEmailField(forms.EmailField):
     """ Запись email в нижнем регистре"""
+
     def to_python(self, value):
         value = super().to_python(value)
         if value is not None:
@@ -60,15 +64,60 @@ class RestorePasswordForm(forms.Form):
                             )
 
 
+class ChangePasswordForm(SetPasswordForm):
+    """Форма изменения пароля"""
+
+    new_password1 = forms.CharField(
+        required=False,
+        label=_("New password"),
+        widget=forms.PasswordInput(attrs={'class': 'form-input'}),
+        strip=False,
+    )
+    new_password2 = forms.CharField(
+        required=False,
+        label=_("New password confirmation"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-input'}),
+    )
+
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+        if password1 and password2 and password1 != password2:
+            raise ValidationError(_("Пароли не совпадают"))
+        elif password1 and password2:
+            password_validation.validate_password(password2, self.user)
+            return password2
+        return None
+
+
 class UserProfileForm(UserChangeForm):
     """Форма редактирования профиля"""
 
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
-    phone_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
-    avatar = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'Profile-file form-input'}))
-    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-label'}))
+    phone_validator = PhoneNumberValidator()
+    validate_image_size = ValidateImageSize()
+
+    first_name = forms.CharField(required=False,
+                                 widget=forms.TextInput(attrs={'class': 'form-label'}))
+    last_name = forms.CharField(required=False,
+                                widget=forms.TextInput(attrs={'class': 'form-label'}))
+    phone_number = forms.CharField(required=False,
+                                   validators=[phone_validator],
+                                   max_length=20,
+                                   widget=forms.TextInput(attrs={'class': 'form-label'}))
+    avatar = forms.ImageField(required=False,
+                              validators=[validate_image_size, validators.validate_image_file_extension],
+                              widget=forms.FileInput(attrs={'class': 'Profile-file form-input'}))
+    email = LowerEmailField(required=False,
+                            widget=forms.TextInput(attrs={'class': 'form-label'}))
 
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'phone_number', 'email', 'password', 'avatar')
+        fields = ('first_name', 'last_name', 'phone_number', 'email', 'avatar')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        user = CustomUser.objects.filter(email=email).exclude(pk=self.instance.pk).first()
+        if user:
+            raise ValidationError(_('Этот электронный адрес уже используется.'))
+        return email

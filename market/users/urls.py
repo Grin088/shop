@@ -9,7 +9,7 @@ urlpatterns = [
     path('logout/', views.UserLogoutView.as_view(), name='users_logout'),
     path('password/', views.RestorePasswordView.as_view(), name='users_restore_password'),
     path('account/', views.account, name='users_account'),
-    path('profile/', views.profile, name='users_profile'),
+    path('profile/', views.MyProfileView.as_view(), name='users_profile'),
     # path('<id>/orders-history/'),
     # path('<id>/product-browsing-history/'),
 ]

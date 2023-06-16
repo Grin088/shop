@@ -3,9 +3,18 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, LogoutView, FormView
+from django.contrib.auth import update_session_auth_hash, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, RestorePasswordForm, UserProfileForm
+from django.views.generic.edit import FormMixin
+from django.views.generic.base import View
+from .forms import (CustomUserCreationForm,
+                    CustomAuthenticationForm,
+                    RestorePasswordForm,
+                    UserProfileForm,
+                    ChangePasswordForm,
+                    )
 from .models import CustomUser
 
 
@@ -66,19 +75,65 @@ def account(request):
             name = f"{user.first_name} {user.last_name}"
         else:
             name = user.username
-        context = {'username': name, 'user': user}
+        context = {'username': name,
+                   'user': user}
         return render(request, 'market/users/account.jinja2', context)
 
 
-@login_required(login_url=reverse_lazy('users:users_login'))
-def profile(request):
-    if request.method == 'POST':
-        form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
-        if form.is_valid():
+# @login_required(login_url=reverse_lazy('users:users_login'))
+# def profile(request):
+#     user = CustomUser.objects.get(pk=request.user.pk)
+#     if request.method == 'POST':
+#         form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
+#         if form.is_valid():
+#             if form.cleaned_data['password']:
+#                 user.set_password(form.cleaned_data['password'])
+#                 user.save()
+#             form.save()
+#             success_message = 'Профиль успешно сохранен'
+#             return HttpResponseRedirect(reverse('users:users_profile') + '?success_message=' + success_message)
+#     else:
+#         form = UserProfileForm(instance=request.user)
+#     context = {'form': form,
+#                'user': user}
+#     return render(request, 'market/users/profile.jinja2', context)
+
+
+class MyProfileView(LoginRequiredMixin, FormMixin, View):
+    form_class = ChangePasswordForm
+    second_form_class = UserProfileForm
+    template_name = 'market/users/profile.jinja2'
+    success_url = reverse_lazy('users:users_profile')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        second_form = self.second_form_class(instance=request.user)
+        user = CustomUser.objects.get(pk=request.user.pk)
+        form = self.get_form()
+        return render(request, self.template_name, {'form': form,
+                                                    'second_form': second_form,
+                                                    'user': user})
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        second_form = self.second_form_class(instance=request.user, data=request.POST, files=request.FILES)
+
+        if form.is_valid() and second_form.is_valid():
+            return self.form_valid(form, second_form)
+        else:
+            return self.get(request, *args, **kwargs)
+
+    def form_valid(self, form, second_form):
+        if form.cleaned_data.get('new_password1') and form.cleaned_data.get('new_password2'):
             form.save()
-            success_message = 'Профиль успешно сохранен'
-            return HttpResponseRedirect(reverse('users:users_profile') + '?success_message=' + success_message)
-    else:
-        form = UserProfileForm(instance=request.user)
-    context = {'form': form}
-    return render(request, 'market/users/profile.jinja2', context)
+            # Обновление сведений об аутентификации пользователя
+            update_session_auth_hash(self.request, form.user)
+            # Автоматический вход пользователя после изменения пароля
+            login(self.request, form.user)
+        second_form.save()
+        success_message = 'Профиль успешно сохранен'
+        return HttpResponseRedirect(reverse('users:users_profile') + '?success_message=' + success_message)
