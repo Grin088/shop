@@ -1,6 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse_lazy
-from users.models import CustomUser
+from users.models import CustomUser, PhoneNumberValidator, ValidateImageSize
+from django.contrib.auth.hashers import check_password
+from django.core.files.uploadedfile import SimpleUploadedFile
+from io import BytesIO
+from PIL import Image
+
+from users.forms import UserProfileForm, ChangePasswordForm
 
 
 class UserProfileTest(TestCase):
@@ -94,3 +100,92 @@ class RegistrationFormTest(TestCase):
         """Проверка url выхода пользователя"""
         response = self.client.post(reverse_lazy('users:users_logout'))
         self.assertEqual(response.status_code, 302)
+
+
+class UserProfileChangeTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """Создание пользователя"""
+        super().setUpClass()
+        cls.user = CustomUser.objects.create_user(username='testuser', email='testuser@gmail.com',
+                                                  password="testpass123")
+        cls.user2 = CustomUser.objects.create_user(email='test_user@example.com',
+                                                   username='Admin12',
+                                                   password='Pass123456')
+        cls.url = reverse_lazy('users:users_profile')
+
+    @classmethod
+    def tearDownClass(cls):
+        """ Удаление пользователя"""
+        super().tearDownClass()
+        cls.user.delete()
+        cls.user2.delete()
+
+    def test_edit_profile_view(self):
+        self.client.login(email='testuser@gmail.com', password='testpass123')
+
+        new_email = 'newemail@gmail.com'
+        new_phone_number = '+0987654321'
+        new_first_name = 'Test'
+        new_last_name = 'UserTest'
+        file = BytesIO()
+        image = Image.new('RGBA', size=(1024, 1024), color=(155, 0, 0))
+        image.save(file, 'png')
+        file.seek(0)
+        avatar = SimpleUploadedFile('test_avatar.png', file.getvalue(), content_type='image/png')
+
+        test_data = {'email': new_email,
+                     'phone_number': new_phone_number,
+                     'avatar': avatar,
+                     'first_name': new_first_name,
+                     'last_name': new_last_name,
+                     }
+        response = self.client.post(self.url, test_data)
+
+        self.assertEqual(response.status_code, 302)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, new_email)
+        self.assertEqual(self.user.phone_number, new_phone_number)
+        self.assertEqual(self.user.first_name, new_first_name)
+        self.assertEqual(self.user.last_name, new_last_name)
+        self.assertTrue(check_password('testpass123', self.user.password))
+        self.assertIsNotNone(self.user.avatar)
+        self.assertEqual(self.user.avatar.width, 1024)
+        self.assertEqual(self.user.avatar.height, 1024)
+        self.assertLessEqual(self.user.avatar.size, 2 * 1024 * 1024)
+
+    def test_edit_profile_form_with_invalid_data(self):
+
+        form_data = {'phone_number': '1234567890',
+                     'email': 'test_user@example.com',
+                     }
+        form = UserProfileForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form, 'phone_number', PhoneNumberValidator.message)
+        self.assertEqual(form.errors['email'], ['Этот электронный адрес уже используется.'])
+
+    def test_change_password_form(self):
+
+        self.client.login(email='testuser@gmail.com', password='testpass123')
+        new_password = 'newpass123'
+        form_data = {'new_password1': new_password,
+                     'new_password2': new_password}
+        form = ChangePasswordForm(user=self.user, data=form_data)
+        self.assertTrue(form.is_valid())
+        self.assertIsNotNone(form.cleaned_data['new_password2'])
+        self.assertTrue(self.user.check_password('testpass123'))
+        if form.is_valid():
+            form.save()
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
+
+    def test_change_password_form_with_mismatched_passwords(self):
+
+        invalid_password1 = 'testpass123'
+        form = ChangePasswordForm(user=self.user, data={
+            'new_password1': 'newpass123',
+            'new_password2': invalid_password1
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['new_password2'], ['Пароли не совпадают'])
+

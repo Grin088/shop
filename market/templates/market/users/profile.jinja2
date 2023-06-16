@@ -57,7 +57,8 @@
                                             <div class="Profile-img"><img src="{{ user.avatar.url }}"
                                                                           alt="card.jpg"/>
                                             </div>
-                                            <label class="Profile-fileLabel" for="{{ second_form.avatar.id_for_label }}">Выберите
+                                            <label class="Profile-fileLabel"
+                                                   for="{{ second_form.avatar.id_for_label }}">Выберите
                                                 аватар
                                             </label>
                                             {{ second_form.avatar }}
@@ -103,7 +104,8 @@
                                         {{ form.new_password1 }}
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="{{ form.new_password2.id_for_label }}">Подтверждение пароля
+                                        <label class="form-label" for="{{ form.new_password2.id_for_label }}">Подтверждение
+                                            пароля
                                         </label>
                                         {{ form.new_password2 }}
                                     </div>
@@ -118,11 +120,13 @@
                                             </div>
                                         {% endif %}
                                         {% if second_form.errors or form.errors %}
-                                            {% for filed, message in second_form.errors.items() %}
-                                                {% if field==__all__ %}
-                                                    <p class="error-message">{{ message }}</p>
-                                                {% endif %}
-                                            {% endfor %}
+                                            <ul class="errorlist">
+                                                {% for field_errors in second_form.errors.values %}
+                                                    {% for error in field_errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            </ul>
                                             {% for filed, message in form.errors.items() %}
                                                 {% if field==__all__ %}
                                                     <p class="error-message">{{ message }}</p>

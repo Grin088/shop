@@ -80,25 +80,6 @@ def account(request):
         return render(request, 'market/users/account.jinja2', context)
 
 
-# @login_required(login_url=reverse_lazy('users:users_login'))
-# def profile(request):
-#     user = CustomUser.objects.get(pk=request.user.pk)
-#     if request.method == 'POST':
-#         form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
-#         if form.is_valid():
-#             if form.cleaned_data['password']:
-#                 user.set_password(form.cleaned_data['password'])
-#                 user.save()
-#             form.save()
-#             success_message = 'Профиль успешно сохранен'
-#             return HttpResponseRedirect(reverse('users:users_profile') + '?success_message=' + success_message)
-#     else:
-#         form = UserProfileForm(instance=request.user)
-#     context = {'form': form,
-#                'user': user}
-#     return render(request, 'market/users/profile.jinja2', context)
-
-
 class MyProfileView(LoginRequiredMixin, FormMixin, View):
     form_class = ChangePasswordForm
     second_form_class = UserProfileForm
@@ -136,4 +117,4 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
             login(self.request, form.user)
         second_form.save()
         success_message = 'Профиль успешно сохранен'
-        return HttpResponseRedirect(reverse('users:users_profile') + '?success_message=' + success_message)
+        return redirect(reverse('users:users_profile') + '?success_message=' + success_message)
