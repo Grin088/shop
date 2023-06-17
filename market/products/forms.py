@@ -1,5 +1,5 @@
 from django import forms
-from .models import Review
+from .models import Review, Import
 
 
 class ReviewFrom(forms.ModelForm):
@@ -13,3 +13,19 @@ class ReviewFrom(forms.ModelForm):
     class Meta:
         model = Review
         fields = ["rating", "review_text"]
+
+
+class ImportForm(forms.ModelForm):
+    """класс для формы импорта данных """
+
+    class Meta:
+        """метакласс для указания модели и полей, которые будут включены в форму"""
+        model = Import  # модель для формы
+        fields = ['source', 'email']  # поля для формы
+
+    def __init__(self, *args, **kwargs):
+        """метод для инициализации формы"""
+        super().__init__(*args, **kwargs)  # вызываем родительский метод
+        self.fields['source'].label = 'Имя файла или URL'  # устанавливаем метку для поля source
+        self.fields['email'].label = 'Email получателя уведомления'  # устанавливаем метку для поля email
+        self.fields['email'].required = False  # делаем поле email необязательным для заполнения
