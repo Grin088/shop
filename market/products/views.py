@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect  # noqa F401
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
 from rest_framework.views import APIView
+from django.urls import reverse_lazy
+from django.core.management import call_command
 from django.http import JsonResponse
-from products.models import Review
-from .forms import ReviewFrom
+from .models import Review, Import
+from .forms import ReviewFrom, ImportForm
 from .services.product_services import ProductsServices
 
 
@@ -69,3 +71,27 @@ class ProductView(TemplateView):
 
 class BaseView(TemplateView):
     template_name = 'market/base.jinja2'
+
+
+class ImportCreateView(CreateView):
+    """ представление для запуска импорта"""
+    model = Import # модель для создания объекта
+    form_class = ImportForm # форма для ввода данных
+    template_name = 'market/products/import_form.jinja2' # шаблон для отображения формы
+    success_url = reverse_lazy('import_data:import_list') # URL для перенаправления после успешного создания объекта
+
+    def form_valid(self, form):
+        # метод для обработки валидной формы
+
+        # вызываем родительский метод для создания объекта модели Import с данными из формы
+        response = super().form_valid(form)
+
+        # получаем имя файла или URL и email из формы
+        source = form.cleaned_data['source']
+        email = form.cleaned_data['email']
+
+        # вызываем команду для запуска импорта с указанными аргументами
+        call_command('import_data', source, '--email', email, '--save')
+
+        # возвращаем ответ родительского метода
+        return response
