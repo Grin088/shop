@@ -49,8 +49,10 @@ INSTALLED_APPS = [
     "django_jinja",
     'rest_framework',
     'taggit',
+    'import_data',
 
     # custom apps
+    "django_rq",
     "products",
     "shops",
     "users",
@@ -59,7 +61,6 @@ INSTALLED_APPS = [
     "mptt",
     'django_celery_beat',
     'django_celery_results',
-
 ]
 
 MIDDLEWARE = [
@@ -231,6 +232,15 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_DEFAULT_QUEUE = 'default'
+
+# rq
+RQ_QUEUES = {
+    "default": {
+        "HOST": "localhost",
+        "PORT": 6379,
+        "DB": config["DATABASE_URL"],
+    },
+}
 
 # transferring session storage to Redis
 SESSION_ENGINE = 'redis_sessions.session'
