@@ -1,0 +1,10 @@
+{% extends 'market/base.jinja2' %}
+
+{% block middle %}
+<h1>Запуск импорта</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit" class="btn btn-primary">Запустить импорт</button>
+</form>
+{% endblock %}
