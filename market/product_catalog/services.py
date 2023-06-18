@@ -1,5 +1,4 @@
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.shortcuts import render
 
 from product_catalog.forms import ProductFilterForm

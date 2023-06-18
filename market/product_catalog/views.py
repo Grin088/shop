@@ -4,4 +4,3 @@ from product_catalog import services
 
 class ViewShows(services.MixinGetPost, View):
     pass
-

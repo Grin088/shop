@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView, FormView
 from django.views import View
 from django.views.generic import CreateView
 
-from products.models import Browsing_history, Product
+from products.models import Browsing_history
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, RestorePasswordForm
 from .models import CustomUser
 

@@ -1,5 +1,3 @@
-from time import timezone
-
 from products.models import Browsing_history
 import datetime
 
