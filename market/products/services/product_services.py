@@ -14,7 +14,8 @@ class ProductsServices:
 
     @classmethod
     def customer_can_write_review(cls, request, product_id):
-        """Проверка может ли пользователь оставлять отзыв о товаре"""
+        """Проверка возможности добавления отзыва пользователем"""
+
         user = request.user
 
         order = user.orders.filter(
@@ -40,16 +41,6 @@ class ProductsServices:
             "reviews_quantity": reviews_quantity,
             "rating": rating,
             "images": self.images,
-            # "can_add_review": self.can_create_review()
+            # "can_add_review": self.customer_can_write_review()
         }
         return context
-
-    def can_create_review(self):
-        """Проверка возможности добавления отзыва пользователем"""
-        return (
-            self.customer.orders.filter(
-                status="payed",
-                order_items__product=self.product,
-            ).exists()
-            and not self.reviews
-        )
