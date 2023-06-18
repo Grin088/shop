@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect  # noqa F401
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, ListView
 from rest_framework.views import APIView
 from django.urls import reverse_lazy
 from django.core.management import call_command
@@ -75,15 +75,15 @@ class BaseView(TemplateView):
 
 class ImportCreateView(CreateView):
     """ представление для запуска импорта"""
-    model = Import # модель для создания объекта
-    form_class = ImportForm # форма для ввода данных
-    template_name = 'market/products/import_form.jinja2' # шаблон для отображения формы
-    success_url = reverse_lazy('import_data:import_list') # URL для перенаправления после успешного создания объекта
+
+    model = Import
+    form_class = ImportForm
+    template_name = 'market/products/import_form.jinja2'
+    success_url = reverse_lazy('products:import-list')
 
     def form_valid(self, form):
-        # метод для обработки валидной формы
 
-        # вызываем родительский метод для создания объекта модели Import с данными из формы
+        # вызываем родительский метод для создания бъекта модели Import с данными из формы
         response = super().form_valid(form)
 
         # получаем имя файла или URL и email из формы
@@ -95,3 +95,10 @@ class ImportCreateView(CreateView):
 
         # возвращаем ответ родительского метода
         return response
+
+
+class ImportListView(ListView):
+    model = Import
+    template_name = 'market/products/import_list.jinja2'
+    context_object_name = 'imports'
+    ordering = '-start_time'
