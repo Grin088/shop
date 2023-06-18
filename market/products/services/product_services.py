@@ -28,7 +28,7 @@ class ProductsServices:
         reviews_quantity = self.product.get_count_reviews()
         rating = round(self.product.get_average_rating(), 2)
         if not browsing_history.is_valid_history(user_id=self.user.id,
-                                                 product_id=self.product_id):
+                                                 product_id=self.product_id) and self.user.is_authenticated:
             browsing_history.browsing_history(user_id=self.user.id,
                                               product_id=self.product_id)
         context = {
