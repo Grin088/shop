@@ -174,7 +174,11 @@ class Import(models.Model):
     source = models.CharField(max_length=255, verbose_name=_('имя файла или URL для импорта'))
     start_time = models.DateTimeField(null=True, verbose_name=_('дата и время начала импорта'))
     end_time = models.DateTimeField(null=True, verbose_name=_('дата и время окончания импорта'))
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending', verbose_name=_('статус импорта'))
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='pending',
+        verbose_name=_('статус импорта'))
     imported_count = models.IntegerField(default=0, verbose_name=_('количество импортированных товаров'))
     errors = models.JSONField(default=list, verbose_name=_('список ошибок при импорте'))
     email = models.EmailField(null=True, verbose_name=_('email получателя уведомления'))
