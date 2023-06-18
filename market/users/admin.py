@@ -1,15 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
 from django.utils.translation import gettext_lazy as _
-from .forms import CustomUserCreationForm
+from users.forms import CustomUserCreationForm
+from users.models import CustomUser
 
 
 @admin.register(CustomUser)
 class AccountAdmin(UserAdmin):
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name", "email", "avatar", "phone_number")}),
+        (None, {"fields": ("email", "password")}),
+        (_("Personal info"), {"fields": ("username", "first_name", "last_name", "avatar", "phone_number")}),
         (
             _("Permissions"),
             {

@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, LogoutView, FormView
 from django.views.generic import CreateView
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, RestorePasswordForm
-from .models import CustomUser
+from users.forms import CustomUserCreationForm, CustomAuthenticationForm, RestorePasswordForm
+from users.models import CustomUser
 
 
 class UserRegistrationView(CreateView):
