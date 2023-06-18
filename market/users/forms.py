@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
-from .models import CustomUser
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
+from users.models import CustomUser
 
 
 def emai_existed_validator(value):
@@ -23,7 +23,6 @@ class LowerEmailField(forms.EmailField):
 
 class CustomUserCreationForm(BaseUserCreationForm):
     """Форма для создания нового пользователя"""
-    email = forms.EmailField(required=True)
 
     class Meta:
         model = CustomUser

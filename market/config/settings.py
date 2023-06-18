@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import dotenv_values
 from urllib.parse import urlparse
+from dotenv import dotenv_values
 
 import dj_database_url
 
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "mptt",
     'django_celery_beat',
     'django_celery_results',
+    'discounts'
 
 ]
 
