@@ -15,16 +15,14 @@ def get_paginator(request, products, forms):
     return context
 
 
-def filter_search(request, products):
-    sessions = request.session['filter']
-    prices = sessions['price'].split(';')
-    # {'price': '33641;58295', 'name': '', 'in_stock': True, 'free_delivery': False}
-    if sessions['name']:
-        product_search = products.filter(name__icontains=sessions['name'], offers__price__range=(prices[0], prices[1]))
+def filter_search(session, products):
+    prices = session['price'].split(';')
+    if session['name']:
+        product_search = products.filter(name__icontains=session['name'], offers__price__range=(prices[0], prices[1]))
     else:
         product_search = products.filter(offers__price__range=(prices[0], prices[1]))
-    if sessions['name'] and sessions['in_stock']:
-        product_search = products.filter(name__icontains=sessions['name'], offers__price__range=(prices[0], prices[1]))
+    if session['name'] and session['in_stock']:
+        product_search = products.filter(name__icontains=session['name'], offers__price__range=(prices[0], prices[1]))
 
     return product_search
 
@@ -40,7 +38,7 @@ class MixinGetPost:
             form = ProductFilterForm(request.session['filter'])
             if form.is_valid():
                 form.fields['price'].widget.attrs.update({'data-from': prices[0], 'data-to': prices[1]})
-                products = filter_search(request, products)
+                products = filter_search(request.session['filter'], products)
         else:
             form = ProductFilterForm()
             products = Product.objects.all().distinct()
@@ -56,7 +54,7 @@ class MixinGetPost:
                                                       'data-to': prices[1]})
             request.session.set_expiry(180)
             request.session['filter'] = form.cleaned_data
-            product = filter_search(request, product)
+            product = filter_search(request.session['filter'], product)
         else:
             form = ProductFilterForm()
         context = get_paginator(request, product, form)
