@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import dotenv_values
 from urllib.parse import urlparse
+from dotenv import dotenv_values
 
 import dj_database_url
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_jinja",
     'rest_framework',
+    'taggit',
 
     # custom apps
     "products",
@@ -58,6 +59,7 @@ INSTALLED_APPS = [
     "mptt",
     'django_celery_beat',
     'django_celery_results',
+    'discounts'
 
 ]
 
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -150,7 +153,12 @@ REDIS_URL = config["REDIS_URL"]
 CACHE_CONSTANT = 600
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'BACKEND': "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "example"
     }
 }
 

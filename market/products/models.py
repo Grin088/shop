@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from mptt.models import TreeForeignKey
 from users.models import CustomUser as User
 from django.db.models import Avg, ManyToManyField
+from taggit.managers import TaggableManager
 
 
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
@@ -16,6 +17,7 @@ def product_preview_directory_path(instance: "Product", filename: str) -> str:
 
 class Product(models.Model):
     """Продукт"""
+    tags = TaggableManager()
 
     class Meta:
         verbose_name_plural = _("продукты")
@@ -31,14 +33,20 @@ class Product(models.Model):
         verbose_name=_("предварительный просмотр"),
     )
     property: ManyToManyField = models.ManyToManyField(
-        "Property", through="ProductProperty", verbose_name=_("характеристики")
+        "Property",
+        through="ProductProperty",
+        verbose_name=_("характеристики")
     )
-    category_id = TreeForeignKey(
+    category = TreeForeignKey(
         "catalog.Catalog",
         on_delete=models.PROTECT,
         null=True,
         related_name="category",
         verbose_name=_("категория"),
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name=_("описание"),
     )
 
     def __str__(self):
@@ -119,6 +127,13 @@ class Review(models.Model):
         verbose_name = _("отзыв")
         verbose_name_plural = _("отзывы")
 
+    RATING_CHOICES = (
+        (1, "1"),
+        (2, "2"),
+        (3, "3"),
+        (4, "4"),
+        (5, "5")
+    )
     user = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, verbose_name=_("Покупатель")
     )
@@ -127,7 +142,7 @@ class Review(models.Model):
     )
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))
     rating = models.PositiveSmallIntegerField(
-        choices=((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5")),
+        choices=RATING_CHOICES,
         verbose_name=_("Оценка"),
     )
     review_text = models.TextField(

@@ -27,7 +27,6 @@ class LowerEmailField(forms.EmailField):
 
 class CustomUserCreationForm(BaseUserCreationForm):
     """Форма для создания нового пользователя"""
-    email = forms.EmailField(required=True)
 
     class Meta:
         model = CustomUser

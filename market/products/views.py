@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from django.http import JsonResponse
 from products.models import Review
 from .forms import ReviewFrom
-from .services.product_services import ReviewServices
+from .services.product_services import ProductsServices
 
 
 class ReviewsAPI(APIView):
@@ -39,12 +39,12 @@ class ReviewsAPI(APIView):
 class ProductView(TemplateView):
     """Класс для отображения деталей продукта"""
 
-    template_name = "market/products/product.jinja2"
+    template_name = "market/products/product_detail.jinja2"
     form_class = ReviewFrom
 
     def get_context_data(self, **kwargs):
         """Получение необходимого контекста"""
-        services = ReviewServices(
+        services = ProductsServices(
             request=self.request, product_id=self.kwargs.get("product_id")
         )
         context = super().get_context_data(**kwargs)
@@ -65,3 +65,7 @@ class ProductView(TemplateView):
         context = self.get_context_data(product_id=product_id)
         context["form"] = form
         return self.render_to_response(context)
+
+
+class BaseView(TemplateView):
+    template_name = 'market/base.jinja2'
