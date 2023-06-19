@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse_lazy
-from users.models import CustomUser, PhoneNumberValidator, ValidateImageSize
+from users.models import CustomUser, PhoneNumberValidator
 from django.contrib.auth.hashers import check_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from io import BytesIO
@@ -189,4 +189,3 @@ class UserProfileChangeTests(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['new_password2'], ['Пароли не совпадают'])
-
