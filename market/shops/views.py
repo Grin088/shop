@@ -18,7 +18,7 @@ from .models import Shop
 from .services.is_member_of_group import is_member_of_group
 
 
-# @cache_page(settings.CACHE_CONSTANT)
+@cache_page(settings.CACHE_CONSTANT)
 def home(request):
     if request.method == "GET":
         featured_categories = get_featured_categories()
