@@ -1,3 +1,4 @@
+from products.models import Browsing_history
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.core.mail import send_mail
@@ -117,3 +118,27 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
         second_form.save()
         success_message = 'Профиль успешно сохранен'
         return redirect(reverse('users:users_profile') + '?success_message=' + success_message)
+
+
+class BrowsingHistory(View):
+    def get(self, request):
+        """В будущем добавить фильтр для пользователя"""
+        history = Browsing_history.objects.all().order_by('-data_at')[:20]
+        history_count = Browsing_history.objects.count()
+        contex = {
+            'count': history_count,
+            'history': history
+        }
+        return render(request, 'browsing_history.jinja2', context=contex)
+
+    def post(self, request):
+        product_id = self.request.POST.get('delete')
+        history = Browsing_history.objects.all().order_by('-data_at')[:20]
+        if 'delete' in request.POST:
+            Browsing_history.objects.filter(product_id=product_id).delete()
+        history_count = Browsing_history.objects.count()
+        contex = {
+            'count': history_count,
+            'history': history
+        }
+        return render(request, 'browsing_history.jinja2', context=contex)

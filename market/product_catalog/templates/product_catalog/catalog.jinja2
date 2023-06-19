@@ -16,7 +16,8 @@
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <div class="range Section-columnRange">
-                                        <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="5000" data-max="100000" data-from="5000" data-to="30000" />
+{#                                        <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="5000" data-max="100000" data-from="5000" data-to="30000" />#}
+                                        {{ form.price }}
                                         <div class="range-price">Цена:&#32;
                                             <div class="rangePrice">
                                             </div>
@@ -24,19 +25,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-input form-input_full" id="title" name="title" type="text" placeholder="Название" />
+{#                                    <input class="form-input form-input_full" id="title" name="title" type="text" placeholder="Название" />#}
+                                        {{ form.name }}
                                 </div>
                                 <div class="form-group">
                                     <!-- - var options = setOptions(items, ['value', 'selected', 'disabled']);-->
                                 </div>
                                 <div class="form-group">
                                     <label class="toggle">
-                                        <input type="checkbox" name="in_stock" /><span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
+{#                                        <input type="checkbox" name="in_stock" /><span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>#}
+                                        {{ form.in_stock }} <span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
                                     </label>
                                 </div>
                                 <div class="form-group">
                                     <label class="toggle">
-                                        <input type="checkbox" name="free_delivery" /><span class="toggle-box"></span><span class="toggle-text">С бесплатной доставкой</span>
+{#                                        <input type="checkbox" name="free_delivery" /><span class="toggle-box"></span><span class="toggle-text">С бесплатной доставкой</span>#}
+                                        {{ form.free_delivery }} <span class="toggle-box"></span><span class="toggle-text">С бесплатной доставкой</span>
                                     </label>
                                 </div>
                                 <div class="form-group">
@@ -72,14 +76,21 @@
                     </div>
                     <div class="Cards">
                         {% for offer in page_obj %}
-                            <div class="Card"><a class="Card-picture" href="{{ url('product_detail' ,pk=offer.pk)}}"><img src="{{ offer.product.preview.url }}" alt="{{ offer.product.preview }}" /></a>
+                            {% set score = [] %}
+                            {% for shop in offer.offers.filter(product=offer) %}
+                                {% if score.append(shop.price) %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="Card">
+                                <p>{{ offer.name }}</p>
+                                <a class="Card-picture" href="{{ url('products:product_detail' ,product_id=offer.pk)}}"><img src="{{ offer.preview.url }}" alt="{{ offer.preview }}" /></a>
                                 <div class="Card-content">
-                                    <strong class="Card-title"><a href="{{ url('product_detail' ,pk=offer.pk)}}">Corsair Carbide Series Arctic White Steel</a>
+                                    <strong class="Card-title"><a href="{{ url('products:product_detail' ,product_id=offer.pk)}}">Corsair Carbide Series Arctic White Steel</a>
                                     </strong>
                                     <div class="Card-description">
-                                        <div class="Card-cost"><span class="Card-price">{{ offer.price }} руб.</span>
+                                        <div class="Card-cost"><span class="Card-price">От {{ (score | min ) | round }} руб.</span>
                                         </div>
-                                        <div class="Card-category">{{ offer.product.category_id }}
+                                        <div class="Card-category">{{ offer.category.name }}
                                         </div>
                                         <div class="Card-hover"><a class="Card-btn" href="#"><img src="assets/img/icons/card/cart.svg" alt="cart.svg" /></a>
                                         </div>

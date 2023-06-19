@@ -1,0 +1,54 @@
+{% extends 'market/base.jinja2' %}
+{#<!doctype html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport"#}
+{#          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">#}
+{#    <meta http-equiv="X-UA-Compatible" content="ie=edge">#}
+{#    <title>Document</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h1>Тест страница</h1>#}
+{#    {{ request.user }}#}
+{#    {% for h in history %}#}
+{#        <p>{{ h.product }}</p>#}
+{#    {% endfor %}#}
+{##}
+{#    <p>Продуктов просмотренно: {{ history}}</p>#}
+{##}
+{#</body>#}
+{#</html>#}
+{% block middle %}
+    <p>Просмотрено всего: {{ count }}</p>
+    <div class="Section-content">
+        <div class="Cards">
+            {% for offer in history %}
+                {% set score = [] %}
+                {% for p in offer.product.offers.all() %}
+                    {% if score.append(p.price) %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="Card"><a class="Card-picture" href="#"><img src="{{ offer.product.preview.url }}" alt="{{ offer.product.preview }}" /></a>
+                    <div class="Card-content">
+                        <strong class="Card-title"><a href="#">Corsair Carbide Series Arctic White Steel</a>
+                        </strong>
+                        <div class="Card-description">
+                            <div class="Card-cost"><span class="Card-price">От {{ (score | min ) | round }} руб.</span>
+                            </div>
+                            <div class="Card-category">{{ offer.product.category.name }}
+                            </div>
+                            <div class="Card-hover"><a class="Card-btn" href="#"><img src="assets/img/icons/card/cart.svg" alt="cart.svg" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="delete" value="{{ offer.product.pk }}">Удалить из просмотренных</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

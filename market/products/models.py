@@ -168,3 +168,15 @@ class Review(models.Model):
             reviews = reviews.filter(product_id=product_id)
 
         return reviews
+
+
+class Browsing_history(models.Model):
+    """Подсчет просмотра товаров"""
+    users = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')
+    data_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-data_at']
+        verbose_name = _("Просмотр продута")
+        verbose_name_plural = _("Просмотр продуктов")
