@@ -19,12 +19,12 @@ def get_limited_edition():
 
 
 def get_top_products():
-    products_br = Browsing_history.objects.all()
-    products_n = sorted(list(Counter(Product.objects.filter(products__in=products_br)).
-                             items()), key=lambda key: key[1])[:-9:-1]
-    products_n = [value for value, key in products_n]
-    if products_n:
-        return products_n
+    products_history = Browsing_history.objects.all()
+    products = sorted(list(Counter(Product.objects.filter(products__in=products_history)).
+                           items()), key=lambda key: key[1])[:-9:-1]
+    products = [value for value, key in products]
+    if products:
+        return products
     else:
         return None
 
