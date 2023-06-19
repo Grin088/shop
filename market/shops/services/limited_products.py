@@ -1,8 +1,6 @@
 import random
 from collections import Counter
 from datetime import timedelta
-
-from django.db.models import Case, When
 from django.utils import timezone
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
