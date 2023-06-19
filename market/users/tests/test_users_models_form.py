@@ -113,6 +113,11 @@ class UserProfileChangeTests(TestCase):
                                                    username='Admin12',
                                                    password='Pass123456')
         cls.url = reverse_lazy('users:users_profile')
+        file = BytesIO()
+        image = Image.new('RGBA', size=(1024, 1024), color=(155, 0, 0))
+        image.save(file, 'png')
+        file.seek(0)
+        cls.avatar = SimpleUploadedFile('test_avatar.png', file.getvalue(), content_type='image/png')
 
     @classmethod
     def tearDownClass(cls):
@@ -120,23 +125,19 @@ class UserProfileChangeTests(TestCase):
         super().tearDownClass()
         cls.user.delete()
         cls.user2.delete()
+        cls.avatar.delete()
 
-    def test_edit_profile_view(self):
+    def test_edit_profile_view_success(self):
         self.client.login(email='testuser@gmail.com', password='testpass123')
 
         new_email = 'newemail@gmail.com'
         new_phone_number = '+0987654321'
         new_first_name = 'Test'
         new_last_name = 'UserTest'
-        file = BytesIO()
-        image = Image.new('RGBA', size=(1024, 1024), color=(155, 0, 0))
-        image.save(file, 'png')
-        file.seek(0)
-        avatar = SimpleUploadedFile('test_avatar.png', file.getvalue(), content_type='image/png')
 
         test_data = {'email': new_email,
                      'phone_number': new_phone_number,
-                     'avatar': avatar,
+                     'avatar': self.avatar,
                      'first_name': new_first_name,
                      'last_name': new_last_name,
                      }
@@ -154,7 +155,7 @@ class UserProfileChangeTests(TestCase):
         self.assertEqual(self.user.avatar.height, 1024)
         self.assertLessEqual(self.user.avatar.size, 2 * 1024 * 1024)
 
-    def test_edit_profile_form_with_invalid_data(self):
+    def test_edit_profile_form_with_invalid_data_failure(self):
 
         form_data = {'phone_number': '1234567890',
                      'email': 'test_user@example.com',
@@ -164,7 +165,7 @@ class UserProfileChangeTests(TestCase):
         self.assertFormError(form, 'phone_number', PhoneNumberValidator.message)
         self.assertEqual(form.errors['email'], ['Этот электронный адрес уже используется.'])
 
-    def test_change_password_form(self):
+    def test_change_password_form_success(self):
 
         self.client.login(email='testuser@gmail.com', password='testpass123')
         new_password = 'newpass123'
@@ -179,7 +180,7 @@ class UserProfileChangeTests(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password(new_password))
 
-    def test_change_password_form_with_mismatched_passwords(self):
+    def test_change_password_form_with_mismatched_passwords_failure(self):
 
         invalid_password1 = 'testpass123'
         form = ChangePasswordForm(user=self.user, data={
