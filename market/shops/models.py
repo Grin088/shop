@@ -44,6 +44,8 @@ class Banner(models.Model):
 
 
 class OrderStatus(models.Model):
+    """Модель статуса заказа"""
+
     class Meta:
         verbose_name = _('статус заказа')
         verbose_name_plural = _('статусы заказа')
@@ -55,6 +57,8 @@ class OrderStatus(models.Model):
 
 
 class Order(models.Model):
+    """Модель заказов"""
+
     class Meta:
         verbose_name = _('заказ')
         verbose_name_plural = _('заказы')
@@ -74,12 +78,16 @@ class Order(models.Model):
 
 
 class OrderOffer(models.Model):
+    """Промежуточная модель. Дополнительное поле количество товара"""
+
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     offer = models.ForeignKey(Offer, on_delete=models.PROTECT)
     count = models.SmallIntegerField(verbose_name=_('количество'))
 
 
 class OrderStatusChange(models.Model):
+    """Модель сохранения хронологии изменения статуса заказа"""
+
     class Meta:
         verbose_name = _('изменение статуса заказа')
         verbose_name_plural = _('изменение статусов заказов')
