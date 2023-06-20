@@ -41,9 +41,9 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderStatus)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = 'sort_index', 'name'
+    list_display = 'sort_index', 'name',
 
 
 @admin.register(OrderStatusChange)
 class ShopAdmin(admin.ModelAdmin):
-    list_display = 'id', 'time', 'src_status_id', 'dst_status_id'
+    list_display = 'id', 'time', 'src_status_id', 'dst_status_id',
