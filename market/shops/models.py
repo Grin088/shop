@@ -4,9 +4,9 @@ from django.utils.translation import gettext_lazy as _
 from users.models import CustomUser
 
 
-
 class Shop(models.Model):
     """Магазин"""
+
     name = models.CharField(max_length=512, verbose_name=_("название"))
     products = models.ManyToManyField("products.Product", through="Offer", related_name="shops",
                                       verbose_name=_("товары в магазине"))
@@ -52,6 +52,7 @@ class OrderStatus(models.Model):
 
     sort_index = models.SmallIntegerField(unique=True,  verbose_name=_('порядковый индекс'))
     name = models.CharField(max_length=100, verbose_name=_('статус заказа'))
+
     def __str__(self):
         return self.name
 

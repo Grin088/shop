@@ -40,10 +40,10 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 @admin.register(OrderStatus)
-class OrderAdmin(admin.ModelAdmin):
+class OrderStatusAdmin(admin.ModelAdmin):
     list_display = 'sort_index', 'name',
 
 
 @admin.register(OrderStatusChange)
-class ShopAdmin(admin.ModelAdmin):
+class OrderStatusChangeAdmin(admin.ModelAdmin):
     list_display = 'id', 'time', 'src_status_id', 'dst_status_id',
