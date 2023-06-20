@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render
 
 from product_catalog.forms import ProductFilterForm
@@ -17,13 +18,28 @@ def get_paginator(request, products, forms):
 
 def filter_search(session, products):
     prices = session['price'].split(';')
-    if session['name']:
-        product_search = products.filter(name__icontains=session['name'], offers__price__range=(prices[0], prices[1]))
-    else:
-        product_search = products.filter(offers__price__range=(prices[0], prices[1]))
-    if session['name'] and session['in_stock']:
-        product_search = products.filter(name__icontains=session['name'], offers__price__range=(prices[0], prices[1]))
+    sessions = {value: key for value, key in session.items() if (session[value] and value != 'price')}
+    product_search = products.filter((Q(name__icontains='' if sessions.get('name') is None else sessions['name']) &
+                                      Q(offers__price__range=(prices[0], prices[1])))).distinct()
 
+    if sessions.get('in_stock'):
+        product_search = products.filter((Q(name__icontains='' if sessions.get('name') is None else sessions['name']) &
+                                          Q(offers__price__range=(prices[0], prices[1]))) &
+                                         Q(offers__product_in_stock=None if sessions.get('in_stock') is None else
+                                         sessions['in_stock'])).distinct()
+
+    if sessions.get('free_delivery'):
+        product_search = products.filter((Q(name__icontains='' if sessions.get('name') is None else sessions['name']) &
+                                          Q(offers__price__range=(prices[0], prices[1]))) &
+                                         Q(offers__free_shipping=None if sessions.get('free_delivery') is None else
+                                         sessions['free_delivery'])).distinct()
+    if sessions.get('in_stock') and sessions.get('free_delivery'):
+        product_search = products.filter((Q(name__icontains='' if sessions.get('name') is None else sessions['name']) &
+                                          Q(offers__price__range=(prices[0], prices[1]))) &
+                                         Q(offers__free_shipping=None if sessions.get('free_delivery') is None else
+                                         sessions['free_delivery']) &
+                                         Q(offers__free_shipping=None if sessions.get('free_delivery') is None else
+                                         sessions['free_delivery'])).distinct()
     return product_search
 
 
@@ -38,7 +54,8 @@ class MixinGetPost:
             form = ProductFilterForm(request.session['filter'])
             if form.is_valid():
                 form.fields['price'].widget.attrs.update({'data-from': prices[0], 'data-to': prices[1]})
-                products = filter_search(request.session['filter'], products)
+
+                products = filter_search(sessions, products)
         else:
             form = ProductFilterForm()
             products = Product.objects.all().distinct()
@@ -54,7 +71,8 @@ class MixinGetPost:
                                                       'data-to': prices[1]})
             request.session.set_expiry(180)
             request.session['filter'] = form.cleaned_data
-            product = filter_search(request.session['filter'], product)
+            session = request.session['filter']
+            product = filter_search(session, product)
         else:
             form = ProductFilterForm()
         context = get_paginator(request, product, form)
