@@ -31,13 +31,13 @@ class OrderOfferAdminInline(admin.TabularInline):
     model = Order.offer.through
 
 
-
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [
         OrderOfferAdminInline,
     ]
     list_display = 'id', 'custom_user', 'status', 'data',
+
 
 @admin.register(OrderStatus)
 class OrderAdmin(admin.ModelAdmin):
