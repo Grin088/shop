@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from users.models import CustomUser
+
+
 
 class Shop(models.Model):
     """Магазин"""
@@ -38,3 +41,49 @@ class Banner(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class OrderStatus(models.Model):
+    class Meta:
+        verbose_name = _('статус заказа')
+        verbose_name_plural = _('статусы заказа')
+
+    sort_index = models.SmallIntegerField(unique=True,  verbose_name=_('порядковый индекс'))
+    name = models.CharField(max_length=100, verbose_name=_('статус заказа'))
+    def __str__(self):
+        return self.name
+
+
+class Order(models.Model):
+    class Meta:
+        verbose_name = _('заказ')
+        verbose_name_plural = _('заказы')
+
+    custom_user = models.ForeignKey(CustomUser,
+                                    on_delete=models.PROTECT,
+                                    related_name='orders',
+                                    verbose_name=_('пользователь'))
+    offer = models.ManyToManyField(Offer, through='OrderOffer',
+                                   related_name='orders',
+                                   verbose_name=_('предложение'))
+    status = models.ForeignKey(OrderStatus,
+                               on_delete=models.PROTECT,
+                               related_name='orders',
+                               verbose_name=_('статус'))
+    data = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
+
+
+class OrderOffer(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    offer = models.ForeignKey(Offer, on_delete=models.PROTECT)
+    count = models.SmallIntegerField(verbose_name=_('количество'))
+
+
+class OrderStatusChange(models.Model):
+    class Meta:
+        verbose_name = _('изменение статуса заказа')
+        verbose_name_plural = _('изменение статусов заказов')
+    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    time = models.DateTimeField(auto_now_add=True, verbose_name=_('время изменения'))
+    src_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_src', on_delete=models.PROTECT)
+    dst_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_dst', on_delete=models.PROTECT)
