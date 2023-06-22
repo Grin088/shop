@@ -7,15 +7,17 @@ from products.models import Product
 
 
 def get_paginator(request, products, forms):
-    if request.method == 'GET' or request.method == 'POST':
-        if request.GET.get('sort'):
-            request.session['sorted'] = request.GET.get('sort')
-            sort = request.session['sorted']
-            products = sorted_products(sort, products)
-        else:
-            if 'sorted' in request.session:
-                sort_session = request.session['sorted']
-                products = sorted_products(sort_session, products)
+    """Представление пагинации 'Каталог продуктов' и сессия для сортировки """
+
+    if request.GET.get('sort'):
+        request.session['sorted'] = request.GET.get('sort')
+        sort = request.session['sorted']
+        products = sorted_products(sort, products)
+    else:
+        if 'sorted' in request.session:
+            sort_session = request.session['sorted']
+            products = sorted_products(sort_session, products)
+    # TODO Пагинацию изменить при необходимости (default=4 записи)
     paginator = Paginator(products, 4)
     page = request.GET.get('page')
     page_obj = paginator.get_page(page)
@@ -72,6 +74,7 @@ def filter_search(session, products):
 
 
 class MixinGetPost:
+    """Представление 'Каталог продуктов' """
 
     def get(self, request):
         if 'filter' in request.session:
@@ -95,6 +98,7 @@ class MixinGetPost:
             prices = form.cleaned_data['price'].split(';')
             form.fields['price'].widget.attrs.update({'data-from': prices[0],
                                                       'data-to': prices[1]})
+            # TODO Время жизни сессии можно изменить при необходимости (default=3 мин.)
             request.session.set_expiry(180)
             request.session['filter'] = form.cleaned_data
             session = request.session['filter']

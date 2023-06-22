@@ -1,6 +1,6 @@
 from django.contrib import admin# noqa F401
 
-from .models import Shop, Offer, Banner
+from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
 
 
 class ShopProductInline(admin.TabularInline):
@@ -25,3 +25,25 @@ class BannerAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'image', 'active')
     list_filter = ('active',)
     search_fields = ('title',)
+
+
+class OrderOfferAdminInline(admin.TabularInline):
+    model = Order.offer.through
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [
+        OrderOfferAdminInline,
+    ]
+    list_display = 'id', 'custom_user', 'status', 'data',
+
+
+@admin.register(OrderStatus)
+class OrderStatusAdmin(admin.ModelAdmin):
+    list_display = 'sort_index', 'name',
+
+
+@admin.register(OrderStatusChange)
+class OrderStatusChangeAdmin(admin.ModelAdmin):
+    list_display = 'id', 'time', 'src_status_id', 'dst_status_id',
