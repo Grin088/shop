@@ -5,7 +5,10 @@
     "fields": {
       "shop": 1,
       "product": 1,
-      "price": "50.00"
+      "price": "5000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -14,7 +17,10 @@
     "fields": {
       "shop": 1,
       "product": 2,
-      "price": "55.00"
+      "price": "5500.00",
+      "product_in_stock": false,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -23,7 +29,10 @@
     "fields": {
       "shop": 2,
       "product": 2,
-      "price": "60.00"
+      "price": "6000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-16T09:48:35.593Z"
     }
   },
   {
@@ -32,7 +41,10 @@
     "fields": {
       "shop": 2,
       "product": 3,
-      "price": "65.00"
+      "price": "6005.00",
+      "product_in_stock": true,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -41,7 +53,10 @@
     "fields": {
       "shop": 3,
       "product": 3,
-      "price": "70.00"
+      "price": "7000.00",
+      "product_in_stock": true,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -50,7 +65,10 @@
     "fields": {
       "shop": 3,
       "product": 4,
-      "price": "75.00"
+      "price": "7500.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-17T09:48:35.593Z"
     }
   },
   {
@@ -59,7 +77,10 @@
     "fields": {
       "shop": 4,
       "product": 4,
-      "price": "80.00"
+      "price": "8000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -68,7 +89,10 @@
     "fields": {
       "shop": 4,
       "product": 5,
-      "price": "85.00"
+      "price": "8500.00",
+      "product_in_stock": false,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -77,7 +101,10 @@
     "fields": {
       "shop": 5,
       "product": 5,
-      "price": "100.00"
+      "price": "10000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -86,7 +113,10 @@
     "fields": {
       "shop": 5,
       "product": 6,
-      "price": "105.00"
+      "price": "10005.00",
+      "product_in_stock": true,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -95,7 +125,10 @@
     "fields": {
       "shop": 6,
       "product": 1,
-      "price": "100.00"
+      "price": "10000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -104,7 +137,10 @@
     "fields": {
       "shop": 6,
       "product": 2,
-      "price": "90.00"
+      "price": "9000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -113,7 +149,10 @@
     "fields": {
       "shop": 6,
       "product": 3,
-      "price": "80.00"
+      "price": "8000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -122,7 +161,10 @@
     "fields": {
       "shop": 6,
       "product": 4,
-      "price": "70.00"
+      "price": "7000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -131,7 +173,10 @@
     "fields": {
       "shop": 6,
       "product": 5,
-      "price": "60.00"
+      "price": "6000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -140,7 +185,10 @@
     "fields": {
       "shop": 6,
       "product": 6,
-      "price": "50.00"
+      "price": "5000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   },
   {
@@ -149,7 +197,82 @@
     "fields": {
       "shop": 2,
       "product": 7,
-      "price": "500.00"
+      "price": "50000.00",
+      "product_in_stock": true,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-23T11:48:35.593Z"
+    }
+  },
+  {
+    "model": "shops.offer",
+    "pk": 18,
+    "fields": {
+      "shop": 6,
+      "product": 1,
+      "price": "7000.00",
+      "product_in_stock": false,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-10T09:48:35.593Z"
+    }
+  },
+  {
+    "model": "shops.offer",
+    "pk": 19,
+    "fields": {
+      "shop": 6,
+      "product": 1,
+      "price": "8000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
+    }
+  },
+  {
+    "model": "shops.offer",
+    "pk": 20,
+    "fields": {
+      "shop": 6,
+      "product": 1,
+      "price": "9000.00",
+      "product_in_stock": false,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
+    }
+  },
+  {
+    "model": "shops.offer",
+    "pk": 21,
+    "fields": {
+      "shop": 4,
+      "product": 3,
+      "price": "6000.00",
+      "product_in_stock": true,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
+    }
+  },
+  {
+    "model": "shops.offer",
+    "pk": 22,
+    "fields": {
+      "shop": 4,
+      "product": 2,
+      "price": "8000.00",
+      "product_in_stock": false,
+      "free_shipping": true,
+      "date_of_creation": "2023-06-15T09:48:35.593Z"
+    }
+  },
+  {
+    "model": "shops.offer",
+    "pk": 23,
+    "fields": {
+      "shop": 4,
+      "product": 5,
+      "price": "7000.00",
+      "product_in_stock": true,
+      "free_shipping": false,
+      "date_of_creation": "2023-06-21T09:48:35.593Z"
     }
   }
 ]
