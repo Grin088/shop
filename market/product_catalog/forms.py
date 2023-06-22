@@ -9,3 +9,4 @@ class ProductFilterForm(forms.Form):
     name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': "Название"}))
     in_stock = forms.BooleanField(required=False, label='Товары только в наличии')
     free_delivery = forms.BooleanField(required=False, label='Бесплатная доставка')
+
