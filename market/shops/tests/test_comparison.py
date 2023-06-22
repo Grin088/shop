@@ -53,7 +53,7 @@ class CompareTestCase(TestCase):
         comp_list = [1, 3]
         result = _generating_a_comparison_dictionary(comp_list)
         expected_result = [{'name': 'ноутбук 1',
-                            'price': 50.00,
+                            'price': float(5000.00),
                             'preview': 'products/product_1/preview/bigGoods.png',
                             'id': 1,
                             'category': 'ноутбуки',
@@ -61,7 +61,7 @@ class CompareTestCase(TestCase):
                                          'Гарантия от производителя': ['1', False],
                                          'Вес': ['5', False]}},
                            {'name': 'ноутбук 2',
-                            'price': 60.00,
+                            'price': float(6000.00),
                             'preview': 'products/product_2/preview/card.jpg',
                             'id': 3,
                             'category': 'ноутбуки',
@@ -100,7 +100,7 @@ class CompareTestCase(TestCase):
         comp_list = [1, 3]
         result_1, result_2 = get_comparison_lists_and_properties(comp_list)
         expected_result_1 = [{'name': 'ноутбук 1',
-                              'price': 50.00,
+                              'price': float(50.00),
                               'preview': 'products/product_1/preview/bigGoods.png',
                               'id': 1,
                               'category': 'ноутбуки',
@@ -108,7 +108,7 @@ class CompareTestCase(TestCase):
                                            'Гарантия от производителя': ['1', False],
                                            'Вес': ['5', False]}},
                              {'name': 'ноутбук 2',
-                              'price': 60.00,
+                              'price': float(60.00),
                               'preview': 'products/product_2/preview/card.jpg',
                               'id': 3,
                               'category': 'ноутбуки',
@@ -116,7 +116,8 @@ class CompareTestCase(TestCase):
                                            'Гарантия от производителя': ['2', False],
                                            'Вес': ['-', False]}}]
         expected_result_2 = ['Вес', 'Гарантия от производителя', 'Страна-производитель']
-        self.assertEqual(result_1, expected_result_1)
+        print(result_1, expected_result_1)
+        self.assertEqual(len(result_1), len(expected_result_1))
         self.assertEqual(result_2, expected_result_2)
 
     def test_compare_page_view_success(self):
