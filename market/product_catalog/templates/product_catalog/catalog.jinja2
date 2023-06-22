@@ -57,11 +57,14 @@
                         </header>
                         <div class="Section-columnContent">
                             <div class="buttons">
-{#                                {% for tag in tags.tags %}#}
-{#                                    <a class="btn btn_default btn_sm" href="#">{{tag}}</a>#}
-{#                                {% endfor %}#}
-
-
+{#                                {% for tag in product.tags.all() %}#}
+{#                                         {% if tag != product.tags.last() %}#}
+{#                                            <a href="#">{{ tag }}</a>,#}
+{#                                         {% else %}#}
+{#                                            <a href="#">{{ tag }}</a>#}
+{#                                         {% endif %}#}
+{#                                    {% endfor %}#}
+{#
 {#                                <a class="btn btn_default btn_sm" href="#">Разработка</a>#}
 {#                                <a class="btn btn_default btn_sm" href="#">Игры</a>#}
 {#                                <a class="btn btn_default btn_sm" href="#">Asus</a>#}
