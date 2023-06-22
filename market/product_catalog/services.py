@@ -1,11 +1,9 @@
-from collections import Counter
-
 from django.core.paginator import Paginator
 from django.db.models import Q, Min
 from django.shortcuts import render
 
 from product_catalog.forms import ProductFilterForm
-from products.models import Product, Browsing_history
+from products.models import Product
 
 
 def get_paginator(request, products, forms):
@@ -35,15 +33,13 @@ def sorted_products(sort, product):
                                                                    else 'date_of_creation'))}
         product = list(product.keys())
         return product
-    elif sort == 'reviews':
-        product = {reviews: reviews.get_count_reviews() for reviews in product}
+    elif sort in ('sorting.get_count_history()', 'sorting.get_count_reviews()'):
+        product = {sorting: sorting.get_count_reviews() if sort == 'sorting.get_count_reviews()'
+                   else sorting.get_count_history() for sorting in product}
         product = sorted(product.items(), key=lambda key: key[1])[::-1]
         product = [value for value, key in product]
         return product
     else:
-        product = {history: history.get_count_history() for history in product}
-        product = sorted(product.items(), key=lambda key: key[1])[::-1]
-        product = [value for value, key in product]
         return product
 
 
@@ -99,8 +95,6 @@ class MixinGetPost:
             prices = form.cleaned_data['price'].split(';')
             form.fields['price'].widget.attrs.update({'data-from': prices[0],
                                                       'data-to': prices[1]})
-            # if 'sorted' in request.session:
-            #     del request.session['sorted']
             request.session.set_expiry(180)
             request.session['filter'] = form.cleaned_data
             session = request.session['filter']

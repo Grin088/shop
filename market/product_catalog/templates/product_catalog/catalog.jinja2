@@ -79,9 +79,9 @@
                             {% csrf_token %}
                             <div class="Sort-variants">
 {#                                <a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a>#}
-                                <button class="Sort-sortBy Sort-sortBy_dec" name="sort" value="top" type="submit" >Популярности</button>
+                                <button class="Sort-sortBy Sort-sortBy_dec" name="sort" value="sorting.get_count_history()" type="submit" >Популярности</button>
                                 <button class="Sort-sortBy" name="sort" value="offers__price" type="submit">Цене</button>
-                                <button class="Sort-sortBy" name="sort" value="reviews" type="submit">Отзывам</button>
+                                <button class="Sort-sortBy" name="sort" value="sorting.get_count_reviews()" type="submit">Отзывам</button>
                                 <button class="Sort-sortBy Sort-sortBy_inc" name="sort" value="-offers__date_of_creation" type="submit">Новизне</button>
                         </div>
                         </form>
