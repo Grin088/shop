@@ -8,15 +8,15 @@ from products.models import Product
 
 def get_paginator(request, products, forms):
     """Представление пагинации 'Каталог продуктов' и сессия для сортировки """
-    if request.method == 'GET' or request.method == 'POST':
-        if request.GET.get('sort'):
-            request.session['sorted'] = request.GET.get('sort')
-            sort = request.session['sorted']
-            products = sorted_products(sort, products)
-        else:
-            if 'sorted' in request.session:
-                sort_session = request.session['sorted']
-                products = sorted_products(sort_session, products)
+
+    if request.GET.get('sort'):
+        request.session['sorted'] = request.GET.get('sort')
+        sort = request.session['sorted']
+        products = sorted_products(sort, products)
+    else:
+        if 'sorted' in request.session:
+            sort_session = request.session['sorted']
+            products = sorted_products(sort_session, products)
     # TODO Пагинацию изменить при необходимости (default=4 записи)
     paginator = Paginator(products, 4)
     page = request.GET.get('page')
