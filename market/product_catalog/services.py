@@ -41,9 +41,8 @@ def sorted_products(sort, product):
         product = [value for value, key in product]
         return product
     else:
-        products_history = Browsing_history.objects.all()
-        product = sorted(list(Counter(Product.objects.filter(products__in=products_history)).
-                              items()), key=lambda key: key[1])[::-1]
+        product = {history: history.get_count_history() for history in product}
+        product = sorted(product.items(), key=lambda key: key[1])[::-1]
         product = [value for value, key in product]
         return product
 
