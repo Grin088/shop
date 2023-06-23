@@ -1,3 +1,5 @@
+from email.headerregistry import Address
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -64,6 +66,11 @@ class Order(models.Model):
         verbose_name = _('заказ')
         verbose_name_plural = _('заказы')
 
+    DELIVERY_CHOICES = [
+        ('ORDINARY', 'Обычная'),
+        ('EXPRESS', 'Экспрес'),
+    ]
+
     custom_user = models.ForeignKey(CustomUser,
                                     on_delete=models.PROTECT,
                                     related_name='orders',
@@ -76,6 +83,9 @@ class Order(models.Model):
                                related_name='orders',
                                verbose_name=_('статус'))
     data = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
+    delivery =  models.CharField(max_length=8, choices=DELIVERY_CHOICES, verbose_name=_('доставка'), default='ORDINARY')
+    citi = models.CharField(max_length=100, verbose_name=_('город'))
+    address = models.CharField(max_length=200, verbose_name=_('адрес'))
 
 
 class OrderOffer(models.Model):
@@ -96,3 +106,5 @@ class OrderStatusChange(models.Model):
     time = models.DateTimeField(auto_now_add=True, verbose_name=_('время изменения'))
     src_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_src', on_delete=models.PROTECT)
     dst_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_dst', on_delete=models.PROTECT)
+
+

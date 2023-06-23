@@ -6,6 +6,11 @@ from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse_lazy
 
+from users.forms import CustomAuthenticationForm
+from users.views import MyLoginView
+from django.contrib.auth.views import LoginView
+
+from .forms import OderLoginUserForm
 from .services import banner
 from .services.catalog import get_featured_categories
 from .services.compare import (compare_list_check,
@@ -16,6 +21,7 @@ from .services.limited_products import get_random_limited_edition_product, get_t
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from .models import Shop
 from .services.is_member_of_group import is_member_of_group
+from django.contrib.auth import authenticate
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -100,3 +106,32 @@ class ComparePageView(View):
             return render(request, 'shops/comparison.jinja2', context=context)
 
         return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
+
+
+class OrderView(TemplateView):
+    def get(self, request: HttpRequest) -> HttpResponse:
+        # TODO"""AAAA"""
+        print(request.user.username)
+        context = {
+            "user": request.user,
+            "form": OderLoginUserForm
+        }
+        return render(request, "order/order.jinja2", context=context)
+    def post(self, request: HttpRequest) -> HttpResponse:
+        print(211111111111, request.POST.get("email"), request.POST.get("password"))
+        user = authenticate(email=request.POST.get("email"), password=request.POST.get("password"))
+        print(user)
+        request.user = user
+        context = {
+            "user": request.user,
+
+        }
+
+        return render(request, "order/order.jinja2", context=context)
+
+
+
+
+class OrderLoginView(MyLoginView):
+    """Вход пользователя"""
+    next_page = reverse_lazy('order')
