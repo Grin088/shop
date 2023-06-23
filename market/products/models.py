@@ -66,6 +66,10 @@ class Product(models.Model):
             or 0
         )
 
+    def get_count_history(self) -> int:
+        """Подсчет просмотров истории продукта"""
+        return Browsing_history.objects.filter(product=self).count()
+
 
 class Property(models.Model):
     """Свойство продукта"""

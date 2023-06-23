@@ -53,7 +53,7 @@ class CompareTestCase(TestCase):
         comp_list = [1, 3]
         result = _generating_a_comparison_dictionary(comp_list)
         expected_result = [{'name': 'ноутбук 1',
-                            'price': 50.00,
+                            'price': 5000.00,
                             'preview': 'products/product_1/preview/bigGoods.png',
                             'id': 1,
                             'category': 'ноутбуки',
@@ -61,7 +61,7 @@ class CompareTestCase(TestCase):
                                          'Гарантия от производителя': ['1', False],
                                          'Вес': ['5', False]}},
                            {'name': 'ноутбук 2',
-                            'price': 60.00,
+                            'price': 6000.00,
                             'preview': 'products/product_2/preview/card.jpg',
                             'id': 3,
                             'category': 'ноутбуки',
@@ -100,7 +100,7 @@ class CompareTestCase(TestCase):
         comp_list = [1, 3]
         result_1, result_2 = get_comparison_lists_and_properties(comp_list)
         expected_result_1 = [{'name': 'ноутбук 1',
-                              'price': 50.00,
+                              'price': 5000.00,
                               'preview': 'products/product_1/preview/bigGoods.png',
                               'id': 1,
                               'category': 'ноутбуки',
@@ -108,7 +108,7 @@ class CompareTestCase(TestCase):
                                            'Гарантия от производителя': ['1', False],
                                            'Вес': ['5', False]}},
                              {'name': 'ноутбук 2',
-                              'price': 60.00,
+                              'price': 6000.00,
                               'preview': 'products/product_2/preview/card.jpg',
                               'id': 3,
                               'category': 'ноутбуки',
