@@ -1,0 +1,19 @@
+{% extends 'market/base.jinja2' %}
+{% block middle %}
+<h1>Детали импорта</h1>
+<ul>
+  <li>Имя файла: {{ object.source }}</li>
+  <li>Дата и время запуска: {{ start_time }}</li>
+  <li>Дата и время окончания: {{ end_time }}</li>
+  <li>Статус: {{ status }}</li>
+  <li>Результат: {{ task_result }}</li>
+  {% if object.errors %}
+  <li>Ошибки:</li>
+  <ul>
+    {% for error in object.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</ul>
+{% endblock %}
