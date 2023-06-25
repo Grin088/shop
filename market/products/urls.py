@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProductView, ReviewsAPI, ImportCreateView, ImportListView
+from .views import ProductView, ReviewsAPI, ImportCreateView, ImportDetailView
 from django.conf import settings  # noqa F401
 from django.views.decorators.cache import cache_page  # noqa F401
 
@@ -12,7 +12,7 @@ urlpatterns = [
          ProductView.as_view(),
          name="product_detail"),
     path('import/', ImportCreateView.as_view(), name='import'),
-    path('import-list/', ImportListView.as_view(), name='import-list')
+    path('import/<int:pk>/', ImportDetailView.as_view(), name='import-detail'),
 ]
 
 # TODO реализация сброса кэша после обновления товара
