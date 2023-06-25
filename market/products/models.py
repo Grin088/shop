@@ -182,6 +182,7 @@ class Import(models.Model):
     imported_count = models.IntegerField(default=0, verbose_name=_('количество импортированных товаров'))
     errors = models.JSONField(default=list, verbose_name=_('список ошибок при импорте'))
     email = models.EmailField(null=True, verbose_name=_('email получателя уведомления'))
+    task_id = models.CharField(max_length=36, blank=True, null=True, verbose_name=_('идентификатор задачи'))
 
     def __str__(self):
         return f'Импорт из {self.source}'
