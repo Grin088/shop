@@ -1,5 +1,4 @@
-{
-  "items": [
+[
     {
       "name": "Ноутбук ASUS VivoBook 15",
       "description": "Ноутбук ASUS VivoBook 15 с диагональю экрана 15.6 дюйма, процессором Intel Core i5, оперативной памятью 8 ГБ и жестким диском на 512 ГБ.",
@@ -22,4 +21,3 @@
       "preview": "https://example.com/images/apple_ipad_air.jpg"
     }
   ]
-}
