@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import FileInput
+
 from .models import Review, Import
 
 
@@ -26,6 +28,10 @@ class ImportForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         """метод для инициализации формы"""
         super().__init__(*args, **kwargs)  # вызываем родительский метод
-        self.fields['source'].label = 'Имя файла или URL'  # устанавливаем метку для поля source
+        self.fields['source'].label = 'Your json file'  # устанавливаем метку для поля source
         self.fields['email'].label = 'Email получателя уведомления'  # устанавливаем метку для поля email
         self.fields['email'].required = False  # делаем поле email необязательным для заполнения
+        self.fields['source'].widget = FileInput(attrs={
+            'class': 'import_row',
+            'accept': '.json',
+        })
