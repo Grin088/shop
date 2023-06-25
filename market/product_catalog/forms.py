@@ -2,13 +2,11 @@ from django import forms
 
 
 class ProductFilterForm(forms.Form):
-    # ordering = forms.ChoiceField(label='Сортировка', required=False, choices=[
-    #     ['price', 'По популярности #В разработке#'],
-    #     ['price', 'Сначала дешевые'],
-    #     ['-price', 'Сначала дорогие'],
-    #     ['price', 'По отзывам #В разработке#'],
-    #     ['price', 'По новизне #В разработке#']
-    # ])
-    # min_price = forms.IntegerField(label='от', required=False)
-    # max_price = forms.IntegerField(label='до', required=False)
-    pass
+    """Форма заполнения фильтров"""
+    price = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': "range-line", 'type': "text",
+                                                                         'data-type': "double", 'data-min': "2000",
+                                                                         'data-max': "100000", 'data-from': "5000",
+                                                                         'data-to': "30000"}))
+    name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': "Название"}))
+    in_stock = forms.BooleanField(required=False, label='Товары только в наличии')
+    free_delivery = forms.BooleanField(required=False, label='Бесплатная доставка')

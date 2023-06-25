@@ -66,6 +66,10 @@ class Product(models.Model):
             or 0
         )
 
+    def get_count_history(self) -> int:
+        """Подсчет просмотров истории продукта"""
+        return Browsing_history.objects.filter(product=self).count()
+
 
 class Property(models.Model):
     """Свойство продукта"""
@@ -127,6 +131,13 @@ class Review(models.Model):
         verbose_name = _("отзыв")
         verbose_name_plural = _("отзывы")
 
+    RATING_CHOICES = (
+        (1, "1"),
+        (2, "2"),
+        (3, "3"),
+        (4, "4"),
+        (5, "5")
+    )
     user = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, verbose_name=_("Покупатель")
     )
@@ -135,7 +146,7 @@ class Review(models.Model):
     )
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))
     rating = models.PositiveSmallIntegerField(
-        choices=((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5")),
+        choices=RATING_CHOICES,
         verbose_name=_("Оценка"),
     )
     review_text = models.TextField(
@@ -161,6 +172,18 @@ class Review(models.Model):
             reviews = reviews.filter(product_id=product_id)
 
         return reviews
+
+
+class Browsing_history(models.Model):
+    """Подсчет просмотра товаров"""
+    users = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')
+    data_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-data_at']
+        verbose_name = _("Просмотр продута")
+        verbose_name_plural = _("Просмотр продуктов")
 
 
 class Import(models.Model):

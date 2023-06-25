@@ -68,7 +68,7 @@ block
                     {% if request.user.is_authenticated  %}
                     <button class="dropbtn"><img class="CartBlock-img" src="{{ static('/market/assets/img/icons/loon-icon.svg') }}" alt="loon-icon.svg" /></button>
                     <div class="dropdown-content">
-                        <a class="dropdown-content-a" href="{{ url('account') }}">Личный кабинет</a>
+                        <a class="dropdown-content-a" href="{{ url('users:users_account') }}">Личный кабинет</a>
                         <a class="dropdown-content-a" href="{{ url('account') }}">Административный раздел</a>
                         <a class="dropdown-content-a" href="{{ url('account') }}">Выход</a>
                     </div>

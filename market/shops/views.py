@@ -37,7 +37,6 @@ def home(request):
             'top_products': top_products,
             'limited_edition': limited_edition,
         }
-        print(limited_product.id)
         return render(request, 'market/index.jinja2', context=context)
 
 

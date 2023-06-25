@@ -1,9 +1,10 @@
 import random
+from collections import Counter
 from datetime import timedelta
 from django.utils import timezone
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
-from products.models import Product
+from products.models import Product, Browsing_history
 from ..tasks import update_product_of_the_day
 
 
@@ -16,7 +17,11 @@ def get_limited_edition():
 
 
 def get_top_products():
-    products = Product.objects.order_by('-index')[:8]
+    """Представление топ-продуктов (первые 8)"""
+    products_history = Browsing_history.objects.all()
+    products = sorted(list(Counter(Product.objects.filter(products__in=products_history)).
+                           items()), key=lambda key: key[1])[:-9:-1]
+    products = [value for value, key in products]
     if products:
         return products
     else:

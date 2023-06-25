@@ -1,4 +1,5 @@
 from products.models import Review, Product
+from products.services import browsing_history
 
 
 class ProductsServices:
@@ -13,7 +14,8 @@ class ProductsServices:
 
     @classmethod
     def customer_can_write_review(cls, request, product_id):
-        """Проверка может ли пользователь оставлять отзыв о товаре"""
+        """Проверка возможности добавления отзыва пользователем"""
+
         user = request.user
 
         order = user.orders.filter(
@@ -26,7 +28,10 @@ class ProductsServices:
         """Получение необходимого контекста для шаблона"""
         reviews_quantity = self.product.get_count_reviews()
         rating = round(self.product.get_average_rating(), 2)
-
+        if not browsing_history.is_valid_history(user_id=self.user.id,
+                                                 product_id=self.product_id) and self.user.is_authenticated:
+            browsing_history.browsing_history(user_id=self.user.id,
+                                              product_id=self.product_id)
         context = {
             "user": self.user,
             "product": self.product,
@@ -36,17 +41,6 @@ class ProductsServices:
             "reviews_quantity": reviews_quantity,
             "rating": rating,
             "images": self.images,
-            # "can_add_review": self.can_create_review()
+            # "can_add_review": self.customer_can_write_review()
         }
-
         return context
-
-    def can_create_review(self):
-        """Проверка возможности добавления отзыва пользователем"""
-        return (
-            self.customer.orders.filter(
-                status="payed",
-                order_items__product=self.product,
-            ).exists()
-            and not self.reviews
-        )

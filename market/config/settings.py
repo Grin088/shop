@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import dotenv_values
 from urllib.parse import urlparse
+from dotenv import dotenv_values
 
 import dj_database_url
 
@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "django_jinja",
     'rest_framework',
     'taggit',
-    'import_data',
 
     # custom apps
     "products",
@@ -60,6 +59,8 @@ INSTALLED_APPS = [
     "mptt",
     'django_celery_beat',
     'django_celery_results',
+    'discounts'
+
 ]
 
 MIDDLEWARE = [
@@ -231,17 +232,6 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_DEFAULT_QUEUE = 'default'
-
-
-#import
-IMPORT_INCOME = BASE_DIR / "imports" / "import-data"
-IMPORT_DONE = BASE_DIR / "imports" / "successful_imports"
-IMPORT_FAIL = BASE_DIR / "imports" / "failed_imports"
-IMPORT_LOGS = BASE_DIR / "imports" / "logs"
-
-os.makedirs(IMPORT_DONE, exist_ok=True)
-os.makedirs(IMPORT_FAIL, exist_ok=True)
-os.makedirs(IMPORT_LOGS, exist_ok=True)
 
 # transferring session storage to Redis
 SESSION_ENGINE = 'redis_sessions.session'
