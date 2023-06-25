@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect  # noqa F401
-from django.views.generic import TemplateView, CreateView, ListView
+from django.views.generic import TemplateView, CreateView, DetailView
 from rest_framework.views import APIView
-from django.urls import reverse_lazy
-from django.core.management import call_command
+from django.urls import reverse
+from celery.result import AsyncResult
+from import_data.tasks import import_products
 from django.http import JsonResponse
 from .models import Review, Import
 from .forms import ReviewFrom, ImportForm
@@ -75,30 +76,60 @@ class BaseView(TemplateView):
 
 class ImportCreateView(CreateView):
     """ представление для запуска импорта"""
-
     model = Import
     form_class = ImportForm
     template_name = 'market/products/import_form.jinja2'
-    success_url = reverse_lazy('products:import-list')
+    # success_url = reverse_lazy('products:import-detail')
 
     def form_valid(self, form):
 
-        # вызываем родительский метод для создания бъекта модели Import с данными из формы
+        # вызываем родительский метод для создания объекта модели Import с данными из формы
         response = super().form_valid(form)
 
         # получаем имя файла или URL и email из формы
         source = form.cleaned_data['source']
         email = form.cleaned_data['email']
 
-        # вызываем команду для запуска импорта с указанными аргументами
-        call_command('import_data', source, '--email', email, '--save')
+        # запускаем задачу импорта с помощью celery
+        task = import_products.delay(source, email)
 
-        # возвращаем ответ родительского метода
+        # получаем идентификатор задачи
+        task_id = task.id
+
+        # сохраняем идентификатор задачи в объекте модели Import
+        self.object.task_id = task_id
+        self.object.save()
+
+        # перенаправляем пользователя на страницу с деталями импорта
         return response
 
+    def get_success_url(self):
+        # метод для получения URL для перенаправления после создания объекта модели Import
+        return reverse('products:import-detail', kwargs={'pk': self.object.pk})
 
-class ImportListView(ListView):
+
+class ImportDetailView(DetailView):
+    """представление для отображения деталей импорта"""
     model = Import
-    template_name = 'market/products/import_list.jinja2'
-    context_object_name = 'imports'
-    ordering = '-start_time'
+    template_name = 'market/products/import_detail.jinja2'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        import_obj = self.get_object()
+        task_id = import_obj.task_id
+        # получаем статус и результат задачи с помощью celery
+        task = AsyncResult(task_id)
+        task_status = task.status
+        if task_status == 'SUCCESS':
+            # task_result = task.result
+            context['task_result'] = f'Импорт из {import_obj.source} успешно завершен.' \
+                                     f' Импортировано {import_obj.imported_count} товаров.'
+        elif task_status == 'FAILURE':
+            context['task_result'] = f'Импорт из {import_obj.source} завершен с ошибкой. Ошибка: {task.result}'
+        else:
+            context['task_result'] = 'Импорт еще не завершен'
+        context['task_status'] = task_status
+        context['start_time'] = import_obj.start_time
+        context['end_time'] = import_obj.end_time
+        context['status'] = import_obj.status
+        return context
