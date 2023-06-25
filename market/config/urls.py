@@ -25,5 +25,4 @@ urlpatterns = [
     path("", include('shops.urls')),
     path("catalog/", include('product_catalog.urls')),
     path("products/", include('products.urls')),
-    path("django-rq/", include("django_rq.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
