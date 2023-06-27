@@ -1,5 +1,6 @@
 {% extends "market/base.jinja2" %}
 {% block middle %}
+
     <div class="Middle Middle_top">
         <div class="Section Section_column Section_columnRight Section_columnWide Order">
             <div class="wrap">
@@ -28,7 +29,8 @@
                     </div>
                 </div>
                 <div class="Section-content">
-                    <form class="form" action="#" method="post">
+                    <form class="form" id="form-section-content" action="#" method="post">
+                        {% csrf_token %}
                         <div class="Order-block Order-block_OPEN" id="step1">
                             <header class="Section-header Section-header_sm">
                                 <h2 class="Section-title">Шаг 1. Параметры пользователя
@@ -40,7 +42,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="name">ФИО
                                         </label>
-                                            <div class="form-input">
+                                            <div class="form-input" >
                                                 <p> {{ user.username }} </p>
                                             </div>
                                     </div>
@@ -59,38 +61,43 @@
                                            </div>
                                     </div>
                                 </div>
-                                {% else %}
-                                    <form method="post">
-                                        {% csrf_token %}
-                                        <div class="row-block">
-                                             <div class="form-group">
-                                                <label class="form-label" for="mail">E-mail
-                                                </label>
-                                                <input class="form-input" id="mail" name="email" type="text" value="" data-validate="require" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label" for="password">Пароль
-                                                </label>
-                                                <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль" />
-                                            </div>
-
-                                            <div class="form-group">
-                                                <button class="btn btn_muted Order-btnReg" type="submit">Войдите в свою учётную запись</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                    <div class="row-block">
-                                        <div class="form-group"><a class="btn btn_muted Order-btnReg" href="{{ url('users:users_register') }}">Я еще не зарегистрирован</a>
-                                        </div>
-                                    </div>
-
-                                {% endif %}
-
                             </div>
                             <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">Дальше</a>
                             </div>
                         </div>
+                        {% else %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row-block">
+                                     <div class="form-group">
+                                        <label class="form-label" for="mail">E-mail
+                                        </label>
+                                        <input class="form-input" id="mail" name="email" type="text" value="" data-validate="require" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="password">Пароль
+                                        </label>
+                                        <input class="form-input" id="password" name="password" type="password" data-validate="require"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button class="btn btn_muted Order-btnReg" type="submit">Войдите в свою учётную запись</button>
+                                    </div>
+                                    <div class="form-group">
+                                        {% if text %}
+                                            <t>{{ text }}</t>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row-block">
+                                <div class="form-group"><a class="btn btn_muted Order-btnReg" href="{{ url('users:users_register') }}">Я еще не зарегистрирован</a>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                        {% endif %}
                         <div class="Order-block" id="step2">
                             <header class="Section-header Section-header_sm">
                                 <h2 class="Section-title">Шаг 2. Способ доставки
@@ -99,24 +106,24 @@
                             <div class="form-group">
                                 <div>
                                     <label class="toggle">
-                                        <input type="radio" name="delivery" value="ordinary" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Обычная доставка</span>
+                                        <input type="radio" name="delivery" value="ORDINARY" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Обычная доставка</span>
                                     </label>
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <input type="radio" name="delivery" value="express" /><span class="toggle-box"></span><span class="toggle-text">Экспресс доставка</span>
+                                        <input type="radio"  name="delivery" value="EXPRESS" /><span class="toggle-box"></span><span class="toggle-text">Экспресс доставка</span>
                                     </label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="city">Город
                                 </label>
-                                <input class="form-input" id="city" name="city" type="text" />
+                                <input class="form-input" id="city" name="city" type="text"  data-validate="require"/>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="address">Адрес
+                                <label class="form-label" for="address" >Адрес
                                 </label>
-                                <textarea class="form-textarea" name="address" id="address"></textarea>
+                                <textarea class="form-textarea" name="address" id="address"  data-validate="require"></textarea>
                             </div>
                             <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3">Дальше</a>
                             </div>
@@ -129,16 +136,16 @@
                             <div class="form-group">
                                 <div>
                                     <label class="toggle">
-                                        <input type="radio" name="pay" value="online" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Онлайн картой</span>
+                                        <input type="radio" name="pay" value="ONLINE" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Онлайн картой</span>
                                     </label>
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <input type="radio" name="pay" value="someone" /><span class="toggle-box"></span><span class="toggle-text">Онлайн со случайного чужого счета</span>
+                                        <input type="radio" name="pay" value="SOMEONE" /><span class="toggle-box"></span><span class="toggle-text">Онлайн со случайного чужого счета</span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4">Дальше</a>
+                            <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4" onclick="copyaddress()">Дальше</a>
                             </div>
                         </div>
                         <div class="Order-block" id="step4">
@@ -147,6 +154,8 @@
                                 </h2>
                             </header>
                             <!--+div.Order.-confirmation-->
+
+
                             <div class="Order-infoBlock">
                                 <div class="Order-personal">
                                     <div class="row">
@@ -154,19 +163,19 @@
                                             <div class="Order-info">
                                                 <div class="Order-infoType">ФИО:
                                                 </div>
-                                                <div class="Order-infoContent">Иванов Иван Иванович
+                                                <div class="Order-infoContent">{{ user.username }}
                                                 </div>
                                             </div>
                                             <div class="Order-info">
                                                 <div class="Order-infoType">Телефон:
                                                 </div>
-                                                <div class="Order-infoContent">+7000000000
+                                                <div class="Order-infoContent">{{ user.phone_number }}
                                                 </div>
                                             </div>
                                             <div class="Order-info">
                                                 <div class="Order-infoType">E-mail:
                                                 </div>
-                                                <div class="Order-infoContent">send@test.test
+                                                <div class="Order-infoContent">{{ user.email }}
                                                 </div>
                                             </div>
                                         </div>
@@ -174,25 +183,25 @@
                                             <div class="Order-info Order-info_delivery">
                                                 <div class="Order-infoType">Тип доставки:
                                                 </div>
-                                                <div class="Order-infoContent">Обычная доставка
+                                                <div class="Order-infoContent" id="delivery_infoBlock">Обычная доставка
                                                 </div>
                                             </div>
                                             <div class="Order-info">
-                                                <div class="Order-infoType">Город:
+                                                <div class="Order-infoType" >Город:
                                                 </div>
-                                                <div class="Order-infoContent">Москва
+                                                <div class="Order-infoContent" id="city2">
                                                 </div>
                                             </div>
                                             <div class="Order-info">
                                                 <div class="Order-infoType">Адрес:
                                                 </div>
-                                                <div class="Order-infoContent">Ул. Академика Арцимовича, д. 10, кв. 10
+                                                <div class="Order-infoContent" id="address2">
                                                 </div>
                                             </div>
                                             <div class="Order-info Order-info_pay">
                                                 <div class="Order-infoType">Оплата:
                                                 </div>
-                                                <div class="Order-infoContent">Онлайн картой
+                                                <div class="Order-infoContent" id="pay_infoBlock">Онлайн картой
                                                 </div>
                                             </div>
                                         </div>
@@ -258,6 +267,10 @@
                                             <strong class="Cart-title">Итого:
                                             </strong><span class="Cart-price">200.99$</span>
                                         </div>
+                                         <div class="Cart-block Cart-block_total">
+                                            <strong class="Cart-title">Доставка:
+                                            </strong><span class="Cart-price">200.99$</span>
+                                        </div>
                                         <div class="Cart-block">
                                             <button class="btn btn_primary btn_lg" type="submit">Оплатить
                                             </button>
@@ -271,4 +284,26 @@
             </div>
         </div>
     </div>
+<script>
+    function copyaddress() {
+        document.getElementById("city2").innerHTML = document.getElementById("city").value;
+        document.getElementById("address2").innerHTML = document.getElementById("address").value;
+
+        const formData = new FormData(document.getElementById("form-section-content"));
+            if (formData.get("delivery") === "EXPRESS"){
+                document.getElementById("delivery_infoBlock").innerHTML = "Экспресс доставка";
+            }
+
+            if (formData.get("pay") === "SOMEONE"){
+                document.getElementById("pay_infoBlock").innerHTML = "Онлайн со случайного чужого счета";
+            }
+
+
+    }
+
+
+
+
+        {#document.getElementById("address2").innerHTML = formData.get("delivery")#}
+</script>
 {% endblock %}

@@ -67,8 +67,13 @@ class Order(models.Model):
         verbose_name_plural = _('заказы')
 
     DELIVERY_CHOICES = [
-        ('ORDINARY', 'Обычная'),
-        ('EXPRESS', 'Экспрес'),
+        ('ORDINARY', _('Обычная')),
+        ('EXPRESS', _('Экспрес')),
+    ]
+
+    PAY_CHOICES = [
+        ('ONLINE', _('Онлайн')),
+        ('SOMEONE', _('Онлайн со случайного чужого счета')),
     ]
 
     custom_user = models.ForeignKey(CustomUser,
@@ -86,6 +91,7 @@ class Order(models.Model):
     delivery =  models.CharField(max_length=8, choices=DELIVERY_CHOICES, verbose_name=_('доставка'), default='ORDINARY')
     citi = models.CharField(max_length=100, verbose_name=_('город'))
     address = models.CharField(max_length=200, verbose_name=_('адрес'))
+    pay = models.CharField(max_length=8, choices=PAY_CHOICES, verbose_name=_('доставка'), default='ONLINE')
 
 
 class OrderOffer(models.Model):

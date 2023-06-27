@@ -19,9 +19,9 @@ from .services.compare import (compare_list_check,
                                )
 from .services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from .models import Shop
+from .models import Shop, OrderOffer
 from .services.is_member_of_group import is_member_of_group
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -110,18 +110,41 @@ class ComparePageView(View):
 
 class OrderView(TemplateView):
     def get(self, request: HttpRequest) -> HttpResponse:
+
         # TODO"""AAAA"""
-        print(request.user.username)
+
+        order_product_list = [(1, 10), (2, 20), (3, 30)] #TODO имитатор корзины(не проверена)
+        for product_i, counter_i in order_product_list:
+            pass
+
+
         context = {
             "user": request.user,
             "form": OderLoginUserForm
         }
         return render(request, "order/order.jinja2", context=context)
     def post(self, request: HttpRequest) -> HttpResponse:
-        print(211111111111, request.POST.get("email"), request.POST.get("password"))
-        user = authenticate(email=request.POST.get("email"), password=request.POST.get("password"))
-        print(user)
-        request.user = user
+
+        if not request.user.is_authenticated:
+            user = authenticate(email=request.POST.get("email"), password=request.POST.get("password"))
+            print(user)
+            if user:
+                login(request, user)
+            else:
+                return render(request, "order/order.jinja2", context={"text": "Неправильный ввод эмейла или пароля",
+                                                                      "user": request.user,
+                                                                      })
+
+        delivery = request.POST.get("delivery")
+        city = request.POST.get("city")
+        address = request.POST.get("address")
+        pay = request.POST.get("pay") # TODO online and someone
+
+
+
+        print(111111, delivery)
+
+
         context = {
             "user": request.user,
 
@@ -135,3 +158,10 @@ class OrderView(TemplateView):
 class OrderLoginView(MyLoginView):
     """Вход пользователя"""
     next_page = reverse_lazy('order')
+
+
+class  HistoryOrder(View):
+
+    def get(self, request,**kwargs):
+        return render(request, "order/historyorder.jinja2")
+
