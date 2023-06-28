@@ -62,6 +62,8 @@ def import_products(file_path, email):
     import_obj = Import.objects.get(source=file_path)
     import_obj.status = 'running'
     import_obj.start_time = timezone.now()
+    import_obj.end_time = None  # Инициализируем значение end_time
+    import_obj.imported_count = None  # Инициализируем значение imported_count
     import_obj.save()
     try:
         import_obj.status = 'completed'
