@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from import_data.tasks import import_products
 
+
 class Command(BaseCommand):
     """класс для команды импорта данных"""
 
@@ -20,8 +21,6 @@ class Command(BaseCommand):
 
         # получаем значения аргументов из options
         source = options['source']
-        # email = options['email']
-        # save = options['save']
 
         # запускаем задачу импорта с помощью celery
         task = import_products.delay(source)
