@@ -1,7 +1,7 @@
 import json
 import os
 from django.conf import settings
-from products.models import Import, Product
+from products.models import Product
 from catalog.models import Catalog
 
 
@@ -33,6 +33,3 @@ def process_products(file_path, email=None):
             products.append(product)
             log_file.write(f'Товар {name} был {"создан" if created else "обновлен"}\n')
     return products, errors
-
-
-

@@ -10,21 +10,22 @@ from catalog.models import Catalog
 
 
 @app.task
-def import_products(file_path, email):
+def import_products(file_path, email):  # noqa F401
     try:
         with open(file_path) as f:
             data = json.load(f)
     except Exception as e:
         return 'Завершён с ошибкой', [str(e)]
     if app.control.inspect().active():
-        return 'Завершён с ошибкой', ['Предыдущий импорт ещё не выполнен. Пожалуйста, дождитесь его окончания']
+        return 'Завершён с ошибкой',\
+            ['Предыдущий импорт ещё не выполнен. Пожалуйста, дождитесь его окончания']
 
     log_file_name = os.path.basename(file_path) + '.log'
     log_file_path = os.path.join(settings.IMPORT_LOGS, log_file_name)
 
     with open(log_file_path, 'w') as log_file:
         errors = []
-        products = []  # создаем пустой список для товаров
+        products = []
         for item in data:
             name = item.get('name')
             description = item.get('description')
