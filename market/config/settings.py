@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     "mptt",
     'django_celery_beat',
     'django_celery_results',
-    'discounts'
+    'discounts',
+    'site_settings',
 
 ]
 
