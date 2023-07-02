@@ -7,4 +7,3 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(SiteSettings, SiteSettingsAdmin)
-
