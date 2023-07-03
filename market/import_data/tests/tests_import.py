@@ -1,6 +1,6 @@
 import os
 from django.test import TestCase
-from products.models import Import, Product
+from products.models import Product
 from catalog.models import Catalog
 from import_data.services import process_products
 
