@@ -27,6 +27,7 @@ class OrderTestCase(TestCase):
     def setUp(self) -> None:
         self.user = CustomUser.objects.get(pk=11)
         self.client.force_login(self.user)
+
     def test_history_order_view_success(self):
         """Тестирование истории заказа"""
         order = Order.objects.filter(custom_user=self.user)

@@ -10,7 +10,6 @@ from .views import (BaseView,
                     )
 
 
-
 urlpatterns = [
     path('', BaseView.as_view(), name='index'),
     path('', BaseView.as_view(), name='login'),

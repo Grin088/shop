@@ -89,11 +89,12 @@ class Order(models.Model):
                                related_name='orders',
                                verbose_name=_('статус'))
     data = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
-    delivery =  models.CharField(max_length=8, choices=DELIVERY_CHOICES, verbose_name=_('доставка'), default='ORDINARY')
+    delivery = models.CharField(max_length=8, choices=DELIVERY_CHOICES, verbose_name=_('доставка'), default='ORDINARY')
     citi = models.CharField(max_length=100, verbose_name=_('город'))
     address = models.CharField(max_length=200, verbose_name=_('адрес'))
     pay = models.CharField(max_length=8, choices=PAY_CHOICES, verbose_name=_('доставка'), default='ONLINE')
     total_cost = models.DecimalField(decimal_places=2, max_digits=10)
+
 
 class OrderOffer(models.Model):
     """Промежуточная модель. Дополнительное поле количество товара"""
