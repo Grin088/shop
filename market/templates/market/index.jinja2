@@ -1,6 +1,7 @@
 {% extends 'market/base.jinja2' %}
-
-
+{% block header_slider %}
+{% include "market/banner.jinja2" %}
+{% endblock %}
 {% block middle %}
 {% include 'market/home_categories.jinja2' %}
 <div class="Section Section_column Section_columnLeft Section_columnDesktop">

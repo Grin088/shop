@@ -56,7 +56,20 @@
                             </strong>
                         </header>
                         <div class="Section-columnContent">
-                            <div class="buttons"><a class="btn btn_default btn_sm" href="#">Видео</a><a class="btn btn_default btn_sm" href="#">Разработка</a><a class="btn btn_default btn_sm" href="#">Игры</a><a class="btn btn_default btn_sm" href="#">Asus</a><a class="btn btn_default btn_sm" href="#">Разработка</a><a class="btn btn_default btn_sm" href="#">Видео</a>
+                            <div class="buttons">
+{#                                {% for tag in product.tags.all() %}#}
+{#                                         {% if tag != product.tags.last() %}#}
+{#                                            <a href="#">{{ tag }}</a>,#}
+{#                                         {% else %}#}
+{#                                            <a href="#">{{ tag }}</a>#}
+{#                                         {% endif %}#}
+{#                                    {% endfor %}#}
+{#
+{#                                <a class="btn btn_default btn_sm" href="#">Разработка</a>#}
+{#                                <a class="btn btn_default btn_sm" href="#">Игры</a>#}
+{#                                <a class="btn btn_default btn_sm" href="#">Asus</a>#}
+{#                                <a class="btn btn_default btn_sm" href="#">Разработка</a>#}
+{#                                <a class="btn btn_default btn_sm" href="#">Видео</a>#}
                             </div>
                         </div>
                     </div>
@@ -67,10 +80,12 @@
                         </div>
                         <form method="get">
                             {% csrf_token %}
-                            <div class="Sort-variants"><a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a>
-                            <button class="Sort-sortBy" name="sort_price" type="submit">Цене</button>
-                            <button class="Sort-sortBy" name="sort_reviews" type="submit">Отзывам</button>
-                            <a class="Sort-sortBy Sort-sortBy_inc" href="#">Новизне</a>
+                            <div class="Sort-variants">
+{#                                <a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a>#}
+                                <button class="Sort-sortBy Sort-sortBy_dec" name="sort" value="sorting.get_count_history()" type="submit" >Популярности</button>
+                                <button class="Sort-sortBy" name="sort" value="offers__price" type="submit">Цене</button>
+                                <button class="Sort-sortBy" name="sort" value="sorting.get_count_reviews()" type="submit">Отзывам</button>
+                                <button class="Sort-sortBy Sort-sortBy_inc" name="sort" value="-offers__date_of_creation" type="submit">Новизне</button>
                         </div>
                         </form>
                     </div>
@@ -92,7 +107,7 @@
                                         </div>
                                         <div class="Card-category">{{ offer.category.name }}
                                         </div>
-                                        <div class="Card-hover"><a class="Card-btn" href="#"><img src="assets/img/icons/card/cart.svg" alt="cart.svg" /></a>
+                                        <div class="Card-hover"><a class="Card-btn" href="#"><img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" /></a>
                                         </div>
                                     </div>
                                 </div>
