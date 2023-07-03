@@ -5,7 +5,8 @@ from .views import (BaseView,
                     ComparePageView,
                     OrderView,
                     OrderLoginView,
-                    HistoryOrder,
+                    HistoryOrderView,
+                    OrderDetailsView,
                     )
 
 
@@ -22,5 +23,6 @@ urlpatterns = [
     path('seller/', seller_detail, name='seller_detail'),
     path('order/', OrderView.as_view(), name='order'),
     path('order/login/', OrderLoginView.as_view(), name='order_login'),
-    path('order_history/<int:id>/', HistoryOrder.as_view(), name='order_login'),
+    path('order_history/', HistoryOrderView.as_view(), name='order_history'),
+    path('order_history/<int:pk>/', OrderDetailsView.as_view(), name='order_details'),
 ]

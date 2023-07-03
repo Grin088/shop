@@ -1,5 +1,3 @@
-from email.headerregistry import Address
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -92,7 +90,7 @@ class Order(models.Model):
     citi = models.CharField(max_length=100, verbose_name=_('город'))
     address = models.CharField(max_length=200, verbose_name=_('адрес'))
     pay = models.CharField(max_length=8, choices=PAY_CHOICES, verbose_name=_('доставка'), default='ONLINE')
-
+    total_cost = models.DecimalField(decimal_places=2, max_digits=10)
 
 class OrderOffer(models.Model):
     """Промежуточная модель. Дополнительное поле количество товара"""
@@ -100,6 +98,7 @@ class OrderOffer(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     offer = models.ForeignKey(Offer, on_delete=models.PROTECT)
     count = models.SmallIntegerField(verbose_name=_('количество'))
+    price = models.DecimalField(decimal_places=2, max_digits=10)
 
 
 class OrderStatusChange(models.Model):
@@ -112,5 +111,3 @@ class OrderStatusChange(models.Model):
     time = models.DateTimeField(auto_now_add=True, verbose_name=_('время изменения'))
     src_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_src', on_delete=models.PROTECT)
     dst_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_dst', on_delete=models.PROTECT)
-
-

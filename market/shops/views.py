@@ -3,25 +3,28 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from users.forms import CustomAuthenticationForm
+from users.models import CustomUser
 from users.views import MyLoginView
 from django.contrib.auth.views import LoginView
 
-from .forms import OderLoginUserForm
-from .services import banner
-from .services.catalog import get_featured_categories
-from .services.compare import (compare_list_check,
+from shops.forms import OderLoginUserForm
+from shops.services import banner
+from shops.services.catalog import get_featured_categories
+from shops.services.compare import (compare_list_check,
                                splitting_into_groups_by_category,
                                get_comparison_lists_and_properties,
                                )
-from .services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
+from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from .models import Shop, OrderOffer
-from .services.is_member_of_group import is_member_of_group
-from django.contrib.auth import authenticate, login
+from shops.models import Shop, OrderOffer
+from shops.services.is_member_of_group import is_member_of_group
+from shops.models import Order, OrderOffer
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -67,7 +70,7 @@ def seller_detail(request):
 class ComparePageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         """Страница сравнения"""
-
+        # TODO Добавляет список  для отработки сравнения
         # compare_list_check(request.session, 4)
         comp_list = request.session.get("comp_list", [])
 
@@ -109,15 +112,13 @@ class ComparePageView(View):
 
 
 class OrderView(TemplateView):
+    """Оформление заказа"""
+
     def get(self, request: HttpRequest) -> HttpResponse:
-
         # TODO"""AAAA"""
-
         order_product_list = [(1, 10), (2, 20), (3, 30)] #TODO имитатор корзины(не проверена)
         for product_i, counter_i in order_product_list:
             pass
-
-
         context = {
             "user": request.user,
             "form": OderLoginUserForm
@@ -127,7 +128,6 @@ class OrderView(TemplateView):
 
         if not request.user.is_authenticated:
             user = authenticate(email=request.POST.get("email"), password=request.POST.get("password"))
-            print(user)
             if user:
                 login(request, user)
             else:
@@ -140,19 +140,10 @@ class OrderView(TemplateView):
         address = request.POST.get("address")
         pay = request.POST.get("pay") # TODO online and someone
 
-
-
-        print(111111, delivery)
-
-
         context = {
             "user": request.user,
-
         }
-
         return render(request, "order/order.jinja2", context=context)
-
-
 
 
 class OrderLoginView(MyLoginView):
@@ -160,8 +151,28 @@ class OrderLoginView(MyLoginView):
     next_page = reverse_lazy('order')
 
 
-class  HistoryOrder(View):
+class HistoryOrderView(LoginRequiredMixin, View):
+    """История заказов"""
 
-    def get(self, request,**kwargs):
-        return render(request, "order/historyorder.jinja2")
+    login_url = reverse_lazy("users:users_login")
+    def get(self, request: HttpRequest) -> HttpResponse:
+        context = {
+            "orders": Order.objects.filter(custom_user_id=request.user).prefetch_related("status").order_by("-data")
+        }
+        return render(request, "order/historyorder.jinja2", context=context)
 
+
+class OrderDetailsView(LoginRequiredMixin, View):
+    """Отображение деталей заказа"""
+
+    login_url = reverse_lazy("users:users_login")
+    def get(self, reqnuest: HttpRequest, pk:int)-> HttpResponse:
+        query = Order.objects.select_related("custom_user").get(id=pk)
+
+        if reqnuest.user != query.custom_user:
+            return HttpResponse("<h1>HTTP 403 Forbidden</h1>")
+        context = {
+            "order": query,
+            "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related("offer__product"),
+        }
+        return render(reqnuest, "order/oneorder.jinja2" , context=context)
