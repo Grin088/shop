@@ -1,6 +1,3 @@
-from django.forms import ModelForm
-
-from shops.models import Order
 from users.models import CustomUser
 from django.contrib.auth.forms import BaseUserCreationForm
 

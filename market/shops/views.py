@@ -22,7 +22,6 @@ from shops.models import Shop, Order, OrderOffer
 from shops.services.is_member_of_group import is_member_of_group
 
 
-
 @cache_page(settings.CACHE_CONSTANT)
 def home(request):
     if request.method == "GET":
@@ -111,15 +110,12 @@ class OrderView(TemplateView):
     """Оформление заказа"""
 
     def get(self, request: HttpRequest) -> HttpResponse:
-
-        order_product_list = [(1, 10), (2, 20), (3, 30)] #TODO имитатор корзины(не проверена)
-        for product_i, counter_i in order_product_list:
-            pass
         context = {
             "user": request.user,
             "form": OderLoginUserForm
         }
         return render(request, "order/order.jinja2", context=context)
+
     def post(self, request: HttpRequest) -> HttpResponse:
 
         if not request.user.is_authenticated:
