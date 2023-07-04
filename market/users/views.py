@@ -16,6 +16,7 @@ from .forms import (CustomUserCreationForm,
                     ChangePasswordForm,
                     )
 from .models import CustomUser
+from users.services.users import last_order_request
 
 
 class UserRegistrationView(CreateView):
@@ -76,7 +77,8 @@ def account(request):
         else:
             name = user.username
         context = {'username': name,
-                   'user': user}
+                   'user': user,
+                   'order': last_order_request(request.user)}
         return render(request, 'market/users/account.jinja2', context)
 
 

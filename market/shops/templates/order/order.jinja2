@@ -1,0 +1,312 @@
+{% extends "market/base.jinja2" %}
+{% block middle %}
+
+    <div class="Middle Middle_top">
+        <div class="Section Section_column Section_columnRight Section_columnWide Order">
+            <div class="wrap">
+
+                <div class="Section-column">
+                    <div class="Section-columnSection">
+                        <header class="Section-header">
+                            <strong class="Section-title">Прогресс заполнения
+                            </strong>
+                        </header>
+                        <div class="Section-columnContent">
+                            <div class="NavigateProfile">
+                                <ul class="menu menu_vt">
+                                    <li class="menu-item_ACTIVE menu-item" id="step-1"><a class="menu-link Order-next" href="#step1" onclick=illumination("step-1")>Шаг 1. Параметры пользователя</a>
+                                    </li>
+                                    <li class="menu-item" id="step-2"><a class="menu-link Order-next" href="#step2" onclick=illumination("step-2")>Шаг 2. Способ доставки</a>
+                                    </li>
+                                    <li class="menu-item" id="step-3"><a class="menu-link Order-next" href="#step3" onclick=illumination("step-3")>Шаг 3. Способ оплаты</a>
+                                    </li>
+                                    <li class="menu-item" id="step-4"><a class="menu-link Order-next" href="#step4" onclick=illumination("step-4")>Шаг 4. Подтверждение заказа</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> ,
+                    </div>
+                </div>
+                <div class="Section-content">
+                    <form class="form" id="form-section-content" action="#" method="post">
+                        {% csrf_token %}
+                        <div class="Order-block Order-block_OPEN" id="step1">
+                            <header class="Section-header Section-header_sm">
+                                <h2 class="Section-title">Шаг 1. Параметры пользователя
+                                </h2>
+                            </header>
+                            <div class="row">
+                                {% if user.is_authenticated %}
+                                <div class="row-block">
+                                    <div class="form-group">
+                                        <label class="form-label" for="name">ФИО
+                                        </label>
+                                            <div class="form-input" >
+                                                <p> {{ user.username }} </p>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="phone">Телефон
+                                        </label>
+                                            <div class="form-input">
+                                                <p> {{ user.phone_number }} </p>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="mail">E-mail
+                                        </label>
+                                           <div class="form-input">
+                                               <p> {{ user.email }} </p>
+                                           </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2" onclick=illumination("step-2")>Дальше</a>
+                            </div>
+                        </div>
+                        {% else %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row-block">
+                                     <div class="form-group">
+                                        <label class="form-label" for="mail">E-mail
+                                        </label>
+                                        <input class="form-input" id="mail" name="email" type="text" value="" data-validate="require" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="password">Пароль
+                                        </label>
+                                        <input class="form-input" id="password" name="password" type="password" data-validate="require"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button class="btn btn_muted Order-btnReg" type="submit">Войдите в свою учётную запись</button>
+                                    </div>
+                                    <div class="form-group">
+                                        {% if text %}
+                                            <t>{{ text }}</t>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row-block">
+                                <div class="form-group"><a class="btn btn_muted Order-btnReg" href="{{ url('users:users_register') }}">Я еще не зарегистрирован</a>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                        {% endif %}
+                        <div class="Order-block" id="step2">
+                            <header class="Section-header Section-header_sm">
+                                <h2 class="Section-title">Шаг 2. Способ доставки
+                                </h2>
+                            </header>
+                            <div class="form-group">
+                                <div>
+                                    <label class="toggle">
+                                        <input type="radio" name="delivery" value="ORDINARY" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Обычная доставка</span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="toggle">
+                                        <input type="radio"  name="delivery" value="EXPRESS" /><span class="toggle-box"></span><span class="toggle-text">Экспресс доставка</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="city">Город
+                                </label>
+                                <input class="form-input" id="city" name="city" type="text"  data-validate="require"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="address" >Адрес
+                                </label>
+                                <textarea class="form-textarea" name="address" id="address"  data-validate="require"></textarea>
+                            </div>
+                            <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3" onclick=illumination("step-3",)>Дальше</a>
+                            </div>
+                        </div>
+                        <div class="Order-block" id="step3">
+                            <header class="Section-header Section-header_sm">
+                                <h2 class="Section-title">Шаг 3. Способ оплаты
+                                </h2>
+                            </header>
+                            <div class="form-group">
+                                <div>
+                                    <label class="toggle">
+                                        <input type="radio" name="pay" value="ONLINE" checked="checked" /><span class="toggle-box"></span><span class="toggle-text">Онлайн картой</span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="toggle">
+                                        <input type="radio" name="pay" value="SOMEONE" /><span class="toggle-box"></span><span class="toggle-text">Онлайн со случайного чужого счета</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4" onclick='copyaddress("step-3","step-4")'>Дальше</a>
+                            </div>
+                        </div>
+                        <div class="Order-block" id="step4">
+                            <header class="Section-header Section-header_sm">
+                                <h2 class="Section-title">Шаг 4. Подтверждение заказа
+                                </h2>
+                            </header>
+                            <!--+div.Order.-confirmation-->
+
+                            {% if user.is_authenticated %}
+                            <div class="Order-infoBlock">
+                                <div class="Order-personal">
+                                    <div class="row">
+                                        <div class="row-block">
+                                            <div class="Order-info">
+                                                <div class="Order-infoType">ФИО:
+                                                </div>
+                                                <div class="Order-infoContent">{{ user.username }}
+                                                </div>
+                                            </div>
+                                            <div class="Order-info">
+                                                <div class="Order-infoType">Телефон:
+                                                </div>
+                                                <div class="Order-infoContent">{{ user.phone_number }}
+                                                </div>
+                                            </div>
+                                            <div class="Order-info">
+                                                <div class="Order-infoType">E-mail:
+                                                </div>
+                                                <div class="Order-infoContent">{{ user.email }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row-block">
+                                            <div class="Order-info Order-info_delivery">
+                                                <div class="Order-infoType">Тип доставки:
+                                                </div>
+                                                <div class="Order-infoContent" id="delivery_infoBlock">Обычная доставка
+                                                </div>
+                                            </div>
+                                            <div class="Order-info">
+                                                <div class="Order-infoType" >Город:
+                                                </div>
+                                                <div class="Order-infoContent" id="city2">
+                                                </div>
+                                            </div>
+                                            <div class="Order-info">
+                                                <div class="Order-infoType">Адрес:
+                                                </div>
+                                                <div class="Order-infoContent" id="address2">
+                                                </div>
+                                            </div>
+                                            <div class="Order-info Order-info_pay">
+                                                <div class="Order-infoType">Оплата:
+                                                </div>
+                                                <div class="Order-infoContent" id="pay_infoBlock">Онлайн картой
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="Cart Cart_order">
+                                    <div class="Cart-product">
+                                        <div class="Cart-block Cart-block_row">
+                                            <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg" /></a>
+                                            </div>
+                                            <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Ноутбук</a>
+                                                <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
+                                                </div>
+                                            </div>
+                                            <div class="Cart-block Cart-block_price">
+                                                <div class="Cart-price">80.00$
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Cart-block Cart-block_row">
+                                            <div class="Cart-block Cart-block_amount">1 шт.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="Cart-product">
+                                        <div class="Cart-block Cart-block_row">
+                                            <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/sale/product.png" alt="product.png" /></a>
+                                            </div>
+                                            <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Планшет</a>
+                                                <div class="Cart-desc">Это планшет с современным железом. Процессор последнего поколения
+                                                </div>
+                                            </div>
+                                            <div class="Cart-block Cart-block_price">
+                                                <div class="Cart-price">40.99$
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Cart-block Cart-block_row">
+                                            <div class="Cart-block Cart-block_amount">1 шт.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="Cart-product">
+                                        <div class="Cart-block Cart-block_row">
+                                            <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg" /></a>
+                                            </div>
+                                            <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Ноутбук</a>
+                                                <div class="Cart-desc">Это супер ноутбук, 3 гб. 4 ядра
+                                                </div>
+                                            </div>
+                                            <div class="Cart-block Cart-block_price">
+                                                <div class="Cart-price">80.00$
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Cart-block Cart-block_row">
+                                            <div class="Cart-block Cart-block_amount">1 шт.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="Cart-total">
+                                        <div class="Cart-block Cart-block_total">
+                                            <strong class="Cart-title">Итого:
+                                            </strong><span class="Cart-price">200.99$</span>
+                                        </div>
+                                         <div class="Cart-block Cart-block_total">
+                                            <strong class="Cart-title">Доставка:
+                                            </strong><span class="Cart-price">200.99$</span>
+                                        </div>
+                                        <div class="Cart-block">
+                                            <button class="btn btn_primary btn_lg" type="submit">Оплатить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    function copyaddress(step1, step2) {
+        document.getElementById(step1).classList.remove("menu-item_ACTIVE");
+        document.getElementById(step2).classList.add("menu-item_ACTIVE");
+        document.getElementById("city2").innerHTML = document.getElementById("city").value;
+        document.getElementById("address2").innerHTML = document.getElementById("address").value;
+
+        const formData = new FormData(document.getElementById("form-section-content"));
+            if (formData.get("delivery") === "EXPRESS"){
+                document.getElementById("delivery_infoBlock").innerHTML = "Экспресс доставка";
+            }
+            if (formData.get("pay") === "SOMEONE"){
+                document.getElementById("pay_infoBlock").innerHTML = "Онлайн со случайного чужого счета";
+            }
+    }
+
+    function illumination(step) {
+        document.getElementById("step-1").classList.remove("menu-item_ACTIVE");
+        document.getElementById("step-2").classList.remove("menu-item_ACTIVE");
+        document.getElementById("step-3").classList.remove("menu-item_ACTIVE");
+        document.getElementById("step-4").classList.remove("menu-item_ACTIVE");
+        document.getElementById(step).classList.add("menu-item_ACTIVE")
+    }
+
+</script>
+{% endblock %}
