@@ -2,7 +2,7 @@ import os
 from django.test import TestCase
 from products.models import Product
 from catalog.models import Catalog
-from import_data.services import process_products
+from import_data.services import process_product
 
 
 class ImportTestCase(TestCase):
@@ -12,8 +12,8 @@ class ImportTestCase(TestCase):
         self.abs_file = os.path.abspath(self.file_path)
 
     def test_process_products(self):
-        # Вызываем функцию process_products
-        products, errors = process_products(self.abs_file)
+        """Вызываем функцию process_products"""
+        products, errors = process_product(self.abs_file)
 
         # Проверяем, что список ошибок пустой
         self.assertFalse(errors)

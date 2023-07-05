@@ -5,7 +5,7 @@ from products.models import Product
 from catalog.models import Catalog
 
 
-def process_products(file_path):
+def process_product(file_path):
     """функция обрабатывает данные из файла и создает или обновляет товары"""
     with open(file_path, encoding='utf-8') as file:
         data = json.load(file)

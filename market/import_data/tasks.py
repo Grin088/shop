@@ -4,15 +4,15 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail
 from config.celery import app
-from import_data.services import process_products
-from products.models import Import, Product
+from import_data.services import process_product
+from products.models import Import
 
 
 @app.task
 def import_products(file_path, email):  # noqa F401
     """функция/task для импорта данных"""
     try:
-        products, errors = process_products(file_path)
+        products, errors = process_product(file_path)
     except Exception as e:
         return 'Завершён с ошибкой', [str(e)]
     if app.control.inspect().active():
