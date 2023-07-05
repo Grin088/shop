@@ -6,9 +6,9 @@ from catalog.models import Catalog
 
 
 def process_products(file_path):
-
-    with open(file_path, encoding='utf-8') as f:
-        data = json.load(f)
+    """функция обрабатывает данные из файла и создает или обновляет товары"""
+    with open(file_path, encoding='utf-8') as file:
+        data = json.load(file)
     log_file_name = os.path.basename(file_path) + '.log'
     log_file_path = os.path.join(settings.IMPORT_LOGS, log_file_name)
     with open(log_file_path, 'w', encoding='utf-8') as log_file:

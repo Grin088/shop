@@ -9,11 +9,11 @@ from ..tasks import update_product_of_the_day
 
 
 def get_limited_edition():
+    """возвращает продукты с галочкой 'ограниченные предложения'"""
     edition = Product.objects.filter(limited_edition=True)
     if edition:
         return edition
-    else:
-        return None
+    return None
 
 
 def get_top_products():
@@ -24,8 +24,7 @@ def get_top_products():
     products = [value for value, key in products]
     if products:
         return products
-    else:
-        return None
+    return None
 
 
 def get_random_limited_edition_product():
@@ -34,11 +33,13 @@ def get_random_limited_edition_product():
     if products:
         product = random.choice(products)
         return product
-    else:
-        return None
+    return None
 
 
 def time_left():
+    """возвращает список товаров, который получается из кэша или из базы данных, если кэш пуст
+    и объект timedelta, который показывает, сколько времени осталось до истечения срока действия товаров
+     с ограниченным тиражом."""
     limited_products = cache.get('limited_products')
     if not limited_products:
         update_product_of_the_day.delay()
@@ -47,13 +48,13 @@ def time_left():
     expires_at = cache.get('limited_products.cache_timeout')
     if not expires_at:
         expires_at = now + timedelta(hours=23)  # Начальное значение
-    time_left = (expires_at - now).total_seconds()
-    time_left = max(time_left, 0)  # Удаляем отрицательное значение
-    time_left = timedelta(seconds=time_left)
+    time_l = (expires_at - now).total_seconds()
+    time_l = max(time_l, 0)  # Удаляем отрицательное значение
+    time_l = timedelta(seconds=time_l)
 
     return {
         'limited_products': limited_products,
-        'time_left': time_left,
+        'time_left': time_l,
     }
 
 

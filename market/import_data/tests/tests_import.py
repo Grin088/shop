@@ -25,8 +25,7 @@ class ImportTestCase(TestCase):
         product1 = products[0]
         self.assertEqual(product1.name, 'Ноутбук ASUS VivoBook 15')
         self.assertEqual(product1.description,
-                         'Ноутбук ASUS VivoBook 15 с диагональю экрана 15.6 дюйма,'
-                         ' процессором Intel Core i5, оперативной памятью 8 ГБ и жестким диском на 512 ГБ.')
+                         'Ноутбук ASUS VivoBook 15 с диагональю экрана 15.6 дюйма, процессором Intel Core i5.')
         self.assertEqual(product1.limited_edition, True)
         self.assertEqual(product1.preview, 'preview1.png')
         self.assertEqual(product1.category.name, 'Ноутбуки')

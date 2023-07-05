@@ -20,6 +20,7 @@ from .services.is_member_of_group import is_member_of_group
 
 @cache_page(settings.CACHE_CONSTANT)
 def home(request):
+    """Главная страница"""
     if request.method == "GET":
         featured_categories = get_featured_categories()
         random_banners = banner.banner()
@@ -41,6 +42,7 @@ def home(request):
 
 
 class BaseView(TemplateView):
+    """Базовое представление страницы"""
     template_name = 'market/base.jinja2'
 
 
