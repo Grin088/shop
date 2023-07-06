@@ -13,8 +13,13 @@ def import_products(file_path, email):  # noqa F401
     """функция/task для импорта данных"""
     try:
         products, errors = process_product(file_path)
+    except ValueError as value_error:
+        return 'Завершён с ошибкой', [str(value_error)]
+    except FileNotFoundError as not_found_error:
+        return 'Завершён с ошибкой', [str(not_found_error)]
     except Exception as e:
-        return 'Завершён с ошибкой', [str(e)]
+        return 'Завершён с ошибкой', [f'Неизвестная ошибка {e}']
+
     if app.control.inspect().active():
         return 'Завершён с ошибкой', ['Предыдущий импорт ещё не выполнен. Пожалуйста, дождитесь его окончания']
 
@@ -43,7 +48,7 @@ def import_products(file_path, email):  # noqa F401
         import_obj.imported_count = len(products)
         import_obj.save()
         return f'Импорт из {file_path} успешно завершен. Импортировано {len(products)} товаров.'
-    except Exception as e:
+    except (ValueError, PermissionError, IOError, KeyError) as e:
         import_obj.status = 'failed'
         import_obj.end_time = timezone.now()
         import_obj.errors.append(str(e))
