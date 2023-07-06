@@ -13,12 +13,8 @@ def import_products(file_path, email):  # noqa F401
     """функция/task для импорта данных"""
     try:
         products, errors = process_product(file_path)
-    except ValueError as value_error:
-        return 'Завершён с ошибкой', [str(value_error)]
-    except FileNotFoundError as not_found_error:
-        return 'Завершён с ошибкой', [str(not_found_error)]
-    except Exception as e:
-        return 'Завершён с ошибкой', [f'Неизвестная ошибка {e}']
+    except (ValueError, FileNotFoundError, PermissionError, IOError, KeyError) as error:
+        return 'Завершён с ошибкой', [str(error)]
 
     if app.control.inspect().active():
         return 'Завершён с ошибкой', ['Предыдущий импорт ещё не выполнен. Пожалуйста, дождитесь его окончания']
