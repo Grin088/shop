@@ -3,7 +3,7 @@ from django.test import TestCase
 from products.models import Product
 from catalog.models import Catalog
 from import_data.services import process_product
-# from fixtures import test_imp
+
 
 class ImportTestCase(TestCase):
     """класс для тестирования запуска импорта"""
