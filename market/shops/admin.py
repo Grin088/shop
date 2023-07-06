@@ -22,6 +22,7 @@ class OfferAdmin(admin.ModelAdmin):
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
+    """вывод и фильтрация полей баннера в административной панели"""
     list_display = ('title', 'description', 'image', 'active')
     list_filter = ('active',)
     search_fields = ('title',)

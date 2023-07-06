@@ -187,6 +187,7 @@ class Browsing_history(models.Model):
 
 
 class Import(models.Model):
+    """модель для импорта товаров и отслеживания статуса выполнения """
     STATUS_CHOICES = (
         ('pending', 'В ожидании'),
         ('running', 'В процессе выполнения'),
