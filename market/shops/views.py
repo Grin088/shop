@@ -130,7 +130,7 @@ class OrderView(TemplateView):
             else:
                 return render(request, "market/order/order.jinja2",
                               context={"text": "Неправильный ввод эмейла или пароля",
-                                       "user": request.user,})
+                                       "user": request.user, })
 
         # delivery = request.POST.get("delivery")
         # city = request.POST.get("city")
