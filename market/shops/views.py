@@ -82,7 +82,8 @@ class ComparePageView(View):
             }
             return render(request, "market/shops/comparison.jinja2", context=context)
 
-        return render(request, "market/shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
+        return render(request, "market/shops/comparison.jinja2",
+                      context={"text": "Не достаточно данных для сравнения."})
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Переключение категории сравнения и удаление из списка сравнений"""
@@ -105,7 +106,8 @@ class ComparePageView(View):
                        }
             return render(request, 'market/shops/comparison.jinja2', context=context)
 
-        return render(request, "market/shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
+        return render(request, "market/shops/comparison.jinja2",
+                      context={"text": "Не достаточно данных для сравнения."})
 
 
 class OrderView(TemplateView):
@@ -126,9 +128,9 @@ class OrderView(TemplateView):
             if user:
                 login(request, user)
             else:
-                return render(request, "market/order/order.jinja2", context={"text": "Неправильный ввод эмейла или пароля",
-                                                                      "user": request.user,
-                                                                             })
+                return render(request, "market/order/order.jinja2",
+                              context={"text": "Неправильный ввод эмейла или пароля",
+                                       "user": request.user,})
 
         # delivery = request.POST.get("delivery")
         # city = request.POST.get("city")
