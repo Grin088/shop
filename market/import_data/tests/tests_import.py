@@ -9,7 +9,7 @@ class ImportTestCase(TestCase):
     """класс для тестирования запуска импорта"""
     def setUp(self):
         self.file_path = 'test_imp.json'
-        self.abs_file = os.path.abspath(self.file_path)
+        self.abs_file = os.path.join('.', 'import_data/fixtures', self.file_path)
 
     def test_process_products(self):
         """Вызываем функцию process_products"""
