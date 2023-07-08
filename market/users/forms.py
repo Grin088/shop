@@ -68,13 +68,13 @@ class ChangePasswordForm(SetPasswordForm):
 
     new_password1 = forms.CharField(
         required=False,
-        label=_("New password"),
+        label=_("новый пароль"),
         widget=forms.PasswordInput(attrs={'class': 'form-input'}),
         strip=False,
     )
     new_password2 = forms.CharField(
         required=False,
-        label=_("New password confirmation"),
+        label=_("подтверждение нового пароля"),
         strip=False,
         widget=forms.PasswordInput(attrs={'class': 'form-input'}),
     )

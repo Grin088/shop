@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Min
 from django.shortcuts import render
 
-from product_catalog.forms import ProductFilterForm
+from catalog.forms import ProductFilterForm
 from products.models import Product
 
 
@@ -89,7 +89,7 @@ class MixinGetPost:
             form = ProductFilterForm()
             products = Product.objects.all()
         context = get_paginator(request, products, form)
-        return render(request, 'product_catalog/catalog.jinja2', context=context)
+        return render(request, 'market/catalog/catalog.jinja2', context=context)
 
     def post(self, request):
         product = Product.objects.all()
@@ -106,4 +106,4 @@ class MixinGetPost:
         else:
             form = ProductFilterForm()
         context = get_paginator(request, product, form)
-        return render(request, 'product_catalog/catalog.jinja2', context=context)
+        return render(request, 'market/catalog/catalog.jinja2', context=context)

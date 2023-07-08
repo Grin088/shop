@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as g
 from discounts.models import ShopItemDiscount, CartItemDiscount
 from discounts.forms import ShopDiscountCreationForm, CartDiscountCreationForm
 
@@ -21,7 +22,7 @@ class ShopDiscountAdmin(admin.ModelAdmin):
             obj.active = False
             obj.save()
             return mark_safe(
-                f'<span style="color: red;">{_("Время действия скидки истекло !")}</span>'
+                f'<span style="color: red;">{g("Время действия скидки истекло !")}</span>'
             )
         return last_time
 
@@ -76,7 +77,7 @@ class CartDiscountAdmin(admin.ModelAdmin):
             obj.active = False
             obj.save()
             return mark_safe(
-                f'<span style="color: red;">{_("Время действия скидки истекло !")}</span>'
+                f'<span style="color: red;">{g("Время действия скидки истекло !")}</span>'
             )
         return last_time
 
