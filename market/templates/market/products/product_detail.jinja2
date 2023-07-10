@@ -138,7 +138,7 @@
                                                         <div class="ProductCard-cartElement" style="margin-top: 10px;">
                                                             <a class="btn btn_primary" href="#modal_open">
                                                                 <img class="btn-icon" src="{{ static('market/assets/img/icons/card/cart_white.svg') }}" alt="cart_white.svg" />
-                                                                <span class="btn-content">{% trans %}Купить{% endtrans %}</span>
+                                                                <span class="btn-content">{{ gettext('Купить') }}</span>
                                                             </a>
                                                         </div>
                                                     </div>
@@ -190,7 +190,7 @@
                                 <div class="Tabs-addComment">
                                     {% if user.is_authenticated and not review_exist %}
                                     <form class="form" method="post">
-                                     {% csrf_token %}
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                         <div class="rating-area">
                                             <input type="radio" id="star-5" name="rating" value="5">
                                             <label for="star-5" title="{% trans %}Оценка «5»{% endtrans %}"></label>
