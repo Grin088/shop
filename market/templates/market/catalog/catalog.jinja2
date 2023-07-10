@@ -10,12 +10,12 @@
                 <div class="Section-column">
                     <div class="Section-columnSection">
                         <header class="Section-header">
-                            <strong class="Section-title">{% trans %} Фильтр {% endtrans %}
+                            <strong class="Section-title">{% trans %}Фильтр{% endtrans %}
                             </strong>
                         </header>
                         <div class="Section-columnContent">
                             <form class="form" method="post">
-                                {% csrf_token %}
+
                                 <div class="form-group">
                                     <div class="range Section-columnRange">
 {#                                        <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="5000" data-max="100000" data-from="5000" data-to="30000" />#}
@@ -46,7 +46,7 @@
                                     </label>
                                 </div>
                                 <div class="form-group">
-                                    <div class="buttons"><button type="submit" name="filter" class="btn btn_square btn_dark btn_narrow">Фильтр</button>
+                                    <div class="buttons"><button type="submit" name="filter" class="btn btn_square btn_dark btn_narrow">{% trans %}Фильтр{% endtrans %}</button>
                                     </div>
                                 </div>
                             </form>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="Section-columnSection">
                         <header class="Section-header">
-                            <strong class="Section-title">Популярные тэги
+                            <strong class="Section-title">{% trans %}Популярные тэги{% endtrans %}
                             </strong>
                         </header>
                         <div class="Section-columnContent">
@@ -78,16 +78,16 @@
                 </div>
                 <div class="Section-content">
                     <div class="Sort">
-                        <div class="Sort-title">Сортировать по:
+                        <div class="Sort-title">{% trans %}Сортировать по:{% endtrans %}
                         </div>
                         <form method="get">
-                            {% csrf_token %}
+
                             <div class="Sort-variants">
 {#                                <a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a>#}
-                                <button class="Sort-sortBy Sort-sortBy_dec" name="sort" value="sorting.get_count_history()" type="submit" >Популярности</button>
-                                <button class="Sort-sortBy" name="sort" value="offers__price" type="submit">Цене</button>
-                                <button class="Sort-sortBy" name="sort" value="sorting.get_count_reviews()" type="submit">Отзывам</button>
-                                <button class="Sort-sortBy Sort-sortBy_inc" name="sort" value="-offers__date_of_creation" type="submit">Новизне</button>
+                                <button class="Sort-sortBy Sort-sortBy_dec" name="sort" value="sorting.get_count_history()" type="submit">{% trans %}Популярности{% endtrans %}</button>
+                                <button class="Sort-sortBy" name="sort" value="offers__price" type="submit">{% trans %}Цене{% endtrans %}</button>
+                                <button class="Sort-sortBy" name="sort" value="sorting.get_count_reviews()" type="submit">{% trans %}Отзывам{% endtrans %}</button>
+                                <button class="Sort-sortBy Sort-sortBy_inc" name="sort" value="-offers__date_of_creation" type="submit">{% trans %}Новизне{% endtrans %}</button>
                         </div>
                         </form>
                     </div>
@@ -107,7 +107,7 @@
                                     <div class="Card-description">
                                         <div class="Card-cost"><span class="Card-price">От {{ (score | min ) | round }} руб.</span>
                                         </div>
-                                        <div class="Card-category">{{ offer.category.name }}
+                                        <div class="Card-category">{{ _(offer.category.name) }}
                                         </div>
                                         <div class="Card-hover"><a class="Card-btn" href="#"><img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" /></a>
                                         </div>
@@ -130,29 +130,3 @@
         </div>
     </div>
 {% endblock %}
-{#    <form method="get">#}
-{#        {% csrf_token %}#}
-{#        {{form}}#}
-{#        <input type="submit" value="Поиск">#}
-{#    </form>#}
-{#    <form method="get">#}
-{#        {% csrf_token %}#}
-{#        <input name="q" type="text" placeholder="Search">#}
-{#        <button type="submit">Search</button>#}
-{#    </form><br>#}
-{##}
-{##}
-{##}
-{#    {% for offer in page_obj %}#}
-{#        <a href="{{ url('product_detail' ,pk=offer.pk)}}"><img src="{{ offer.product.preview.url }}"></a>#}
-{##}
-{#        <p>Товар: <a href="{{ url('product_detail' ,pk=offer.pk)}}">{{ offer.product.name }}</a></p>#}
-{#        <p>Описание: <a href="{{ url('product_detail' ,pk=offer.pk)}}">#В разработке#</a></p>#}
-{#        <p>Цена: {{ offer.price }}</p>#}
-{#        <p>Кол-во продавцов: #В разработке#</p>#}
-{#        <p>Отзывы: <a href="{{ url('product_detail' ,pk=offer.pk)}}#reviews">#Здесь будет кол-во отзывов#</a></p>#}
-{#        <p><button type="submit" value="buy">Купить</button></p>#}
-{#        <p><button type="submit" value="comparison">Добавить к сравнению</button></p><br>#}
-{#    {% endfor %}#}
-
-
