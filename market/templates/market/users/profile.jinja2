@@ -50,7 +50,7 @@
                     <div class="Profile">
                         <form class="form Profile-form" action="{{ url('users:users_profile') }}" method="post"
                               enctype="multipart/form-data">
-                            {% csrf_token %}
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="row">
                                 <div class="row-block">
                                     {% if user.avatar %}

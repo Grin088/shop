@@ -15,7 +15,7 @@
                         </header>
                         <div class="Section-columnContent">
                             <form class="form" method="post">
-
+                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                 <div class="form-group">
                                     <div class="range Section-columnRange">
 {#                                        <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="5000" data-max="100000" data-from="5000" data-to="30000" />#}
@@ -81,7 +81,7 @@
                         <div class="Sort-title">{% trans %}Сортировать по:{% endtrans %}
                         </div>
                         <form method="get">
-
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="Sort-variants">
 {#                                <a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a>#}
                                 <button class="Sort-sortBy Sort-sortBy_dec" name="sort" value="sorting.get_count_history()" type="submit">{% trans %}Популярности{% endtrans %}</button>

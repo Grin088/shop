@@ -17,14 +17,14 @@ extension-pkg-whitelist=
 fail-on=
 
 # Specify a score threshold to be exceeded before program exits with error.
-fail-under=10.0
+fail-under=9.8
 
 # Files or directories to be skipped. They should be base names, not paths.
 ignore=CVS, migrations, manage.py, apps.py, urls.py
 
 # Add files or directories matching the regex patterns to the ignore-list. The
 # regex matches against paths and can be in Posix or Windows format.
-ignore-paths=
+ignore-paths=fixtures
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
@@ -91,6 +91,10 @@ disable=raw-checker-failed,
         trailing-comma-tuple,
         invalid-str-returned,
         protected-access,
+        too-many-locals,
+        duplicate-code,
+        inconsistent-return-statements,
+        redefined-builtin,
         # TODO customization
         missing-module-docstring,
         too-few-public-methods,

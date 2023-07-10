@@ -10,7 +10,7 @@
         <div class="clear"></div>
         <form method="post">
 
-        {% csrf_token %}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         {% if form.errors %}
            {% for filed, message in form.errors.items() %}
 

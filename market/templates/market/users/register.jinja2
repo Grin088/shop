@@ -10,7 +10,7 @@
         </div>
             <div class="clear"></div>
             <form method="post">
-            {% csrf_token %}
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                 <div>
                     <input class="user-input" type="text" name="{{form.username.name}}" id="username.id" placeholder="{{form.username.label}}" />
                     {% if form.username.errors %}

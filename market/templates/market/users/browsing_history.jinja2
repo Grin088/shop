@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <form method="post">
-                        {% csrf_token %}
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                         <button type="submit" name="delete" value="{{ offer.product.pk }}">
                             {% trans %}Удалить из просмотренных{% endtrans %}</button>
                     </form>
