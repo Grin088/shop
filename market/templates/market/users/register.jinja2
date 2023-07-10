@@ -5,12 +5,12 @@
 
     <div class="wrapper">
         <div class="header">
-                <h3 class="sign-in">Регистрация</h3>
+                <h3 class="sign-in">{% trans %}Регистрация{% endtrans %}</h3>
 
         </div>
             <div class="clear"></div>
             <form method="post">
-            {% csrf_token %}
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                 <div>
                     <input class="user-input" type="text" name="{{form.username.name}}" id="username.id" placeholder="{{form.username.label}}" />
                     {% if form.username.errors %}
@@ -36,10 +36,10 @@
                     <p class="error-message">{{ form.password2.errors }}</p>
                     {% endif %}
                 </div>
-                <input type="submit" value="Зарегистрироваться" />
+                <input type="submit" value="{% trans %}Зарегистрироваться{% endtrans %}" />
 
                 <a class="registr" href="{{ url('users:users_login') }}">
-                    Вход
+                    {% trans %}Вход{% endtrans %}
                 </a>
                 <div class="clear"></div>
             </form>

@@ -9,9 +9,9 @@ from users.models import CustomUser
 class AccountAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("username", "first_name", "last_name", "avatar", "phone_number")}),
+        (_("личная информация"), {"fields": ("username", "first_name", "last_name", "avatar", "phone_number")}),
         (
-            _("Permissions"),
+            _("разрешения"),
             {
                 "fields": (
                     "is_active",
@@ -22,7 +22,7 @@ class AccountAdmin(UserAdmin):
                 ),
             },
         ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("важные даты"), {"fields": ("last_login", "date_joined")}),
     )
 
     add_form = CustomUserCreationForm
