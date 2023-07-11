@@ -12,6 +12,7 @@ class Cart(object):
 
     def __init__(self, request):
         # initialization customer cart
+        self.value = request.POST.get('value_amount')
         self.session = request.session
         self.user = request.user
         cart = self.session.get(settings.CART_SESSION_ID)
@@ -53,4 +54,7 @@ class Cart(object):
 
     def cart_quantity_change(self, offer: Offer, quantity):
         offer_id = str(offer.id)
-        self.cart[offer_id]['quantity'] += int(quantity)
+        if self.value == '+':
+            self.cart[offer_id]['quantity'] += 1
+        if self.value == '-':
+            self.cart[offer_id]['quantity'] -= 1
