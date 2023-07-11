@@ -31,9 +31,9 @@
                                             <div class="Amount">
                                                 <form method="post" action="cart.jinja2">
                                                 {% csrf_token %}
-                                                <button class="Amount-remove" type="submit" name="value_amount" value="-">-</button>
-                                                <input readonly class="Amount-input form-input" name="amount" type="text" value="{{ cart_item.quantity }}"/>
-                                                <button class="Amount-add" type="submit" name="value_amount" value="+">+</button>
+                                                <button  type="submit" name="value_amount" value="-">-</button>
+                                                    <input readonly class="Amount-input form-input" name="amount" type="text" value="{{ cart_item.quantity }}"  />
+                                                <button  type="submit" name="value_amount" value="+">+</button>
                                                 </form>
                                             </div>
                                     </div>
