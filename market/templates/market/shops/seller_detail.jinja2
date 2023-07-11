@@ -3,10 +3,10 @@
 {% block middle %}
     <div>
         {% for inf_shop in shop %}
-            <p>Имя: {{ inf_shop.user.username}}</p>
-            <p>Магазин: {{ inf_shop.name }}</p>
+            <p>{% trans %}Имя{% endtrans %}: {{ inf_shop.user.username}}</p>
+            <p>{% trans %}Магазин{% endtrans %}: {{ inf_shop.name }}</p>
         <div>
-            <p>Телефон: {{ inf_shop.phone_number }}</p>
+            <p>{% trans %}Телефон{% endtrans %}: {{ inf_shop.phone_number }}</p>
             <p>Email: {{ inf_shop.email }}</p>
         {% endfor %}
     </div>

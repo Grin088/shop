@@ -1,5 +1,5 @@
 from django.views import View
-from product_catalog import services
+from catalog import services
 
 
 class ViewShows(services.MixinGetPost, View):

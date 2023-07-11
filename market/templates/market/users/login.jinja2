@@ -10,7 +10,7 @@
         <div class="clear"></div>
         <form method="post">
 
-        {% csrf_token %}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         {% if form.errors %}
            {% for filed, message in form.errors.items() %}
 
@@ -32,11 +32,11 @@
                 <p class="error-message">{{ form.password.errors }}</p>
             {% endif %}
         </div>
-            <input type="submit" value="Войти" />
+            <input type="submit" value="{% trans %}Войти{% endtrans %}" />
 
-            <a class="forgot-label" href="{{ url ('users:users_restore_password') }}">Забыли пароль?</a>
+            <a class="forgot-label" href="{{ url ('users:users_restore_password') }}">{% trans %}Забыли пароль?{% endtrans %}</a>
             <a class="registr" href="{{ url ('users:users_register') }}">
-                Регистрация
+                {% trans %}Регистрация{% endtrans %}
             </a>
         </form>
     </div>
