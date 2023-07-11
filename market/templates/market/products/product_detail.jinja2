@@ -42,13 +42,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <form class="ProductCard-cart" method="post" action="{{ url('cart:cart_add', product.id) }}">
+                            <form class="ProductCard-cart" method="post" action="{{ url('cart:cart_add', product.id, 0) }}">
                                 {% csrf_token %}
                                 <div class="ProductCard-cartElement ProductCard-cartElement_amount">
                                     <div class="Amount Amount_product">
                                         <button class="Amount-remove" type="button">
                                         </button>
-                                        <input class="Amount-input form-input" name="amount" type="text" value="1" />
+                                        <input class="Amount-input form-input" name="amount" type="text" value=1 />
                                         <button class="Amount-add" type="button">
                                         </button>
                                     </div>

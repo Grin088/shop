@@ -23,7 +23,7 @@ class CartDetailView(TemplateView):
     pass
 
 
-def cart_add(request, pk):
+def cart_add(request, pk, silent):
     cart = CartServices(request)
     if request.user.is_authenticated:
         amount = request.POST.get('amount', None)
@@ -33,7 +33,10 @@ def cart_add(request, pk):
         amount = request.POST.get('amount', None)
         offer = get_object_or_404(Offer, id=pk)
         cart.add_to_cart(offer=offer, quantity=amount)
-    return redirect('cart:cart_items')
+    if not silent:
+        return redirect('cart:cart_items')
+    else:
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 

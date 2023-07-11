@@ -6,7 +6,7 @@
         <div class="Section">
             <div class="wrap">
                 {% for cart_item in cart %}
-                    <form class="form Cart" method="post" action="{{ url('cart:cart_add', cart_item.offer.id) }}" >
+                    <form class="form Cart" method="post" action="{{ url('cart:cart_add', cart_item.offer.id, 0) }}" >
                         <div class="Cart-product">
                             <div class="Cart-block Cart-block_row">
                                 <div class="Cart-block Cart-block_pict">
@@ -29,9 +29,9 @@
                                 <div class="Cart-block Cart-block_amount">
                                     <div class="Cart-amount">
                                         <div class="Amount">
+                                            {% csrf_token %}
                                             <button class="Amount-remove" type="button"></button>
-                                             {% csrf_token %}
-                                            <input class="Amount-input form-input" name="amount" type="text" value="{{ cart_item.quantity }}"/>
+                                            <input readonly class="Amount-input form-input" name="amount" type="text" value="{{ cart_item.quantity }}"/>
                                             <button class="Amount-add" type="button"></button>
                                         </div>
                                     </div>
