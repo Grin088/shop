@@ -8,6 +8,7 @@ class ProductFilterForm(forms.Form):
                                                                          'data-type': "double", 'data-min': "2000",
                                                                          'data-max': "100000", 'data-from': "5000",
                                                                          'data-to': "30000"}))
-    name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': _("Название")}))
+    name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
+                           'placeholder': _("Название")}))
     in_stock = forms.BooleanField(required=False)
     free_delivery = forms.BooleanField(required=False)
