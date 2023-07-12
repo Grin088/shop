@@ -1,9 +1,5 @@
 {% extends 'market/base.jinja2' %}
-
-
-
 {% block middle %}
-
     <div class="Middle Middle_top">
         <div class="Section Section_column Section_columnLeft">
             <div class="wrap">
@@ -18,7 +14,6 @@
                                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                 <div class="form-group">
                                     <div class="range Section-columnRange">
-{#                                        <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="5000" data-max="100000" data-from="5000" data-to="30000" />#}
                                         {{ form.price }}
                                         <div class="range-price">{% trans %}Цена{% endtrans %}:&#32;
                                             <div class="rangePrice">
@@ -27,21 +22,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-{#                                    <input class="form-input form-input_full" id="title" name="title" type="text" placeholder="Название" />#}
                                         {{ form.name }}
                                 </div>
                                 <div class="form-group">
-                                    <!-- - var options = setOptions(items, ['value', 'selected', 'disabled']);-->
                                 </div>
                                 <div class="form-group">
                                     <label class="toggle">
-{#                                        <input type="checkbox" name="in_stock" /><span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>#}
                                         {{ form.in_stock }} <span class="toggle-box"></span><span class="toggle-text">{% trans %}Только товары в наличии{% endtrans %}</span>
                                     </label>
                                 </div>
                                 <div class="form-group">
                                     <label class="toggle">
-{#                                        <input type="checkbox" name="free_delivery" /><span class="toggle-box"></span><span class="toggle-text">С бесплатной доставкой</span>#}
                                         {{ form.free_delivery }} <span class="toggle-box"></span><span class="toggle-text">{% trans %}С бесплатной доставкой{% endtrans %}</span>
                                     </label>
                                 </div>
@@ -54,8 +45,7 @@
                     </div>
                     <div class="Section-columnSection">
                         <header class="Section-header">
-                            <strong class="Section-title">{% trans %}Популярные тэги{% endtrans %}
-                            </strong>
+                            <strong class="Section-title">{% trans %}Популярные тэги{% endtrans %}</strong>
                         </header>
                         <div class="Section-columnContent">
                             <div class="buttons">
@@ -78,12 +68,12 @@
                 </div>
                 <div class="Section-content">
                     <div class="Sort">
-                        <div class="Sort-title">{% trans %}Сортировать по:{% endtrans %}
+                        <div class="Sort-title">
+                            {% trans %}Сортировать по:{% endtrans %}
                         </div>
                         <form method="get">
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="Sort-variants">
-{#                                <a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a>#}
                                 <button class="Sort-sortBy Sort-sortBy_dec" name="sort" value="sorting.get_count_history()" type="submit">{% trans %}Популярности{% endtrans %}</button>
                                 <button class="Sort-sortBy" name="sort" value="offers__price" type="submit">{% trans %}Цене{% endtrans %}</button>
                                 <button class="Sort-sortBy" name="sort" value="sorting.get_count_reviews()" type="submit">{% trans %}Отзывам{% endtrans %}</button>
@@ -105,11 +95,15 @@
                                     <strong class="Card-title"><a href="{{ url('products:product_detail' ,product_id=offer.pk)}}">Corsair Carbide Series Arctic White Steel</a>
                                     </strong>
                                     <div class="Card-description">
-                                        <div class="Card-cost"><span class="Card-price">От {{ (score | min ) | round }} руб.</span>
+                                        <div class="Card-cost"><span class="Card-price">
+                                            От {{ (score | min ) | round }} руб.</span>
                                         </div>
-                                        <div class="Card-category">{{ _(offer.category.name) }}
+                                        <div class="Card-category">
+                                            {{ _(offer.category.name) }}
                                         </div>
-                                        <div class="Card-hover"><a class="Card-btn" href="#"><img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" /></a>
+                                        <div class="Card-hover">
+                                            <a class="Card-btn" href="#">
+                                                <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" /></a>
                                         </div>
                                     </div>
                                 </div>
