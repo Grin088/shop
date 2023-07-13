@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from mptt.models import TreeForeignKey
 from users.models import CustomUser as User
 from django.db.models import Avg, ManyToManyField
 from taggit.managers import TaggableManager
@@ -37,7 +36,7 @@ class Product(models.Model):
         through="ProductProperty",
         verbose_name=_("характеристики")
     )
-    category = TreeForeignKey(
+    category = models.ForeignKey(
         "catalog.Catalog",
         on_delete=models.PROTECT,
         null=True,
