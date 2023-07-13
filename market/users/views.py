@@ -131,7 +131,7 @@ class BrowsingHistory(View):
             'count': history_count,
             'history': history
         }
-        return render(request, 'market/users/../templates/market/catalog/browsing_history.jinja2', context=contex)
+        return render(request, 'market/users/browsing_history.jinja2', context=contex)
 
     def post(self, request):
         product_id = self.request.POST.get('delete')
@@ -143,4 +143,4 @@ class BrowsingHistory(View):
             'count': history_count,
             'history': history
         }
-        return render(request, 'market/users/../templates/market/catalog/browsing_history.jinja2', context=contex)
+        return render(request, 'market/users/browsing_history.jinja2', context=contex)

@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 
 class ProductFilterForm(forms.Form):
@@ -7,6 +8,7 @@ class ProductFilterForm(forms.Form):
                                                                          'data-type': "double", 'data-min': "2000",
                                                                          'data-max': "100000", 'data-from': "5000",
                                                                          'data-to': "30000"}))
-    name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': "Название"}))
-    in_stock = forms.BooleanField(required=False, label='Товары только в наличии')
-    free_delivery = forms.BooleanField(required=False, label='Бесплатная доставка')
+    name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
+                           'placeholder': _("Название")}))
+    in_stock = forms.BooleanField(required=False)
+    free_delivery = forms.BooleanField(required=False)

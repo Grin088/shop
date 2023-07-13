@@ -79,15 +79,15 @@ class CustomUser(AbstractUser):
             validators.validate_image_file_extension,
             validate_image_size
            ],
-        verbose_name=_("Фото профиля")
+        verbose_name=_("фото профиля")
     )
     phone_number = models.CharField(
         max_length=20,
-        help_text=_('Номер телефона должен начинаться с + и содержать только цифры'),
+        help_text=_('номер телефона должен начинаться с + и содержать только цифры'),
         validators=[phone_number_validator],
         null=False,
         default='+0000000000',
-        verbose_name=_("Номер телефона")
+        verbose_name=_("номер телефона")
     )
 
     USERNAME_FIELD = 'email'
