@@ -6,11 +6,7 @@
     "name": "ноутбуки",
     "parent": null,
     "image": "catalog/icon/bigGoods.png",
-    "is_featured": true,
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 1,
-    "level": 0
+    "is_featured": true
   }
 },
 {
@@ -20,11 +16,7 @@
     "name": "бытовая техника",
     "parent": null,
     "image": "catalog/icon/bitovaya-tekhnika-1.jpg",
-    "is_featured": true,
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 2,
-    "level": 0
+    "is_featured": true
   }
 },
 {
@@ -34,11 +26,7 @@
     "name": "Laptop",
     "parent": null,
     "image": "catalog/icon/product.png",
-    "is_featured": true,
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 3,
-    "level": 0
+    "is_featured": true
   }
 }
 ]
