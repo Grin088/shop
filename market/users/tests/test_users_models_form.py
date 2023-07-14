@@ -30,7 +30,7 @@ class UserProfileTest(TestCase):
         """Проверка данных профиля созданного пользователя"""
 
         self.client.login(username='Test_user', password="123")
-        avatar = self.user.avatar
+        avatar = self.user.avatars.avatar
         phone = self.user.phone_number
         self.assertEqual(avatar, "users/avatars/default/default_avatar1.png")
         self.assertEqual(phone, '+0000000000')
@@ -71,7 +71,7 @@ class RegistrationFormTest(TestCase):
         user = CustomUser.objects.get(username=self.data1['username'])
         self.assertEqual(user.email, self.data1['email'])
         self.assertEqual(user.phone_number, '+0000000000')
-        self.assertEqual(user.avatar, "users/avatars/default/default_avatar1.png")
+        self.assertEqual(user.avatars.avatar, "users/avatars/default/default_avatar1.png")
 
     def test_login(self):
         """Проверка входа """
@@ -153,11 +153,11 @@ class UserProfileChangeTests(TestCase):
         self.assertEqual(self.user.first_name, new_first_name)
         self.assertEqual(self.user.last_name, new_last_name)
         self.assertTrue(check_password('testpass123', self.user.password))
-        self.assertIsNotNone(self.user.avatar)
-        self.assertEqual(self.user.avatar.width, 1024)
-        self.assertEqual(self.user.avatar.height, 1024)
-        self.assertLessEqual(self.user.avatar.size, 2 * 1024 * 1024)
-        avatar_directory = os.path.dirname(self.user.avatar.path)
+        self.assertIsNotNone(self.user.avatars.avatar)
+        self.assertEqual(self.user.avatars.avatar.width, 1024)
+        self.assertEqual(self.user.avatars.avatar.height, 1024)
+        self.assertLessEqual(self.user.avatars.avatar.size, 2 * 1024 * 1024)
+        avatar_directory = os.path.dirname(self.user.avatars.avatar.path)
         shutil.rmtree(avatar_directory)
 
     def test_edit_profile_form_failure(self):

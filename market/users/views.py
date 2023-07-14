@@ -15,7 +15,7 @@ from .forms import (CustomUserCreationForm,
                     UserProfileForm,
                     ChangePasswordForm,
                     )
-from .models import CustomUser
+from .models import CustomUser, AvatarUser
 from users.services.users import last_order_request
 
 
@@ -26,6 +26,13 @@ class UserRegistrationView(CreateView):
     model = CustomUser
     template_name = 'market/users/register.jinja2'
     success_url = '/'
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        print(form)
+        avatar = AvatarUser.objects.create(avatar="users/avatars/default/default_avatar1.png", user_id=self.object.id)
+        avatar.save()
+        return result
 
 
 class MyLoginView(LoginView):
