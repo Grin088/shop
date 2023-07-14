@@ -13,7 +13,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:44.313Z",
       "email": "user1@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -33,7 +32,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:44.648Z",
       "email": "user2@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -53,7 +51,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:44.965Z",
       "email": "user3@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -73,7 +70,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:45.280Z",
       "email": "user4@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -93,7 +89,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:45.594Z",
       "email": "user5@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -113,7 +108,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:45.911Z",
       "email": "user6@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -133,7 +127,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:46.224Z",
       "email": "user7@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -153,7 +146,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:46.548Z",
       "email": "user8@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -173,7 +165,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:46.874Z",
       "email": "user9@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -193,7 +184,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:47.191Z",
       "email": "user10@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -213,7 +203,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:47.510Z",
       "email": "admin1@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -233,7 +222,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:47.825Z",
       "email": "admin2@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -253,7 +241,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:48.157Z",
       "email": "admin3@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -273,7 +260,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:48.474Z",
       "email": "admin4@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -293,7 +279,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T05:44:48.791Z",
       "email": "admin5@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -313,7 +298,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T06:11:35.142Z",
       "email": "user@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
@@ -333,7 +317,6 @@
       "is_active": true,
       "date_joined": "2023-06-06T06:11:35.472Z",
       "email": "admin@mail.ru",
-      "avatar": "users/avatars/default/default_avatar1.png",
       "phone_number": "+0000000000",
       "groups": [],
       "user_permissions": []
