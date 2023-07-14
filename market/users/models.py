@@ -107,4 +107,4 @@ class AvatarUser(models.Model):
            ],
         verbose_name=_("фото профиля")
     )
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='avatars')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='avatar')

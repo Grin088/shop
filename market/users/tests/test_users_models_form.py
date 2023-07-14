@@ -2,7 +2,7 @@ import os
 import shutil
 from django.test import TestCase
 from django.urls import reverse_lazy
-from users.models import CustomUser, PhoneNumberValidator
+from users.models import CustomUser, PhoneNumberValidator, AvatarUser
 from django.contrib.auth.hashers import check_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from io import BytesIO
@@ -30,7 +30,8 @@ class UserProfileTest(TestCase):
         """Проверка данных профиля созданного пользователя"""
 
         self.client.login(username='Test_user', password="123")
-        avatar = self.user.avatars.avatar
+        avatar_user = AvatarUser.objects.create(avatar='users/avatars/default/default_avatar1.png', user_id=self.user.pk)
+        avatar = self.user.avatar.avatar
         phone = self.user.phone_number
         self.assertEqual(avatar, "users/avatars/default/default_avatar1.png")
         self.assertEqual(phone, '+0000000000')
@@ -71,7 +72,7 @@ class RegistrationFormTest(TestCase):
         user = CustomUser.objects.get(username=self.data1['username'])
         self.assertEqual(user.email, self.data1['email'])
         self.assertEqual(user.phone_number, '+0000000000')
-        self.assertEqual(user.avatars.avatar, "users/avatars/default/default_avatar1.png")
+        self.assertEqual(user.avatar.avatar, "users/avatars/default/default_avatar1.png")
 
     def test_login(self):
         """Проверка входа """
@@ -127,6 +128,8 @@ class UserProfileChangeTests(TestCase):
     def test_edit_profile_view_success(self):
         """Проверка формы редактирования профиля"""
         self.client.login(email='testuser@gmail.com', password='testpass123')
+        avatar_user = AvatarUser.objects.create(avatar='users/avatars/default/default_avatar1.png',
+                                                user_id=self.user.pk)
 
         new_email = 'newemail@gmail.com'
         new_phone_number = '+0987654321'
@@ -153,10 +156,10 @@ class UserProfileChangeTests(TestCase):
         self.assertEqual(self.user.first_name, new_first_name)
         self.assertEqual(self.user.last_name, new_last_name)
         self.assertTrue(check_password('testpass123', self.user.password))
-        self.assertIsNotNone(self.user.avatars.avatar)
-        self.assertEqual(self.user.avatars.avatar.width, 1024)
-        self.assertEqual(self.user.avatars.avatar.height, 1024)
-        self.assertLessEqual(self.user.avatars.avatar.size, 2 * 1024 * 1024)
+        self.assertIsNotNone(self.user.avatar.avatar)
+        self.assertEqual(self.user.avatar.avatar.width, 1024)
+        self.assertEqual(self.user.avatar.avatar.height, 1024)
+        self.assertLessEqual(self.user.avatar.avatar.size, 2 * 1024 * 1024)
         avatar_directory = os.path.dirname(self.user.avatars.avatar.path)
         shutil.rmtree(avatar_directory)
 
