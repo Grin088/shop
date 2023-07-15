@@ -30,10 +30,12 @@ class UserProfileTest(TestCase):
         """Проверка данных профиля созданного пользователя"""
 
         self.client.login(username='Test_user', password="123")
-        avatar_user = AvatarUser.objects.create(avatar='users/avatars/default/default_avatar1.png', user_id=self.user.pk)
+        avatar_user = AvatarUser.objects.create(avatar='users/avatars/default/default_avatar1.png',
+                                                user_id=self.user.pk)
         avatar = self.user.avatar.avatar
         phone = self.user.phone_number
         self.assertEqual(avatar, "users/avatars/default/default_avatar1.png")
+        self.assertEqual(avatar_user.avatar, "users/avatars/default/default_avatar1.png")
         self.assertEqual(phone, '+0000000000')
 
 
@@ -72,7 +74,7 @@ class RegistrationFormTest(TestCase):
         user = CustomUser.objects.get(username=self.data1['username'])
         self.assertEqual(user.email, self.data1['email'])
         self.assertEqual(user.phone_number, '+0000000000')
-        self.assertEqual(user.avatar.avatar, "static/market/img/icons/default_avatar1.png")
+        self.assertEqual(user.avatar.avatar, "users/avatars/default/default_avatar1.png")
 
     def test_login(self):
         """Проверка входа """
@@ -128,7 +130,7 @@ class UserProfileChangeTests(TestCase):
     def test_edit_profile_view_success(self):
         """Проверка формы редактирования профиля"""
         self.client.login(email='testuser@gmail.com', password='testpass123')
-        avatar_user = AvatarUser.objects.create(avatar='static/market/img/icons/default_avatar1.png',
+        avatar_user = AvatarUser.objects.create(avatar='users/avatars/default/default_avatar1.png',
                                                 user_id=self.user.pk)
 
         new_email = 'newemail@gmail.com'
@@ -153,7 +155,6 @@ class UserProfileChangeTests(TestCase):
 
         self.user.refresh_from_db()
         avatar_user.user.refresh_from_db()
-        print(self.user.avatar.avatar)
         self.assertEqual(self.user.email, new_email)
         self.assertEqual(self.user.phone_number, new_phone_number)
         self.assertEqual(self.user.first_name, new_first_name)
