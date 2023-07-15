@@ -2,17 +2,17 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from users.forms import CustomUserCreationForm
-from users.models import CustomUser, AvatarUser
+from users.models import CustomUser, UserAvatar
 
 
-class AvatarUserInline(admin.TabularInline):
-    model = AvatarUser
+class UserAvatarInline(admin.TabularInline):
+    model = UserAvatar
 
 
 @admin.register(CustomUser)
 class AccountAdmin(UserAdmin):
     inlines = [
-        AvatarUserInline
+        UserAvatarInline
     ]
     fieldsets = (
         (None, {"fields": ("email", "password")}),

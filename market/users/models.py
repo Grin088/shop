@@ -94,9 +94,9 @@ class CustomUser(AbstractUser):
         verbose_name_plural = _("пользователи")
 
 
-class AvatarUser(models.Model):
+class UserAvatar(models.Model):
     validate_image_size = ValidateImageSize()
-    avatar = models.ImageField(
+    image = models.ImageField(
         null=False,
         blank=False,
         upload_to=user_avatar_directory_path,

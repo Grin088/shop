@@ -15,7 +15,7 @@ from .forms import (CustomUserCreationForm,
                     UserProfileForm,
                     ChangePasswordForm,
                     )
-from .models import CustomUser, AvatarUser
+from .models import CustomUser, UserAvatar
 from users.services.users import last_order_request
 
 
@@ -29,8 +29,9 @@ class UserRegistrationView(CreateView):
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        avatar = AvatarUser.objects.create(avatar="users/avatars/default/default_avatar1.png", user_id=self.object.id)
-        avatar.save()
+        default_avatar = UserAvatar.objects.create(image="users/avatars/default/default_avatar1.png",
+                                                   user_id=self.object.id)
+        default_avatar.save()
         return result
 
 
@@ -111,9 +112,9 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
         form = self.get_form()
         second_form = self.second_form_class(instance=request.user, data=request.POST, files=request.FILES)
         if form.is_valid() and second_form.is_valid():
-            avatar1 = second_form.cleaned_data.get('avatar')
-            avatar = AvatarUser.objects.get(user_id=request.user.pk)
-            avatar.avatar = avatar1
+            select_avatar = second_form.cleaned_data.get('avatar')
+            avatar = UserAvatar.objects.get(user_id=request.user.pk)
+            avatar.image = select_avatar
             avatar.save()
             return self.form_valid(form, second_form)
         else:
