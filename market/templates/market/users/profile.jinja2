@@ -52,9 +52,10 @@
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="row">
                                 <div class="row-block">
-                                    {% if user.avatars.avatar %}
+
+                                    {% if user.avatar.avatar != 'static/market/img/icons/default_avatar1.png' %}
                                         <div class="Profile-avatar">
-                                            <div class="Profile-img"><img src="{{ user.avatars.avatar.url }}"
+                                            <div class="Profile-img"><img src="{{ user.avatar.avatar.url }}"
                                                                           alt="card.jpg"/>
                                             </div>
                                             <label class="Profile-fileLabel"
@@ -66,7 +67,7 @@
                                     {% else %}
                                         <div class="form-group">
                                             <label class="form-label" for="{{ second_form.avatar.id_for_label }}">
-                                                {% trans %}Аватар{% endtrans %}
+                                                    Аватар
                                             </label>
                                             <div class="Profile-avatar Profile-avatar_noimg">
 

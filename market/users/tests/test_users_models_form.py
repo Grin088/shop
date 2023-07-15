@@ -72,7 +72,7 @@ class RegistrationFormTest(TestCase):
         user = CustomUser.objects.get(username=self.data1['username'])
         self.assertEqual(user.email, self.data1['email'])
         self.assertEqual(user.phone_number, '+0000000000')
-        self.assertEqual(user.avatar.avatar, "users/avatars/default/default_avatar1.png")
+        self.assertEqual(user.avatar.avatar, "static/market/img/icons/default_avatar1.png")
 
     def test_login(self):
         """Проверка входа """
@@ -128,7 +128,7 @@ class UserProfileChangeTests(TestCase):
     def test_edit_profile_view_success(self):
         """Проверка формы редактирования профиля"""
         self.client.login(email='testuser@gmail.com', password='testpass123')
-        avatar_user = AvatarUser.objects.create(avatar='users/avatars/default/default_avatar1.png',
+        avatar_user = AvatarUser.objects.create(avatar='static/market/img/icons/default_avatar1.png',
                                                 user_id=self.user.pk)
 
         new_email = 'newemail@gmail.com'
@@ -150,7 +150,10 @@ class UserProfileChangeTests(TestCase):
         response = self.client.post(self.url, test_data)
 
         self.assertEqual(response.status_code, 302)
+
         self.user.refresh_from_db()
+        avatar_user.user.refresh_from_db()
+        print(self.user.avatar.avatar)
         self.assertEqual(self.user.email, new_email)
         self.assertEqual(self.user.phone_number, new_phone_number)
         self.assertEqual(self.user.first_name, new_first_name)
@@ -160,7 +163,7 @@ class UserProfileChangeTests(TestCase):
         self.assertEqual(self.user.avatar.avatar.width, 1024)
         self.assertEqual(self.user.avatar.avatar.height, 1024)
         self.assertLessEqual(self.user.avatar.avatar.size, 2 * 1024 * 1024)
-        avatar_directory = os.path.dirname(self.user.avatars.avatar.path)
+        avatar_directory = os.path.dirname(self.user.avatar.avatar.path)
         shutil.rmtree(avatar_directory)
 
     def test_edit_profile_form_failure(self):

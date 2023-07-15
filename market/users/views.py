@@ -1,3 +1,4 @@
+
 from products.models import Browsing_history
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -29,8 +30,7 @@ class UserRegistrationView(CreateView):
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        print(form)
-        avatar = AvatarUser.objects.create(avatar="users/avatars/default/default_avatar1.png", user_id=self.object.id)
+        avatar = AvatarUser.objects.create(avatar="static/market/img/icons/default_avatar1.png", user_id=self.object.id)
         avatar.save()
         return result
 
@@ -111,8 +111,15 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         second_form = self.second_form_class(instance=request.user, data=request.POST, files=request.FILES)
-
         if form.is_valid() and second_form.is_valid():
+            avatar1 = second_form.cleaned_data.get('avatar')
+            avatar = AvatarUser.objects.get(user_id=request.user.pk)
+            file = request.FILES['avatar']
+            avatar.avatar = avatar1
+            avatar.save()
+
+            # avatar = AvatarUser.objects.create(avatar=f'"users/avatars/user_{self.request.user.id}/{avatar1}"',
+            #                                           user_id=self.request.user.id)
             return self.form_valid(form, second_form)
         else:
             return self.get(request, *args, **kwargs)

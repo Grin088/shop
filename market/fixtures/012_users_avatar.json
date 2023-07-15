@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "user": 1,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -12,7 +12,7 @@
     "pk": 2,
     "fields": {
       "user": 2,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -20,7 +20,7 @@
     "pk": 3,
     "fields": {
       "user": 3,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -28,7 +28,7 @@
     "pk": 5,
     "fields": {
       "user": 4,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -37,7 +37,7 @@
     "fields":
     {
       "user": 5,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -45,7 +45,7 @@
     "pk": 7,
     "fields": {
       "user": 6,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -54,7 +54,7 @@
     "fields":
     {
       "user": 7,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -63,7 +63,7 @@
     "fields":
     {
       "user": 8,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -72,7 +72,7 @@
     "fields":
     {
       "user": 9,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -81,7 +81,7 @@
     "fields":
     {
       "user": 10,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -90,7 +90,7 @@
     "fields":
     {
       "user": 11,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -99,7 +99,7 @@
     "fields":
     {
       "user": 12,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -108,7 +108,7 @@
     "fields":
     {
       "user": 13,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -117,7 +117,7 @@
     "fields":
     {
       "user": 14,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -126,7 +126,7 @@
     "fields":
     {
       "user": 15,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -135,7 +135,7 @@
     "fields":
     {
       "user": 16,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   },
   {
@@ -144,7 +144,7 @@
     "fields":
     {
       "user": 17,
-      "avatar": "users/avatars/default/default_avatar1.png"
+      "avatar": "static/market/img/icons/default_avatar1.png"
     }
   }
 ]
