@@ -59,7 +59,7 @@ class CustomUserManager(UserManager):
 
 class CustomUser(AbstractUser):
     """Класс пользователя"""
-    validate_image_size = ValidateImageSize()
+
     phone_number_validator = PhoneNumberValidator()
 
     objects = CustomUserManager()
@@ -70,24 +70,13 @@ class CustomUser(AbstractUser):
         null=False,
         unique=True
     )
-    avatar = models.ImageField(
-        null=False,
-        blank=False,
-        upload_to=user_avatar_directory_path,
-        default=get_default_avatar_path,
-        validators=[
-            validators.validate_image_file_extension,
-            validate_image_size
-           ],
-        verbose_name=_("Фото профиля")
-    )
     phone_number = models.CharField(
         max_length=20,
-        help_text=_('Номер телефона должен начинаться с + и содержать только цифры'),
+        help_text=_('номер телефона должен начинаться с + и содержать только цифры'),
         validators=[phone_number_validator],
         null=False,
         default='+0000000000',
-        verbose_name=_("Номер телефона")
+        verbose_name=_("номер телефона")
     )
 
     USERNAME_FIELD = 'email'
@@ -103,3 +92,19 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = _("пользователь")
         verbose_name_plural = _("пользователи")
+
+
+class UserAvatar(models.Model):
+    validate_image_size = ValidateImageSize()
+    image = models.ImageField(
+        null=False,
+        blank=False,
+        upload_to=user_avatar_directory_path,
+        default=get_default_avatar_path,
+        validators=[
+            validators.validate_image_file_extension,
+            validate_image_size
+           ],
+        verbose_name=_("фото профиля")
+    )
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='avatar')

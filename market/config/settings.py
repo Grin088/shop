@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from urllib.parse import urlparse
 from dotenv import dotenv_values
+from django.utils.translation import gettext_lazy as _
 
 import dj_database_url
 
@@ -55,8 +56,6 @@ INSTALLED_APPS = [
     "shops",
     "users",
     "catalog",
-    "product_catalog",
-    "mptt",
     'django_celery_beat',
     'django_celery_results',
     'discounts',
@@ -186,10 +185,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
+LANGUAGES = (
+    ('en', _('Английский')),
+    ('ru', _('Русский'))
+)
 
 TIME_ZONE = "UTC"
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 

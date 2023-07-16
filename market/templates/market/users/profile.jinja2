@@ -8,12 +8,12 @@
         <div class="Middle-top">
             <div class="wrap">
                 <div class="Middle-header">
-                    <h1 class="Middle-title">Профиль
+                    <h1 class="Middle-title">{% trans %} Профиль {% endtrans %}
                     </h1>
                     <ul class="breadcrumbs Middle-breadcrumbs">
-                        <li class="breadcrumbs-item"><a href="index.html">home</a>
+                        <li class="breadcrumbs-item"><a href="index.html">{% trans %}Домой{% endtrans %}</a>
                         </li>
-                        <li class="breadcrumbs-item breadcrumbs-item_current"><span>Профиль</span>
+                        <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans %}Профиль{% endtrans %}</span>
                         </li>
                     </ul>
                 </div>
@@ -24,22 +24,22 @@
                 <div class="Section-column">
                     <div class="Section-columnSection">
                         <header class="Section-header">
-                            <strong class="Section-title">Навигация
+                            <strong class="Section-title">{% trans %}Навигация{% endtrans %}
                             </strong>
                         </header>
                         <div class="Section-columnContent">
                             <div class="NavigateProfile">
                                 <ul class="menu menu_vt">
-                                    <li class="menu-item"><a class="menu-link" href="{{ url('users:users_account') }}">Личный
-                                        кабинет</a>
+                                    <li class="menu-item"><a class="menu-link" href="{{ url('users:users_account') }}">
+                                        {% trans %}Личный кабинет{% endtrans %}</a>
                                     </li>
                                     <li class="menu-item_ACTIVE menu-item"><a class="menu-link"
-                                                                              href="{{ url('users:users_profile') }}">Профиль</a>
+                                                                              href="{{ url('users:users_profile') }}">
+                                        {% trans %}Профиль{% endtrans %}</a>
                                     </li>
-                                    <li class="menu-item"><a class="menu-link" href="historyorder.html">История
-                                        заказов</a>
+                                    <li class="menu-item"><a class="menu-link" href="historyorder.html">
+                                        {% trans %}История заказов{% endtrans %}</a>
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -49,47 +49,52 @@
                     <div class="Profile">
                         <form class="form Profile-form" action="{{ url('users:users_profile') }}" method="post"
                               enctype="multipart/form-data">
-                            {% csrf_token %}
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="row">
                                 <div class="row-block">
-                                    {% if user.avatar %}
+
+                                    {% if user.avatar.image != 'users/avatars/default/default_avatar1.png' %}
                                         <div class="Profile-avatar">
-                                            <div class="Profile-img"><img src="{{ user.avatar.url }}"
+                                            <div class="Profile-img"><img src="{{ user.avatar.image.url }}"
                                                                           alt="card.jpg"/>
                                             </div>
                                             <label class="Profile-fileLabel"
-                                                   for="{{ second_form.avatar.id_for_label }}">Выберите
-                                                аватар
+                                                   for="{{ second_form.avatar.id_for_label }}">
+                                                {% trans %}Выберите аватар{% endtrans %}
                                             </label>
                                             {{ second_form.avatar }}
                                         </div>
                                     {% else %}
                                         <div class="form-group">
-                                            <label class="form-label" for="{{ second_form.avatar.id_for_label }}">Аватар
+                                            <label class="form-label" for="{{ second_form.avatar.id_for_label }}">
+                                                    Аватар
                                             </label>
                                             <div class="Profile-avatar Profile-avatar_noimg">
 
                                                 <label class="Profile-fileLabel"
                                                        for="{{ second_form.avatar.id_for_label }}"><img
                                                         src="{{ static('market/assets/img/icons/upload.png') }}"
-                                                        alt="upload.png"/>Загрузить фото
+                                                        alt="upload.png"/>{% trans %}Загрузить фото{% endtrans %}
                                                 </label>
                                                 {{ second_form.avatar }}
                                             </div>
                                         </div>
                                     {% endif %}
                                     <div class="form-group">
-                                        <label class="form-label" for="{{ second_form.first_name.id_for_label }}">Имя
+                                        <label class="form-label" for="{{ second_form.first_name.id_for_label }}">
+                                            {% trans %}Имя{% endtrans %}
                                         </label>
                                         {{ second_form.first_name }}
-                                        <label class="form-label" for="{{ second_form.last_name.id_for_label }}">Фамилия
+                                        <label class="form-label" for="{{ second_form.last_name.id_for_label }}">
+                                            {% trans %}Фамилия{% endtrans %}
                                         </label>
                                         {{ second_form.last_name }}
                                     </div>
                                 </div>
                                 <div class="row-block">
                                     <div class="form-group">
-                                        <label class="form-label" for="{{ second_form.phone_number.id_for_label }}">Телефон
+                                        <label class="form-label" for="{{ second_form.phone_number.id_for_label }}">
+                                            {% trans %}Телефон{% endtrans %}
                                         </label>
                                         {{ second_form.phone_number }}
                                     </div>
@@ -99,19 +104,20 @@
                                         {{ second_form.email }}
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="{{ form.new_password1.id_for_label }}">Пароль
+                                        <label class="form-label" for="{{ form.new_password1.id_for_label }}">
+                                            {% trans %}Пароль{% endtrans %}
                                         </label>
                                         {{ form.new_password1 }}
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="{{ form.new_password2.id_for_label }}">Подтверждение
-                                            пароля
+                                        <label class="form-label" for="{{ form.new_password2.id_for_label }}">
+                                            {% trans %}Подтверждение пароля{% endtrans %}
                                         </label>
                                         {{ form.new_password2 }}
                                     </div>
                                     <div class="form-group">
                                         <div class="Profile-btn">
-                                            <button class="btn btn_success" type="submit">Сохранить
+                                            <button class="btn btn_success" type="submit">{% trans %}Сохранить{% endtrans %}
                                             </button>
                                         </div>
                                         {% if request.GET.success_message %}

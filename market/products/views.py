@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect  # noqa F401
 from django.views.generic import TemplateView, CreateView, DetailView
-from rest_framework.views import APIView
 from django.urls import reverse
+from django.http import JsonResponse
+from rest_framework.views import APIView
 from celery.result import AsyncResult
 from import_data.tasks import import_products
-from django.http import JsonResponse
 from .models import Review, Import
 from .forms import ReviewFrom, ImportForm
 from .services.product_services import ProductsServices
@@ -57,14 +57,12 @@ class ProductView(TemplateView):
     def post(self, request, product_id):
         """Обработка добавления отзыва"""
         form = self.form_class(request.POST)
-
         if form.is_valid():
             review = form.save(commit=False)
             review.user_id = request.user.id
             review.product_id = product_id
             review.save()
             return redirect("/")
-
         context = self.get_context_data(product_id=product_id)
         context["form"] = form
         return self.render_to_response(context)
@@ -79,7 +77,6 @@ class ImportCreateView(CreateView):
     model = Import
     form_class = ImportForm
     template_name = 'market/products/import_form.jinja2'
-    # success_url = reverse_lazy('products:import-detail')
 
     def form_valid(self, form):
 

@@ -15,7 +15,8 @@ from .forms import (CustomUserCreationForm,
                     UserProfileForm,
                     ChangePasswordForm,
                     )
-from .models import CustomUser
+from .models import CustomUser, UserAvatar
+from users.services.users import last_order_request
 
 
 class UserRegistrationView(CreateView):
@@ -25,6 +26,13 @@ class UserRegistrationView(CreateView):
     model = CustomUser
     template_name = 'market/users/register.jinja2'
     success_url = '/'
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        default_avatar = UserAvatar.objects.create(image="users/avatars/default/default_avatar1.png",
+                                                   user_id=self.object.id)
+        default_avatar.save()
+        return result
 
 
 class MyLoginView(LoginView):
@@ -76,7 +84,8 @@ def account(request):
         else:
             name = user.username
         context = {'username': name,
-                   'user': user}
+                   'user': user,
+                   'order': last_order_request(request.user)}
         return render(request, 'market/users/account.jinja2', context)
 
 
@@ -102,8 +111,11 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         second_form = self.second_form_class(instance=request.user, data=request.POST, files=request.FILES)
-
         if form.is_valid() and second_form.is_valid():
+            select_avatar = second_form.cleaned_data.get('avatar')
+            avatar = UserAvatar.objects.get(user_id=request.user.pk)
+            avatar.image = select_avatar
+            avatar.save()
             return self.form_valid(form, second_form)
         else:
             return self.get(request, *args, **kwargs)
@@ -129,7 +141,7 @@ class BrowsingHistory(View):
             'count': history_count,
             'history': history
         }
-        return render(request, 'browsing_history.jinja2', context=contex)
+        return render(request, 'market/users/browsing_history.jinja2', context=contex)
 
     def post(self, request):
         product_id = self.request.POST.get('delete')
@@ -141,4 +153,4 @@ class BrowsingHistory(View):
             'count': history_count,
             'history': history
         }
-        return render(request, 'browsing_history.jinja2', context=contex)
+        return render(request, 'market/users/browsing_history.jinja2', context=contex)
