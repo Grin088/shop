@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from products.models import Product, Browsing_history
+from site_settings.models import SiteSettings
 from ..tasks import update_product_of_the_day
 
 
@@ -18,9 +19,10 @@ def get_limited_edition():
 
 def get_top_products():
     """Представление топ-продуктов (первые 8)"""
+    settings = SiteSettings.load()
     products_history = Browsing_history.objects.all()
     products = sorted(list(Counter(Product.objects.filter(products__in=products_history)).
-                           items()), key=lambda key: key[1])[:-9:-1]
+                           items()), key=lambda key: key[1])[:-settings.top_elements_count-1:-1]
     products = [value for value, key in products]
     if products:
         return products

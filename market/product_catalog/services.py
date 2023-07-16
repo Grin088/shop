@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 from product_catalog.forms import ProductFilterForm
 from products.models import Product
+from site_settings.models import SiteSettings
 
 
 def get_paginator(request, products, forms):
@@ -18,7 +19,8 @@ def get_paginator(request, products, forms):
             sort_session = request.session['sorted']
             products = sorted_products(sort_session, products)
     # TODO Пагинацию изменить при необходимости (default=4 записи)
-    paginator = Paginator(products, 4)
+    pagination_value = SiteSettings.objects.values_list('pagination_size', flat=True).first()
+    paginator = Paginator(products, pagination_value)
     page = request.GET.get('page')
     page_obj = paginator.get_page(page)
     context = {'page_obj': page_obj,

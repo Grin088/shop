@@ -16,6 +16,7 @@ from .services.limited_products import get_random_limited_edition_product, get_t
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from .models import Shop
 from .services.is_member_of_group import is_member_of_group
+from site_settings.models import SiteSettings
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -28,7 +29,8 @@ def home(request):
         # update_time = time_and_products['time_left']  # пока не может использоваться из-за celery
         # limited_products = time_and_products['limited_products']  # пока не может использоваться из-за celery
         limited_product = get_random_limited_edition_product()
-        limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
+        limited_edition_count = SiteSettings.objects.values_list('limited_edition_count', flat=True).first()
+        limited_edition = get_limited_edition().exclude(id=limited_product.id)[:limited_edition_count]
         context = {
             'featured_categories': featured_categories,
             'random_banners': random_banners,

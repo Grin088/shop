@@ -23,21 +23,21 @@ class SiteSettings(OneObjectModel):
     """Модель настроек сайта"""
 
     # Пагинация
-    pagination_size = models.PositiveIntegerField(validators=[MaxValueValidator(8)], default=8,
+    pagination_size = models.PositiveIntegerField(validators=[MaxValueValidator(8)], default=4,
                                                   verbose_name=_('размер страницы'))
     # Главная страница
     banners_count = models.PositiveIntegerField(validators=[MaxValueValidator(3)], default=3,
                                                 verbose_name=_('количество баннеров'))
     deal_of_the_day = models.PositiveIntegerField(validators=[MaxValueValidator(1)], default=1,
-                                                  verbose_name=_('количество сделок дня'))
+                                                  verbose_name=_('количество предложений дня'))
     hot_deals_slider = models.PositiveIntegerField(validators=[MaxValueValidator(9)], default=9,
                                                    verbose_name=_('слайдер горячих предложений'))
     top_elements_count = models.PositiveIntegerField(validators=[MaxValueValidator(8)], default=8,
                                                      verbose_name=_('количество элементов в топе'))
     limited_edition_count = models.PositiveIntegerField(validators=[MaxValueValidator(16)], default=16,
-                                                        verbose_name=_('ограниченное тираж'))
+                                                        verbose_name=_('ограниченные тираж'))
     # Детальная страница товара
-    maximum_number_of_viewed_products = models.PositiveIntegerField(validators=[MaxValueValidator(20)], default=20,
+    maximum_number_of_viewed_products = models.PositiveIntegerField(validators=[MaxValueValidator(20)], default=10,
                                                                     verbose_name=_(
                                                                     'максимальное количество просмотренных товаров'))
     # Способ доставки
