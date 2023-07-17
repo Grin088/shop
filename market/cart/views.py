@@ -19,9 +19,8 @@ class CartView(TemplateView):
 def cart_add(request, pk, silent):
     """Добавляем товар в корзину"""
     cart = CartServices(request)
-    amount = request.POST.get('amount', None)
     offer = get_object_or_404(Offer, id=pk)
-    cart.add_to_cart(offer=offer, quantity=amount)
+    cart.add_to_cart(offer=offer)
     if not silent:
         return redirect('cart:cart_items')
     else:
