@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                                 <div class="Cart-block Cart-block_delete">
-                                    <a class="Cart-delete" href="#">
+                                    <a class="Cart-delete" href="{{ url('cart:delete_from_cart', cart_item.offer.id) }}">
                                         <img src="{{ static('/market/assets/img/icons/card/delete.svg') }}" alt="delete.svg" />
                                     </a>
                                 </div>
@@ -48,7 +48,7 @@
                     {% endfor %}
                     <div class="Cart-total">
                         <div class="Cart-block Cart-block_total">
-                            <strong class="Cart-title">Итого:</strong><span class="Cart-price">200.99$</span>
+                            <strong class="Cart-title">Итого:</strong><span class="Cart-price">{{ cart.get_total_price() }}</span>
                         </div>
                         <div class="Cart-block"><a class="btn btn_success btn_lg" href="order.html">Оформить заказ</a>
                         </div>

@@ -2,10 +2,10 @@ import datetime
 import json
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+
 from .models import Cart as CartModel, CartItem
 from shops.models import Offer
-from django.core.exceptions import ObjectDoesNotExist
-from .forms import CartQuantity
 
 
 class Cart(object):
@@ -40,17 +40,58 @@ class Cart(object):
                 cart_json = []
         return cart_json
 
-    def save_to_db(self, session_cart):
-        pass
+    def save(self):
+        self.session[settings.CART_SESSION_ID] = self.cart
+        self.session.modified = True
+
+    def save_to_db(self):
+        if self.user.is_authenticated:
+            try:
+                cart_in_db = CartModel.objects.get(user=self.user)
+            except ObjectDoesNotExist:
+                cart_in_db = CartModel.objects.create(user=self.user)
+            cart_in_session = self.cart_to_json(self.cart)
+            if self.get_products_quantity() == 0:
+                self.save_to_session()
+            else:
+                for item_in_db in CartItem.objects.filter(cart=cart_in_db):
+                    if not any(item_in_db == item_session for item_session in cart_in_session):
+                        item_in_db.delete()
+                for session_item in cart_in_session:
+                    if CartItem.objects.filter(cart=cart_in_db).filter(offer=session_item['offer'].id).exists():
+                        cart_item = CartItem.objects.filter(cart=cart_in_db).get(offer=session_item['offer'])
+                        cart_item.quantity = session_item['quantity']
+                        cart_item.save()
+                    else:
+                        cart_item = CartItem(cart=cart_in_db,
+                                             offer=session_item['offer'],
+                                             quantity=session_item['quantity'],
+                                             created_at=session_item['created_at'])
+                        cart_item.save()
+
+    def save_to_session(self):
+        cart_in_db = CartModel.objects.get(user=self.user)
+        cart_items = CartItem.objects.filter(cart=cart_in_db)
+        for item_in_db in cart_items:
+            self.cart[item_in_db.offer.id] = {'quantity': item_in_db.quantity,
+                                              'created_at': json.dumps(item_in_db.created_at, default=str)}
+        self.save()
 
     def add_to_cart(self, offer: Offer, quantity):
         offer_id = str(offer.id)
         if offer_id in self.cart:
             self.cart_quantity_change(offer, quantity)
         else:
-            self.cart[offer.id] = {'quantity': int(quantity), 'created_at': json.dumps(datetime.datetime.now(), default=str)}
+            self.cart[offer.id] = {'quantity': 1, 'created_at': json.dumps(datetime.datetime.now(), default=str)}
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
+        self.save_to_db()
+
+    def delete_from_cart(self, offer: Offer):
+        offer_id = str(offer.id)
+        self.cart.pop(offer_id)
+        self.session.modified = True
+        self.save_to_db()
 
     def cart_quantity_change(self, offer: Offer, quantity):
         offer_id = str(offer.id)
@@ -58,3 +99,31 @@ class Cart(object):
             self.cart[offer_id]['quantity'] += 1
         if self.value == '-':
             self.cart[offer_id]['quantity'] -= 1
+        if self.cart[offer_id]['quantity'] == 0:
+            self.cart.pop(offer_id)
+            self.session.modified = True
+        self.save_to_db()
+
+    def get_products(self):
+        products = {}
+        cart = self.cart_to_json(self.cart)
+        for item in cart:
+            products[item['offer'].product] = {'pcs': item['quantity'], 'unit_price': item['offer'].price}
+        return products
+
+    def get_total_price(self):
+        total_price = 0
+        json_cart = self.cart_to_json(self.cart)
+        for item in json_cart:
+            total_price += item['offer'].price * item['quantity']
+        return total_price
+
+    def get_items_quantity(self):
+        return len(self.cart_to_json(self.cart))
+
+    def get_products_quantity(self):
+        products_quantity = 0
+        json_cart = self.cart_to_json(self.cart)
+        for item in json_cart:
+            products_quantity += item['quantity']
+        return products_quantity

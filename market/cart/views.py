@@ -19,24 +19,22 @@ class CartView(TemplateView):
         return context
 
 
-class CartDetailView(TemplateView):
-    pass
-
-
 def cart_add(request, pk, silent):
     cart = CartServices(request)
-    if request.user.is_authenticated:
-        amount = request.POST.get('amount', None)
-        offer = get_object_or_404(Offer, id=pk)
-        cart.add_to_cart(offer=offer, quantity=amount)
-    else:
-        amount = request.POST.get('amount', None)
-        offer = get_object_or_404(Offer, id=pk)
-        cart.add_to_cart(offer=offer, quantity=amount)
+    amount = request.POST.get('amount', None)
+    offer = get_object_or_404(Offer, id=pk)
+    cart.add_to_cart(offer=offer, quantity=amount)
     if not silent:
         return redirect('cart:cart_items')
     else:
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+def delete_item_from_cart(request, pk):
+    cart = CartServices(request)
+    offer = get_object_or_404(Offer, id=pk)
+    cart.delete_from_cart(offer=offer)
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 
