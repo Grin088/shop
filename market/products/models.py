@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from mptt.models import TreeForeignKey
 from users.models import CustomUser as User
 from django.db.models import Avg, ManyToManyField
 from taggit.managers import TaggableManager
@@ -37,7 +36,7 @@ class Product(models.Model):
         through="ProductProperty",
         verbose_name=_("характеристики")
     )
-    category = TreeForeignKey(
+    category = models.ForeignKey(
         "catalog.Catalog",
         on_delete=models.PROTECT,
         null=True,
@@ -116,10 +115,10 @@ class ProductImage(models.Model):
         Product, on_delete=models.CASCADE, related_name="product_images"
     )
     image = models.ImageField(
-        upload_to=product_images_directory_path, verbose_name=_("Изображение")
+        upload_to=product_images_directory_path, verbose_name=_("изображение")
     )
     description = models.CharField(
-        max_length=200, null=False, blank=True, verbose_name=_("Описание")
+        max_length=200, null=False, blank=True, verbose_name=_("описание")
     )
 
 
@@ -139,18 +138,18 @@ class Review(models.Model):
         (5, "5")
     )
     user = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, verbose_name=_("Покупатель")
+        User, on_delete=models.DO_NOTHING, verbose_name=_("покупатель")
     )
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, verbose_name=_("Продукт")
+        Product, on_delete=models.CASCADE, verbose_name=_("продукт")
     )
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))
     rating = models.PositiveSmallIntegerField(
         choices=RATING_CHOICES,
-        verbose_name=_("Оценка"),
+        verbose_name=_("оценка"),
     )
     review_text = models.TextField(
-        max_length=500, blank=False, null=True, verbose_name=_("Текст отзыва")
+        max_length=500, blank=False, null=True, verbose_name=_("текст отзыва")
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -182,8 +181,8 @@ class Browsing_history(models.Model):
 
     class Meta:
         ordering = ['-data_at']
-        verbose_name = _("Просмотр продута")
-        verbose_name_plural = _("Просмотр продуктов")
+        verbose_name = _("просмотр продута")
+        verbose_name_plural = _("просмотр продуктов")
 
 
 class Import(models.Model):

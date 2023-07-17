@@ -57,14 +57,12 @@ class ProductView(TemplateView):
     def post(self, request, product_id):
         """Обработка добавления отзыва"""
         form = self.form_class(request.POST)
-
         if form.is_valid():
             review = form.save(commit=False)
             review.user_id = request.user.id
             review.product_id = product_id
             review.save()
             return redirect("/")
-
         context = self.get_context_data(product_id=product_id)
         context["form"] = form
         return self.render_to_response(context)

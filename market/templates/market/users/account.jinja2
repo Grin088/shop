@@ -35,8 +35,13 @@
                     <div class="Account">
                         <div class="Account-group">
                             <div class="Account-column">
-                                <div class="Account-avatar"><img
-                                        src="{% if user.avatar %} {{ user.avatar.url }} {% else %} {{ static('market/assets/img/icons/user_icon.png') }} {% endif %}"
+                                <div class="Account-avatar">
+                                    <img
+                                        src="{% if user.avatar.image == 'users/avatars/default/default_avatar1.png' %}
+                                            {{ static('market/assets/img/icons/user_icon.png') }}
+                                        {% else %}
+                                            {{ user.avatar.image.url }}
+                                        {% endif %}"
                                         alt="Avatar"/>
                                 </div>
                             </div>
