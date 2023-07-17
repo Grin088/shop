@@ -6,6 +6,7 @@ from cart.cart import Cart as CartServices
 
 
 class CartView(TemplateView):
+    """Страница корзины"""
     template_name = 'market/cart/cart.jinja2'
 
     def get_context_data(self, **kwargs):
@@ -16,6 +17,7 @@ class CartView(TemplateView):
 
 
 def cart_add(request, pk, silent):
+    """Добавляем товар в корзину"""
     cart = CartServices(request)
     amount = request.POST.get('amount', None)
     offer = get_object_or_404(Offer, id=pk)
@@ -27,6 +29,7 @@ def cart_add(request, pk, silent):
 
 
 def delete_item_from_cart(request, pk):
+    """Удаляем товар из корзины"""
     cart = CartServices(request)
     offer = get_object_or_404(Offer, id=pk)
     cart.delete_from_cart(offer=offer)

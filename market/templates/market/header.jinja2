@@ -76,7 +76,7 @@ block
                 </div>
                 <a class="CartBlock-block" href="{{ url('cart') }}">
                     <img class="CartBlock-img" src="{{ static('/market/assets/img/icons/cart.svg') }}" alt="cart.svg" />
-                    <span class="CartBlock-amount">{{ cart.get_items_quantity() }}</span>
+                    <span class="CartBlock-amount">{{ cart.get_products_quantity() }}</span>
                 </a>
                 <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_price() }}$</span>
                 </div>
