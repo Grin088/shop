@@ -76,7 +76,10 @@ class Cart(object):
 
     def save_to_session(self):
         """Сохраняем корзину из бд в сессиею"""
-        cart_in_db = CartModel.objects.get(user=self.user)
+        try:
+            cart_in_db = CartModel.objects.get(user=self.user)
+        except ObjectDoesNotExist:
+            cart_in_db = CartModel.objects.create(user=self.user)
         cart_items = CartItem.objects.filter(cart=cart_in_db)
         for item_in_db in cart_items:
             self.cart[item_in_db.offer.id] = {'quantity': item_in_db.quantity,
