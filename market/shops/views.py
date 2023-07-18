@@ -16,9 +16,10 @@ from shops.services.compare import (compare_list_check,
                                     splitting_into_groups_by_category,
                                     get_comparison_lists_and_properties,
                                     )
+from shops.services.order import pryce_delivery
 from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from shops.models import Shop, Order, OrderOffer
+from shops.models import Shop, Order, OrderOffer, Offer
 from shops.services.is_member_of_group import is_member_of_group
 
 
@@ -63,10 +64,12 @@ def seller_detail(request):
 
 
 class ComparePageView(View):
+    """Страница сравнения"""
+
     def get(self, request: HttpRequest) -> HttpResponse:
-        """Страница сравнения"""
+        """Страница сравнения GET запрос"""
         # TODO Добавляет список  для отработки сравнения
-        # compare_list_check(request.session, 4)
+        # compare_list_check(request.session, 2)
         comp_list = request.session.get("comp_list", [])
 
         if comp_list and len(comp_list) > 1:
@@ -106,13 +109,28 @@ class ComparePageView(View):
         return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
 
 
+class CartItem():  # TODO Не забыть удалить
+    def __init__(self, cart=None, offer=None, quantity=None):
+        self.cart = cart
+        self.offer = Offer.objects.select_related("product").get(id=offer)
+        self.quantity = quantity
+        self.created_at = "11111"
+
+
 class OrderView(TemplateView):
     """Оформление заказа"""
 
     def get(self, request: HttpRequest) -> HttpResponse:
+        cart = [CartItem(1, 2, 4), CartItem(1, 4, 7), CartItem(1, 3, 2)]
+        cart_id = 1
+        total_cost = 2000
+
+
         context = {
             "user": request.user,
-            "form": OderLoginUserForm
+            "form": OderLoginUserForm,
+            "cart": cart,
+            "delivery_price": pryce_delivery(cart_id, total_cost)
         }
         return render(request, "order/order.jinja2", context=context)
 
@@ -127,7 +145,15 @@ class OrderView(TemplateView):
                 return render(request, "order/order.jinja2", context={"text": "Неправильный ввод эмейла или пароля",
                                                                       "user": request.user,
                                                                       })
-
+        order = Order.objects.create(custom_user=self.custom_user,
+                                     #                              offer=self.orderoffer_set,
+                                     #                              status=self.status,
+                                     #                              delivery=self.delivery,
+                                     #                              citi=self.citi,
+                                     #                              address=self.address,
+                                     #                              pay=self.pay,
+                                     #                              total_cost=self.total_cost,
+                                     #                              )
         # delivery = request.POST.get("delivery")
         # city = request.POST.get("city")
         # address = request.POST.get("address")
@@ -145,10 +171,11 @@ class OrderLoginView(MyLoginView):
 
 
 class HistoryOrderView(LoginRequiredMixin, View):
-    """История заказов"""
+    """Страница история заказов"""
     login_url = reverse_lazy("users:users_login")
 
     def get(self, request: HttpRequest) -> HttpResponse:
+        """Обработка GET запроса стр. истории заказов"""
         context = {
             "orders": Order.objects.filter(custom_user_id=request.user).prefetch_related("status").order_by("-data")
         }
@@ -161,6 +188,7 @@ class OrderDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy("users:users_login")
 
     def get(self, reqnuest: HttpRequest, pk: int) -> HttpResponse:
+        """Обработка GET запроса стр. детали заказа"""
         query = Order.objects.select_related("custom_user").get(id=pk)
 
         if reqnuest.user != query.custom_user:

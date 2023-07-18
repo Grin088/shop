@@ -52,6 +52,7 @@ class OrderStatus(models.Model):
     class Meta:
         verbose_name = _('статус заказа')
         verbose_name_plural = _('статусы заказа')
+        ordering = ["sort_index"]
 
     sort_index = models.SmallIntegerField(unique=True,  verbose_name=_('порядковый индекс'))
     name = models.CharField(max_length=100, verbose_name=_('статус заказа'))
@@ -87,6 +88,7 @@ class Order(models.Model):
     status = models.ForeignKey(OrderStatus,
                                on_delete=models.PROTECT,
                                related_name='orders',
+                               default=1,
                                verbose_name=_('статус'))
     data = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
     delivery = models.CharField(max_length=8, choices=DELIVERY_CHOICES, verbose_name=_('доставка'), default='ORDINARY')
@@ -101,7 +103,7 @@ class OrderOffer(models.Model):
 
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     offer = models.ForeignKey(Offer, on_delete=models.PROTECT)
-    count = models.SmallIntegerField(verbose_name=_('количество'))
+    count = models.PositiveSmallIntegerField(verbose_name=_('количество'))
     price = models.DecimalField(decimal_places=2, max_digits=10)
 
 
@@ -111,7 +113,9 @@ class OrderStatusChange(models.Model):
     class Meta:
         verbose_name = _('изменение статуса заказа')
         verbose_name_plural = _('изменение статусов заказов')
+        ordering = ["-time"]
+
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     time = models.DateTimeField(auto_now_add=True, verbose_name=_('время изменения'))
-    src_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_src', on_delete=models.PROTECT)
-    dst_status_id = models.ForeignKey(OrderStatus, related_name='orders_order_change_dst', on_delete=models.PROTECT)
+    src_status = models.ForeignKey(OrderStatus, related_name='orders_order_change_src', on_delete=models.PROTECT)
+    dst_status = models.ForeignKey(OrderStatus, related_name='orders_order_change_dst', on_delete=models.PROTECT)

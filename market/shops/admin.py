@@ -28,11 +28,13 @@ class BannerAdmin(admin.ModelAdmin):
 
 
 class OrderOfferAdminInline(admin.TabularInline):
+    """Вставка модели Order"""
     model = Order.offer.through
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    """Отображение заказов в интерфейсе администратора"""
     inlines = [
         OrderOfferAdminInline,
     ]
@@ -41,9 +43,11 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderStatus)
 class OrderStatusAdmin(admin.ModelAdmin):
+    """Отображение статусов заказав в интерфейсе администратора"""
     list_display = 'sort_index', 'name',
 
 
 @admin.register(OrderStatusChange)
 class OrderStatusChangeAdmin(admin.ModelAdmin):
+    """Отображение истории изменения статусов заказав в интерфейсе администратора"""
     list_display = 'id', 'time', 'src_status_id', 'dst_status_id',

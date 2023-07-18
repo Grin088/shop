@@ -6,13 +6,17 @@
      <style>
         .hide-element {display: none !important;}
      </style>
-        <input id="click-to-hide" type="button" value="Показать одинаковые свойства">
+
+        <div>
+        <input id="click-to-hide" type="submit" value="Показать одинаковые свойства">
+        </div >
+        <div class="ProductCard" style="margin-bottom: 0px">
         {% if category_offer_dict%}
             {% for category, offer  in  category_offer_dict %}
                 <form id=myform method="post">
                 {% csrf_token %}
 
-                <div class="ProductCard-cart">
+                <div style="padding-left: 30px">
                     <input type="hidden" name="category" value="{{category}}" />
                     <input type="submit" value="{{category}}: {{offer}}">
 
@@ -20,7 +24,7 @@
                 </form>
             {% endfor %}
         {% endif %}
-
+        </div >
 
 
        <div class="Middle">
@@ -81,7 +85,7 @@
                             </div>
                             <div class="ProductCard-info">
                                 <div class="ProductCard-cost">
-                                    <div class="ProductCard-price">{{ offer.price }}
+                                    <div class="ProductCard-price">{{ offer.price }}$
                                     </div>
                                 </div>
                             </div>

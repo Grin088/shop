@@ -2,27 +2,18 @@ from django.test import TestCase
 from django.urls import reverse
 
 from shops.models import Order
+from shops.tests.test_comparison import CompareTestCase
 from users.models import CustomUser
 
 
 class OrderTestCase(TestCase):
     """Тест проверки работы заказов"""
 
-    fixtures = {"fixtures/010_auth_group.json",
-                "fixtures/011_users.json",
-                "fixtures/015_shops_banner.json",
-                "fixtures/020_catalog_categories.json",
-                "fixtures/025_products.json",
-                "fixtures/026_tags.json",
-                "fixtures/027_product_image.json",
-                "fixtures/030_property.json",
-                "fixtures/035_productproperty.json",
-                "fixtures/040_shops.json",
-                "fixtures/045_offers.json",
-                "fixtures/050_order_status.json",
-                "fixtures/055_order.json",
-                "fixtures/065_order_offer.json",
-                "fixtures/070_order_status_change.json"}
+    fixtures = CompareTestCase.fixtures | {"fixtures/050_order_status.json",
+                                           "fixtures/055_order.json",
+                                           "fixtures/065_order_offer.json",
+                                           "fixtures/070_order_status_change.json",
+                                           }
 
     def setUp(self) -> None:
         self.user = CustomUser.objects.get(pk=11)

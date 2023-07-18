@@ -53,7 +53,6 @@ def _get_a_complete_list_of_property_names(list_offer: list[int]) -> list[str]:
 
 
 def _generating_a_comparison_dictionary(list_offer: list[int]) -> ListCompare:
-
     """Генерация словаря для сравнения свойств прод"""
 
     list_compar = []
@@ -62,7 +61,7 @@ def _generating_a_comparison_dictionary(list_offer: list[int]) -> ListCompare:
                                                                       "id",
                                                                       "product__preview",
                                                                       "product__category_id__name",
-                                                                      )
+                                                                      ).order_by("id")
 
     for item_i in quveryset_offers:
         list_compar.append({"name": item_i["product__name"],
