@@ -133,8 +133,8 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
 
 
 class BrowsingHistory(View):
+    """Контроллер истории просмотров товаров"""
     def get(self, request):
-        """В будущем добавить фильтр для пользователя"""
         history = Browsing_history.objects.filter(users_id=request.user.id).order_by('-data_at')[:20]
         history_count = Browsing_history.objects.count()
         contex = {
