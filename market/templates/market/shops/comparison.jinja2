@@ -8,13 +8,13 @@
      </style>
 
         <div>
-        <input id="click-to-hide" type="submit" value="Показать одинаковые свойства">
+        <input id="click-to-hide" type="submit" value="{% trans %}Показать одинаковые свойства{% endtrans %}">
         </div >
         <div class="ProductCard" style="margin-bottom: 0px">
         {% if category_offer_dict%}
             {% for category, offer  in  category_offer_dict %}
                 <form id=myform method="post">
-                {% csrf_token %}
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
                 <div style="padding-left: 30px">
                     <input type="hidden" name="category" value="{{category}}" />
@@ -37,11 +37,11 @@
                             <div class="ProductCard-header">
 
                                 <form id=myform method="post">
-                                {% csrf_token %}
+                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                 <div class="ProductCard-cart">
                                     <input type="hidden" name="delete_id" value="{{ offer.id }}" />
                                     <input type="hidden" name="category" value="{{ offer.category }}" />
-                                    <input type="submit" value="Удалить">
+                                    <input type="submit" value="{% trans %}Удалить{% endtrans %}">
                                 </div>
                                 </form>
                                 <h2 class="ProductCard-title">{{ offer.name }}
@@ -59,8 +59,8 @@
                                             <div class="table">
                                                 <table>
                                                     <tr>
-                                                        <th class="hed">Характеристика</th>
-                                                        <th class="hed">Значение</th>
+                                                        <th class="hed">{% trans %}Характеристика{% endtrans %}</th>
+                                                        <th class="hed">{% trans %}Значение{% endtrans %}</th>
                                                     </tr>
                                                     {% for property_i in list_property %}
                                                         {% if offer.property[property_i][1] == True %}
@@ -92,7 +92,7 @@
 
                             <div class="ProductCard-cart">
 
-                                <div class="ProductCard-cartElement"><a class="btn btn_primary" href="cart.html"><img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" /><span class="btn-content">Добавить в корзину</span></a>
+                                <div class="ProductCard-cartElement"><a class="btn btn_primary" href="cart.html"><img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" /><span class="btn-content">{% trans %}Добавить в корзину{% endtrans %}</span></a>
                                 </div>
                             </div>
                         </div>

@@ -25,6 +25,7 @@ from shops.services.is_member_of_group import is_member_of_group
 
 @cache_page(settings.CACHE_CONSTANT)
 def home(request):
+    """Главная страница"""
     if request.method == "GET":
         featured_categories = get_featured_categories()
         random_banners = banner.banner()
@@ -46,6 +47,7 @@ def home(request):
 
 
 class BaseView(TemplateView):
+    """Базовое представление страницы"""
     template_name = 'market/base.jinja2'
 
 
@@ -60,7 +62,7 @@ def seller_detail(request):
         context = {
             'shop': shop,
         }
-        return render(request, 'seller_detail.jinja2', context)
+        return render(request, 'market/shops/seller_detail.jinja2', context)
 
 
 class ComparePageView(View):
@@ -81,9 +83,10 @@ class ComparePageView(View):
                 "list_compare": list_compare,
                 "list_property": list_property
             }
-            return render(request, "shops/comparison.jinja2", context=context)
+            return render(request, "market/shops/comparison.jinja2", context=context)
 
-        return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
+        return render(request, "market/shops/comparison.jinja2",
+                      context={"text": "Не достаточно данных для сравнения."})
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Переключение категории сравнения и удаление из списка сравнений"""
@@ -104,9 +107,10 @@ class ComparePageView(View):
                        "list_compare": list_compare,
                        "list_property": list_property,
                        }
-            return render(request, 'shops/comparison.jinja2', context=context)
+            return render(request, 'market/shops/comparison.jinja2', context=context)
 
-        return render(request, "shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."})
+        return render(request, "market/shops/comparison.jinja2",
+                      context={"text": "Не достаточно данных для сравнения."})
 
 
 class CartItem():  # TODO Не забыть удалить
@@ -132,7 +136,7 @@ class OrderView(TemplateView):
             "cart": cart,
             "delivery_price": pryce_delivery(cart_id, total_cost)
         }
-        return render(request, "order/order.jinja2", context=context)
+        return render(request, "market/order/order.jinja2", context=context)
 
     def post(self, request: HttpRequest) -> HttpResponse:
 
@@ -142,18 +146,10 @@ class OrderView(TemplateView):
             if user:
                 login(request, user)
             else:
-                return render(request, "order/order.jinja2", context={"text": "Неправильный ввод эмейла или пароля",
-                                                                      "user": request.user,
-                                                                      })
-        order = Order.objects.create(custom_user=self.custom_user,
-                                     #                              offer=self.orderoffer_set,
-                                     #                              status=self.status,
-                                     #                              delivery=self.delivery,
-                                     #                              citi=self.citi,
-                                     #                              address=self.address,
-                                     #                              pay=self.pay,
-                                     #                              total_cost=self.total_cost,
-                                     #                              )
+                return render(request, "market/order/order.jinja2",
+                              context={"text": "Неправильный ввод эмейла или пароля",
+                                       "user": request.user, })
+
         # delivery = request.POST.get("delivery")
         # city = request.POST.get("city")
         # address = request.POST.get("address")
@@ -162,7 +158,7 @@ class OrderView(TemplateView):
         context = {
             "user": request.user,
         }
-        return render(request, "order/order.jinja2", context=context)
+        return render(request, "market/order/order.jinja2", context=context)
 
 
 class OrderLoginView(MyLoginView):
@@ -179,7 +175,7 @@ class HistoryOrderView(LoginRequiredMixin, View):
         context = {
             "orders": Order.objects.filter(custom_user_id=request.user).prefetch_related("status").order_by("-data")
         }
-        return render(request, "order/historyorder.jinja2", context=context)
+        return render(request, "market/order/historyorder.jinja2", context=context)
 
 
 class OrderDetailsView(LoginRequiredMixin, View):
@@ -197,4 +193,4 @@ class OrderDetailsView(LoginRequiredMixin, View):
             "order": query,
             "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related("offer__product"),
         }
-        return render(reqnuest, "order/oneorder.jinja2", context=context)
+        return render(reqnuest, "market/order/oneorder.jinja2", context=context)
