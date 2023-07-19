@@ -25,7 +25,7 @@ def compare_list_check(session, id_offer) -> None:
         session["comp_list"] = value
 
 
-def splitting_into_groups_by_category(comp_list: list[int]) -> dict[str, list[int]]:
+def splitting_into_groups_by_category(comp_list: list[int]) -> (dict[str, list[int]], list[(str, int)]):
     """Разбивание списка сравнения по категориям товара"""
 
     category_offer_dict = {}
@@ -37,7 +37,10 @@ def splitting_into_groups_by_category(comp_list: list[int]) -> dict[str, list[in
         else:
             category_offer_dict[item["product__category_id__name"]] = [item["id"]]
 
-    return category_offer_dict
+    category_count_product = sorted([(name, len(count)) for name, count in category_offer_dict.items()],
+                                  key=lambda x: x[1], reverse=True)
+
+    return category_offer_dict, category_count_product
 
 
 def _get_a_complete_list_of_property_names(list_offer: list[int]) -> list[str]:
@@ -108,7 +111,7 @@ def _comparison_of_product_properties(list_compare: ListCompare, list_property: 
     return list_compare
 
 
-def get_comparison_lists_and_properties(list_offer: list[int]) -> (ListCompare, list[str]):
+def comparison_lists_and_properties(list_offer: list[int]) -> (ListCompare, list[str]):
     """Генерация списка сравнения и списка свойств продуктов"""
 
     list_compare = _generating_a_comparison_dictionary(list_offer)
@@ -117,3 +120,6 @@ def get_comparison_lists_and_properties(list_offer: list[int]) -> (ListCompare, 
     list_compare = _comparison_of_product_properties(list_compare, list_property)
 
     return list_compare, list_property
+
+
+# def get_comparepage(session):

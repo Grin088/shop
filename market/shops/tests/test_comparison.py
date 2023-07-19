@@ -8,7 +8,7 @@ from shops.services.compare import (_adding_missing_properties,
                                     _get_a_complete_list_of_property_names,
                                     _generating_a_comparison_dictionary,
                                     _comparison_of_product_properties,
-                                    get_comparison_lists_and_properties,
+                                    comparison_lists_and_properties,
                                     )
 
 
@@ -41,9 +41,13 @@ class CompareTestCase(TestCase):
     def test_splitting_into_groups_by_category_success(self):
         """Тест разбивки списка сравнения на категории """
         comp_list = [1, 3, 4, 5, 17]
-        result = splitting_into_groups_by_category(comp_list)
-        expected_result = {"ноутбуки": [1, 3, 5, 4], "бытовая техника": [17]}
-        self.assertEqual(result, expected_result)
+        result1, result2 = splitting_into_groups_by_category(comp_list)
+        expected_result1 = {"ноутбуки": [1, 3, 5, 4], "бытовая техника": [17]}
+        print(result2)
+        expected_result2 = [("ноутбуки", 4), ("бытовая техника", 1)]
+
+        self.assertEqual(result1, expected_result1)
+        self.assertEqual(result2, expected_result2)
 
     def test_get_a_complete_list_of_property_names_success(self):
         """Проверка генерации списка всех встречающихся свойств продуктов"""
@@ -106,7 +110,7 @@ class CompareTestCase(TestCase):
     def test_get_comparison_lists_and_properties_success(self):
         """ Проверка генерации финального списка сравнения и списка всех свойств. """
         comp_list = [1, 3]
-        result_1, result_2 = get_comparison_lists_and_properties(comp_list)
+        result_1, result_2 = comparison_lists_and_properties(comp_list)
         expected_result_2 = _get_a_complete_list_of_property_names(comp_list)
         self.assertEqual(len(result_1), len(comp_list))
         self.assertEqual(len(result_2), len(expected_result_2))

@@ -14,7 +14,7 @@ from shops.services import banner
 from shops.services.catalog import get_featured_categories
 from shops.services.compare import (compare_list_check,
                                     splitting_into_groups_by_category,
-                                    get_comparison_lists_and_properties,
+                                    comparison_lists_and_properties,
                                     )
 from shops.services.order import pryce_delivery
 from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
@@ -69,41 +69,31 @@ class ComparePageView(View):
     """Страница сравнения"""
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        """Страница сравнения GET запрос"""
-        # TODO Добавляет список  для отработки сравнения
-        # compare_list_check(request.session, 2)
-        comp_list = request.session.get("comp_list", [])
-
+        """Отображение страницы сравнения """
+        comp_list = self.request.session.get("comp_list", [])
         if comp_list and len(comp_list) > 1:
-            category_offer_dict = splitting_into_groups_by_category(comp_list)
-            list_compare, list_property = get_comparison_lists_and_properties(list(category_offer_dict.values())[0])
+            category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
+            list_compare, list_property = comparison_lists_and_properties(list(category_offer_dict.values())[0])
             context = {
-                "category_offer_dict": sorted([(name, len(count)) for name, count in category_offer_dict.items()],
-                                              key=lambda x: x[1], reverse=True),
+                "category_offer_dict": category_count_product,
                 "list_compare": list_compare,
                 "list_property": list_property
             }
             return render(request, "market/shops/comparison.jinja2", context=context)
-
         return render(request, "market/shops/comparison.jinja2",
                       context={"text": "Не достаточно данных для сравнения."})
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Переключение категории сравнения и удаление из списка сравнений"""
-
-        delete_id = request.POST.get('delete_id')
+        delete_id = self.request.POST.get('delete_id')
         if delete_id:
             compare_list_check(request.session, int(delete_id))
-
         comp_list = request.session.get("comp_list", [])
         if len(comp_list) > 1:
-            category_name = request.POST.get("category")
-            category_offer_dict = splitting_into_groups_by_category(comp_list)
-            list_compare, list_property = get_comparison_lists_and_properties(category_offer_dict[category_name])
-
-            context = {"category_offer_dict": sorted([(name, len(count))
-                                                      for name, count in category_offer_dict.items()],
-                                                     key=lambda x: x[1], reverse=True),
+            category_name = self.request.POST.get("category")
+            category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
+            list_compare, list_property = comparison_lists_and_properties(category_offer_dict[category_name])
+            context = {"category_offer_dict": category_count_product,
                        "list_compare": list_compare,
                        "list_property": list_property,
                        }
@@ -124,24 +114,23 @@ class CartItem():  # TODO Не забыть удалить
 class OrderView(TemplateView):
     """Оформление заказа"""
 
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         cart = [CartItem(1, 2, 4), CartItem(1, 4, 7), CartItem(1, 3, 2)]
         cart_id = 1
         total_cost = 2000
 
-
         context = {
-            "user": request.user,
-            "form": OderLoginUserForm,
-            "cart": cart,
-            "delivery_price": pryce_delivery(cart_id, total_cost)
-        }
+                   "user": request.user,
+                   "form": OderLoginUserForm,
+                   "cart": cart,
+                   "delivery_price": pryce_delivery(cart_id, total_cost)
+                   }
         return render(request, "market/order/order.jinja2", context=context)
 
     def post(self, request: HttpRequest) -> HttpResponse:
 
         if not request.user.is_authenticated:
-            user = authenticate(email=request.POST.get("email"), password=request.POST.get("password"))
+            user = authenticate(email=self.request.POST.get("email"), password=self.request.POST.get("password"))
 
             if user:
                 login(request, user)
@@ -150,14 +139,9 @@ class OrderView(TemplateView):
                               context={"text": "Неправильный ввод эмейла или пароля",
                                        "user": request.user, })
 
-        # delivery = request.POST.get("delivery")
-        # city = request.POST.get("city")
-        # address = request.POST.get("address")
-        # pay = request.POST.get("pay") # TODO online and someone
-
         context = {
-            "user": request.user,
-        }
+                   "user": request.user,
+                   }
         return render(request, "market/order/order.jinja2", context=context)
 
 
@@ -173,7 +157,8 @@ class HistoryOrderView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest) -> HttpResponse:
         """Обработка GET запроса стр. истории заказов"""
         context = {
-            "orders": Order.objects.filter(custom_user_id=request.user).prefetch_related("status").order_by("-data")
+            "orders": Order.objects.filter(custom_user_id=self.request.user).
+            prefetch_related("status").order_by("-data")
         }
         return render(request, "market/order/historyorder.jinja2", context=context)
 
@@ -183,14 +168,14 @@ class OrderDetailsView(LoginRequiredMixin, View):
 
     login_url = reverse_lazy("users:users_login")
 
-    def get(self, reqnuest: HttpRequest, pk: int) -> HttpResponse:
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         """Обработка GET запроса стр. детали заказа"""
         query = Order.objects.select_related("custom_user").get(id=pk)
 
-        if reqnuest.user != query.custom_user:
+        if self.request.user != query.custom_user:
             return HttpResponse("<h1>HTTP 403 Forbidden</h1>")
         context = {
             "order": query,
             "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related("offer__product"),
         }
-        return render(reqnuest, "market/order/oneorder.jinja2", context=context)
+        return render(request, "market/order/oneorder.jinja2", context=context)
