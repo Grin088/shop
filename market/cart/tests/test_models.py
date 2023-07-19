@@ -69,5 +69,3 @@ class CartItemModelTest(TestCase):
                 self.assertEqual(
                     cart_item._meta.get_field(field).verbose_name, expected_value
                 )
-
-

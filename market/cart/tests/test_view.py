@@ -32,12 +32,11 @@ class CartViewTest(TestCase):
     def test_template_cart(self):
         response = self.client.get('/cart/cart_items/', follow=True)
         self.assertEqual(response.status_code, 200)
-        #TODO не могу указать путь к темплейту
+        # TODO не могу указать путь к темплейту
         # self.assertTemplateUsed(response, 'market/cart/cart.jinja2')
 
     def test_details(self):
-        #TODO не понимаю как в сессию положить что то
+        # TODO не понимаю как в сессию положить что то
         self.client.post("/cart/add/1/0")
         session = self.client.session
         self.assertEqual(session["cart"], {})
-

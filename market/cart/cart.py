@@ -4,8 +4,8 @@ import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Cart as CartModel, CartItem
 from shops.models import Offer
+from .models import Cart as CartModel, CartItem
 
 
 class Cart(object):
