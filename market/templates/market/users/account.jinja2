@@ -26,6 +26,9 @@
                                     <li class="menu-item"><a class="menu-link" href="historyorder.html">
                                         {% trans %}История заказов{% endtrans %}</a>
                                     </li>
+                                    <li class="menu-item"><a class="menu-link" href="{{ url('users:browsing-history') }}">
+                                        {% trans %}История просмотров{% endtrans %}</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -35,8 +38,13 @@
                     <div class="Account">
                         <div class="Account-group">
                             <div class="Account-column">
-                                <div class="Account-avatar"><img
-                                        src="{% if user.avatar %} {{ user.avatar.url }} {% else %} {{ static('market/assets/img/icons/user_icon.png') }} {% endif %}"
+                                <div class="Account-avatar">
+                                    <img
+                                        src="{% if user.avatar.image == 'users/avatars/default/default_avatar1.png' %}
+                                            {{ static('market/assets/img/icons/user_icon.png') }}
+                                        {% else %}
+                                            {{ user.avatar.image.url }}
+                                        {% endif %}"
                                         alt="Avatar"/>
                                 </div>
                             </div>

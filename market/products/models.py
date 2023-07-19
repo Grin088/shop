@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from mptt.models import TreeForeignKey
 from users.models import CustomUser as User
 from django.db.models import Avg, ManyToManyField
 from taggit.managers import TaggableManager
@@ -37,7 +36,7 @@ class Product(models.Model):
         through="ProductProperty",
         verbose_name=_("характеристики")
     )
-    category = TreeForeignKey(
+    category = models.ForeignKey(
         "catalog.Catalog",
         on_delete=models.PROTECT,
         null=True,
@@ -116,11 +115,19 @@ class ProductImage(models.Model):
         Product, on_delete=models.CASCADE, related_name="product_images"
     )
     image = models.ImageField(
-        upload_to=product_images_directory_path, verbose_name=_("Изображение")
+        upload_to=product_images_directory_path, verbose_name=_("изображение")
     )
     description = models.CharField(
-        max_length=200, null=False, blank=True, verbose_name=_("Описание")
+        max_length=200, null=False, blank=True, verbose_name=_("описание")
     )
+
+
+class StatusReview(models.IntegerChoices):
+    very_bad = 1, '1'
+    bad = 2, '2'
+    satisfactory = 3, '3'
+    well = 4, '4'
+    very_well = 5, '5'
 
 
 class Review(models.Model):
@@ -131,26 +138,26 @@ class Review(models.Model):
         verbose_name = _("отзыв")
         verbose_name_plural = _("отзывы")
 
-    RATING_CHOICES = (
-        (1, "1"),
-        (2, "2"),
-        (3, "3"),
-        (4, "4"),
-        (5, "5")
-    )
+    # RATING_CHOICES = (
+    #     (1, "1"),
+    #     (2, "2"),
+    #     (3, "3"),
+    #     (4, "4"),
+    #     (5, "5")
+    # )
     user = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, verbose_name=_("Покупатель")
+        User, on_delete=models.DO_NOTHING, verbose_name=_("покупатель")
     )
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, verbose_name=_("Продукт")
+        Product, on_delete=models.CASCADE, verbose_name=_("продукт")
     )
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))
     rating = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES,
-        verbose_name=_("Оценка"),
+        choices=StatusReview.choices,
+        verbose_name=_("оценка"),
     )
     review_text = models.TextField(
-        max_length=500, blank=False, null=True, verbose_name=_("Текст отзыва")
+        max_length=500, blank=False, null=True, verbose_name=_("текст отзыва")
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -182,26 +189,33 @@ class Browsing_history(models.Model):
 
     class Meta:
         ordering = ['-data_at']
-        verbose_name = _("Просмотр продута")
-        verbose_name_plural = _("Просмотр продуктов")
+        verbose_name = _("просмотр продута")
+        verbose_name_plural = _("просмотр продуктов")
+
+
+class Status(models.TextChoices):
+    pending = 'pending', 'В ожидании'
+    running = 'running', 'В процессе выполнения'
+    completed = 'completed', 'Выполнен'
+    failed = 'failed', 'Завершен с ошибкой'
 
 
 class Import(models.Model):
     """модель для импорта товаров и отслеживания статуса выполнения """
-    STATUS_CHOICES = (
-        ('pending', 'В ожидании'),
-        ('running', 'В процессе выполнения'),
-        ('completed', 'Выполнен'),
-        ('failed', 'Завершен с ошибкой'),
-    )
+    # STATUS_CHOICES = (
+    #     ('pending', 'В ожидании'),
+    #     ('running', 'В процессе выполнения'),
+    #     ('completed', 'Выполнен'),
+    #     ('failed', 'Завершен с ошибкой'),
+    # )
 
     source = models.CharField(max_length=255, verbose_name=_('имя файла или URL для импорта'))
     start_time = models.DateTimeField(null=True, verbose_name=_('дата и время начала импорта'))
     end_time = models.DateTimeField(null=True, verbose_name=_('дата и время окончания импорта'))
     status = models.CharField(
         max_length=10,
-        choices=STATUS_CHOICES,
-        default='pending',
+        choices=Status.choices,
+        default=Status.pending,
         verbose_name=_('статус импорта'))
     imported_count = models.IntegerField(default=0, verbose_name=_('количество импортированных товаров'))
     errors = models.JSONField(default=list, verbose_name=_('список ошибок при импорте'))
