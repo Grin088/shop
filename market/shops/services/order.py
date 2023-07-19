@@ -1,7 +1,7 @@
-
 from unicodedata import decimal
 
 from shops.models import OrderOffer
+
 
 # TODO добавить из настроек 200 и 2000
 def pryce_delivery(cart: int, total_cost: decimal) -> decimal:

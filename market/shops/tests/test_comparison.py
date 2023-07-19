@@ -64,7 +64,7 @@ class CompareTestCase(TestCase):
         comp_list = [1, 3]
         offer_pk = Offer.objects.filter(id=comp_list[0]).select_related("product")
         property_list = Offer.objects.filter(id=offer_pk[0].id).values_list("product__property__name",
-                         "product__productproperty__value")
+                                                                            "product__productproperty__value")
         property_dict = {}
         for name_i, value_i in property_list:
             property_dict[name_i] = [value_i, False]

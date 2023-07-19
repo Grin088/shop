@@ -38,7 +38,7 @@ def splitting_into_groups_by_category(comp_list: list[int]) -> (dict[str, list[i
             category_offer_dict[item["product__category_id__name"]] = [item["id"]]
 
     category_count_product = sorted([(name, len(count)) for name, count in category_offer_dict.items()],
-                                  key=lambda x: x[1], reverse=True)
+                                    key=lambda x: x[1], reverse=True)
 
     return category_offer_dict, category_count_product
 
@@ -120,6 +120,3 @@ def comparison_lists_and_properties(list_offer: list[int]) -> (ListCompare, list
     list_compare = _comparison_of_product_properties(list_compare, list_property)
 
     return list_compare, list_property
-
-
-# def get_comparepage(session):
