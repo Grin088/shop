@@ -92,7 +92,7 @@ class Order(models.Model):
     delivery = models.CharField(max_length=8, choices=DELIVERY_CHOICES, verbose_name=_('доставка'), default='ORDINARY')
     citi = models.CharField(max_length=100, verbose_name=_('город'))
     address = models.CharField(max_length=200, verbose_name=_('адрес'))
-    pay = models.CharField(max_length=8, choices=PAY_CHOICES, verbose_name=_('доставка'), default='ONLINE')
+    pay = models.CharField(max_length=8, choices=PAY_CHOICES, verbose_name=_('способ оплаты'), default='ONLINE')
     total_cost = models.DecimalField(decimal_places=2, max_digits=10)
 
 
