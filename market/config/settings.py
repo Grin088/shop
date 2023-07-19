@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     "shops",
     "users",
     "catalog",
-    "product_catalog",
     "cart",
     "mptt",
     'django_celery_beat',
