@@ -1,14 +1,14 @@
-import os
-import shutil
+# import os
+# import shutil
 from django.test import TestCase
 from django.urls import reverse_lazy
-from users.models import CustomUser, PhoneNumberValidator, UserAvatar
-from django.contrib.auth.hashers import check_password
-from django.core.files.uploadedfile import SimpleUploadedFile
-from io import BytesIO
-from PIL import Image
-
-from users.forms import UserProfileForm, ChangePasswordForm
+from users.models import CustomUser, PhoneNumberValidator, UserAvatar # noqa F401
+# from django.contrib.auth.hashers import check_password
+# from django.core.files.uploadedfile import SimpleUploadedFile
+# from io import BytesIO
+# from PIL import Image
+#
+# from users.forms import UserProfileForm, ChangePasswordForm
 
 
 class UserProfileTest(TestCase):

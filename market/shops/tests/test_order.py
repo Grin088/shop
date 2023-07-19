@@ -1,9 +1,9 @@
-from django.test import TestCase
-from django.urls import reverse
-
-from shops.models import Order
-from shops.tests.test_comparison import CompareTestCase
-from users.models import CustomUser
+# from django.test import TestCase
+# from django.urls import reverse
+#
+# from shops.models import Order
+# from shops.tests.test_comparison import CompareTestCase
+# from users.models import CustomUser
 
 
 # class OrderTestCase(TestCase):
