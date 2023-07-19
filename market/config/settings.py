@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     "users",
     "catalog",
     "cart",
-    "mptt",
     'django_celery_beat',
     'django_celery_results',
     'discounts'
