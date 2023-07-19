@@ -61,6 +61,16 @@ class OrderStatus(models.Model):
         return self.name
 
 
+class StatusDeliveryOrder(models.TextChoices):
+    ordinary = 'ORDINARY', _('Обычная')
+    express = 'EXPRESS', _('Экспрес')
+
+
+class StatusPayOrder(models.TextChoices):
+    online = 'ONLINE', _('Онлайн')
+    someone = 'SOMEONE', _('Онлайн со случайного чужого счета')
+
+
 class Order(models.Model):
     """Модель заказов"""
 
@@ -68,15 +78,15 @@ class Order(models.Model):
         verbose_name = _('заказ')
         verbose_name_plural = _('заказы')
 
-    DELIVERY_CHOICES = [
-        ('ORDINARY', _('Обычная')),
-        ('EXPRESS', _('Экспрес')),
-    ]
-
-    PAY_CHOICES = [
-        ('ONLINE', _('Онлайн')),
-        ('SOMEONE', _('Онлайн со случайного чужого счета')),
-    ]
+    # DELIVERY_CHOICES = [
+    #     ('ORDINARY', _('Обычная')),
+    #     ('EXPRESS', _('Экспрес')),
+    # ]
+    #
+    # PAY_CHOICES = [
+    #     ('ONLINE', _('Онлайн')),
+    #     ('SOMEONE', _('Онлайн со случайного чужого счета')),
+    # ]
 
     custom_user = models.ForeignKey(CustomUser,
                                     on_delete=models.PROTECT,
@@ -91,10 +101,12 @@ class Order(models.Model):
                                default=1,
                                verbose_name=_('статус'))
     data = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
-    delivery = models.CharField(max_length=8, choices=DELIVERY_CHOICES, verbose_name=_('доставка'), default='ORDINARY')
+    delivery = models.CharField(max_length=8, choices=StatusDeliveryOrder.choices, verbose_name=_('доставка'),
+                                default=StatusDeliveryOrder.ordinary)
     citi = models.CharField(max_length=100, verbose_name=_('город'))
     address = models.CharField(max_length=200, verbose_name=_('адрес'))
-    pay = models.CharField(max_length=8, choices=PAY_CHOICES, verbose_name=_('доставка'), default='ONLINE')
+    pay = models.CharField(max_length=8, choices=StatusPayOrder.choices, verbose_name=_('доставка'),
+                           default=StatusPayOrder.online)
     total_cost = models.DecimalField(decimal_places=2, max_digits=10)
 
 

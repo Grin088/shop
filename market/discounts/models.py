@@ -3,16 +3,21 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class StatusDiscount(models.IntegerChoices):
+    percentages = 1, _('проценты')
+    amount = 2, _('сумма')
+
+
 class Discount(models.Model):
     """Абстрактны класс для создания моделей скидок"""
 
     class Meta:
         abstract = True
 
-    DISCOUNT_AMOUNT_TYPE_CHOICES = (
-        (1, _("проценты")),
-        (2, _("сумма")),
-    )
+    # DISCOUNT_AMOUNT_TYPE_CHOICES = (
+    #     (1, _("проценты")),
+    #     (2, _("сумма")),
+    # )
 
     name = models.CharField(
         max_length=50, null=False, blank=False, verbose_name=_("название скидки")
@@ -22,7 +27,7 @@ class Discount(models.Model):
         verbose_name=_("размер скидки"), null=False, blank=False
     )
     discount_amount_type = models.PositiveSmallIntegerField(
-        choices=DISCOUNT_AMOUNT_TYPE_CHOICES, null=False, blank=False
+        choices=StatusDiscount.choices, null=False, blank=False
     )
     active = models.BooleanField(
         verbose_name=_("скидка активна"), null=False, blank=False

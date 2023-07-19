@@ -122,6 +122,14 @@ class ProductImage(models.Model):
     )
 
 
+class StatusReview(models.IntegerChoices):
+    very_bad = 1, '1'
+    bad = 2, '2'
+    satisfactory = 3, '3'
+    well = 4, '4'
+    very_well = 5, '5'
+
+
 class Review(models.Model):
     """Модель отзывов о товаре и его оценка"""
 
@@ -130,13 +138,13 @@ class Review(models.Model):
         verbose_name = _("отзыв")
         verbose_name_plural = _("отзывы")
 
-    RATING_CHOICES = (
-        (1, "1"),
-        (2, "2"),
-        (3, "3"),
-        (4, "4"),
-        (5, "5")
-    )
+    # RATING_CHOICES = (
+    #     (1, "1"),
+    #     (2, "2"),
+    #     (3, "3"),
+    #     (4, "4"),
+    #     (5, "5")
+    # )
     user = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, verbose_name=_("покупатель")
     )
@@ -145,7 +153,7 @@ class Review(models.Model):
     )
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))
     rating = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES,
+        choices=StatusReview.choices,
         verbose_name=_("оценка"),
     )
     review_text = models.TextField(
@@ -185,22 +193,29 @@ class Browsing_history(models.Model):
         verbose_name_plural = _("просмотр продуктов")
 
 
+class Status(models.TextChoices):
+    pending = 'pending', 'В ожидании'
+    running = 'running', 'В процессе выполнения'
+    completed = 'completed', 'Выполнен'
+    failed = 'failed', 'Завершен с ошибкой'
+
+
 class Import(models.Model):
     """модель для импорта товаров и отслеживания статуса выполнения """
-    STATUS_CHOICES = (
-        ('pending', 'В ожидании'),
-        ('running', 'В процессе выполнения'),
-        ('completed', 'Выполнен'),
-        ('failed', 'Завершен с ошибкой'),
-    )
+    # STATUS_CHOICES = (
+    #     ('pending', 'В ожидании'),
+    #     ('running', 'В процессе выполнения'),
+    #     ('completed', 'Выполнен'),
+    #     ('failed', 'Завершен с ошибкой'),
+    # )
 
     source = models.CharField(max_length=255, verbose_name=_('имя файла или URL для импорта'))
     start_time = models.DateTimeField(null=True, verbose_name=_('дата и время начала импорта'))
     end_time = models.DateTimeField(null=True, verbose_name=_('дата и время окончания импорта'))
     status = models.CharField(
         max_length=10,
-        choices=STATUS_CHOICES,
-        default='pending',
+        choices=Status.choices,
+        default=Status.pending,
         verbose_name=_('статус импорта'))
     imported_count = models.IntegerField(default=0, verbose_name=_('количество импортированных товаров'))
     errors = models.JSONField(default=list, verbose_name=_('список ошибок при импорте'))
