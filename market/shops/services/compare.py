@@ -3,7 +3,7 @@ from typing import Dict, Union
 from django.conf import settings
 from shops.models import Offer
 
-ListCompare = list[Dict[str, Union[str, float, Dict[str, list[str, bool]], int,]]]
+ListCompare = list[Dict[str, Union[str, float, Dict[str, list[str, bool]], int]]]
 
 
 def compare_list_check(session, id_offer) -> None:
