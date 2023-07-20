@@ -1,28 +1,24 @@
 from products.models import Browsing_history
 from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, LogoutView, FormView
-from django.contrib.auth import update_session_auth_hash, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from django.views.generic.edit import FormMixin
 from django.views.generic.base import View
-from .forms import (CustomUserCreationForm,
-                    CustomAuthenticationForm,
-                    RestorePasswordForm,
-                    UserProfileForm,
-                    ChangePasswordForm,
-                    )
-from .models import CustomUser, UserAvatar
-from users.services.users import last_order_request
+from django.utils.translation import gettext_lazy as _
+
+from users.models import CustomUser, UserAvatar
+from users import forms
+from users.services.users_service import MyProfileService as Service, last_order_request
 
 
 class UserRegistrationView(CreateView):
     """ Регистрация нового пользователя """
 
-    form_class = CustomUserCreationForm
+    form_class = forms.CustomUserCreationForm
     model = CustomUser
     template_name = 'market/users/register.jinja2'
     success_url = '/'
@@ -40,7 +36,7 @@ class MyLoginView(LoginView):
     LoginView.next_page = reverse_lazy('users:users_register')
     redirect_authenticated_user = True
     template_name = 'market/users/login.jinja2'
-    authentication_form = CustomAuthenticationForm
+    authentication_form = forms.CustomAuthenticationForm
 
 
 class UserLogoutView(LogoutView):
@@ -50,7 +46,7 @@ class UserLogoutView(LogoutView):
 
 class RestorePasswordView(FormView):
     """Восстановление пароля пользователя"""
-    form_class = RestorePasswordForm
+    form_class = forms.RestorePasswordForm
     template_name = 'market/users/password.jinja2'
     success_url = reverse_lazy('users:users_restore_password')
 
@@ -66,7 +62,7 @@ class RestorePasswordView(FormView):
                   message=f'New password: {new_password}',
                   from_email='admin@gmail.com',
                   recipient_list=[form.cleaned_data['email']])
-        success_message = f'Новый пароль успешно отправлен на {user_email} '
+        success_message = _(f'Новый пароль успешно отправлен на {user_email}')
         return redirect(reverse_lazy('users:users_restore_password') + '?success_message=' + success_message)
 
 
@@ -90,8 +86,9 @@ def account(request):
 
 
 class MyProfileView(LoginRequiredMixin, FormMixin, View):
-    form_class = ChangePasswordForm
-    second_form_class = UserProfileForm
+
+    form_class = forms.ChangePasswordForm
+    second_form_class = forms.UserProfileForm
     template_name = 'market/users/profile.jinja2'
     success_url = reverse_lazy('users:users_profile')
 
@@ -100,7 +97,7 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         second_form = self.second_form_class(instance=request.user)
         user = CustomUser.objects.get(pk=request.user.pk)
         form = self.get_form()
@@ -108,32 +105,21 @@ class MyProfileView(LoginRequiredMixin, FormMixin, View):
                                                     'second_form': second_form,
                                                     'user': user})
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = self.get_form()
         second_form = self.second_form_class(instance=request.user, data=request.POST, files=request.FILES)
-        if form.is_valid() and second_form.is_valid():
-            select_avatar = second_form.cleaned_data.get('avatar')
-            avatar = UserAvatar.objects.get(user_id=request.user.pk)
-            avatar.image = select_avatar
-            avatar.save()
-            return self.form_valid(form, second_form)
-        else:
-            return self.get(request, *args, **kwargs)
+        if Service.post_form_validation(form=form, second_form=second_form, request=self.request):
+            return self.form_valid(form, second_form=second_form)
+        return self.get(request)
 
-    def form_valid(self, form, second_form):
-        if form.cleaned_data.get('new_password1') and form.cleaned_data.get('new_password2'):
-            form.save()
-            # Обновление сведений об аутентификации пользователя
-            update_session_auth_hash(self.request, form.user)
-            # Автоматический вход пользователя после изменения пароля
-            login(self.request, form.user)
-        second_form.save()
-        success_message = 'Профиль успешно сохранен'
-        return redirect(reverse('users:users_profile') + '?success_message=' + success_message)
+    def form_valid(self, form, **kwargs):
+        super().form_valid(form)
+        return Service.form_validation(form=form, request=self.request, **kwargs)
 
 
 class BrowsingHistory(View):
     """Контроллер истории просмотров товаров"""
+
     def get(self, request):
         history = Browsing_history.objects.filter(users_id=request.user.id).order_by('-data_at')[:20]
         history_count = Browsing_history.objects.count()
