@@ -8,4 +8,4 @@ class OderLoginUserForm(BaseUserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'password',]
+        fields = ['email', 'password']

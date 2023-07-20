@@ -76,15 +76,13 @@ class Cart(object):
 
     def save_to_session(self):
         """Сохраняем корзину из бд в сессиею"""
-        try:
-            cart_in_db = CartModel.objects.get(user=self.user)
-        except ObjectDoesNotExist:
-            cart_in_db = CartModel.objects.create(user=self.user)
-        cart_items = CartItem.objects.filter(cart=cart_in_db)
-        for item_in_db in cart_items:
-            self.cart[item_in_db.offer.id] = {'quantity': item_in_db.quantity,
-                                              'created_at': json.dumps(item_in_db.created_at, default=str)}
-        self.save()
+        cart_in_db = CartModel.objects.filter(user=self.user).first()
+        if cart_in_db:
+            cart_items = CartItem.objects.filter(cart=cart_in_db)
+            for item_in_db in cart_items:
+                self.cart[item_in_db.offer.id] = {'quantity': item_in_db.quantity,
+                                                  'created_at': json.dumps(item_in_db.created_at, default=str)}
+            self.save()
 
     def add_to_cart(self, offer: Offer):
         """
@@ -128,10 +126,13 @@ class Cart(object):
         Возвращаем словарь с ключом Product значением словарь со значениями количество товара и цена товара
         :return: dict
         """
-        products = {}
         cart = self.cart_to_json(self.cart)
-        for item in cart:
-            products[item['offer'].product] = {'pcs': item['quantity'], 'unit_price': item['offer'].price}
+        products = {
+            item['offer'].product: {
+                'pcs': item['quantity'],
+                'unit_price': item['offer'].price}
+            for item in cart
+        }
         return products
 
     def get_total_price(self):
@@ -139,10 +140,9 @@ class Cart(object):
         Возвращаем общую цену товаров в корзине
         :return: decimal
         """
-        total_price = 0
+
         json_cart = self.cart_to_json(self.cart)
-        for item in json_cart:
-            total_price += item['offer'].price * item['quantity']
+        total_price = sum([item['offer'].price * item['quantity'] for item in json_cart])
         return total_price
 
     def get_products_quantity(self):
@@ -150,8 +150,6 @@ class Cart(object):
         Возвращаем общую цену товаров в корзине
         :return: decimal
         """
-        products_quantity = 0
         json_cart = self.cart_to_json(self.cart)
-        for item in json_cart:
-            products_quantity += item['quantity']
+        products_quantity = sum([item['quantity'] for item in json_cart])
         return products_quantity

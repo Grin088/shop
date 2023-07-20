@@ -37,6 +37,7 @@ class UserRegistrationView(CreateView):
 
 class MyLoginView(LoginView):
     """Вход пользователя"""
+
     LoginView.next_page = reverse_lazy('users:users_register')
     redirect_authenticated_user = True
     template_name = 'market/users/login.jinja2'
