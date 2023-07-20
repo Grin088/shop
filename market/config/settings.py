@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 from urllib.parse import urlparse
 from dotenv import dotenv_values
@@ -237,6 +238,12 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_BEAT_SCHEDULE = {
+    'process_payment_queue': {
+        'task': 'market.shops.tasks.process_payment_queue',
+        'schedule': timedelta(seconds=60)
+    }
+}
 
 IMPORT_DONE = BASE_DIR / "imports" / "successful_imports"
 IMPORT_FAIL = BASE_DIR / "imports" / "failed_imports"
