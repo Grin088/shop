@@ -8,6 +8,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from users.views import MyLoginView
 from shops.forms import OderLoginUserForm
 from shops.services import banner
@@ -17,9 +20,10 @@ from shops.services.compare import (compare_list_check,
                                     comparison_lists_and_properties,
                                     )
 from shops.services.order import pryce_delivery
-from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
+from shops.services.limited_products import (get_random_limited_edition_product,
+                                             get_top_products, get_limited_edition)
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from shops.models import Shop, Order, OrderOffer, Offer
+from shops.models import Shop, Order, OrderOffer, Offer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
 
 
@@ -179,3 +183,18 @@ class OrderDetailsView(LoginRequiredMixin, View):
             "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related("offer__product"),
         }
         return render(request, "market/order/oneorder.jinja2", context=context)
+
+
+@api_view(['POST'])
+def process_payment(request):
+    """метод API для обработки запросов оплаты"""
+    order_number = request.data.get('order_number')
+    card_number = request.data.get('card_number')
+
+    order = Order.objects.get(id=order_number)
+
+    # Добавление заказа в очередь оплаты
+    queue_job = PaymentQueue(order=order, card_number=card_number)
+    queue_job.save()
+
+    return Response({'message': 'Payment request added to the queue'})
