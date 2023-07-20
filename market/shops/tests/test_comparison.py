@@ -43,7 +43,6 @@ class CompareTestCase(TestCase):
         comp_list = [1, 3, 4, 5, 17]
         result1, result2 = splitting_into_groups_by_category(comp_list)
         expected_result1 = {"ноутбуки": [1, 3, 5, 4], "бытовая техника": [17]}
-        print(result2)
         expected_result2 = [("ноутбуки", 4), ("бытовая техника", 1)]
 
         self.assertEqual(result1, expected_result1)
