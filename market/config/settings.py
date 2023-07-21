@@ -24,6 +24,8 @@ config = dotenv_values(os.path.join("..", ".env"))
 BASE_DIR = Path(__file__).resolve().parent.parent
 AUTH_USER_MODEL = 'users.CustomUser'
 
+CART_SESSION_ID = 'cart'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -57,6 +59,7 @@ INSTALLED_APPS = [
     "shops",
     "users",
     "catalog",
+    "cart",
     'django_celery_beat',
     'django_celery_results',
     'discounts'
@@ -82,6 +85,9 @@ TEMPLATES = [
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
+            "context_processors": [
+                "cart.context_processors.cart"
+            ],
             "match_extension": ".jinja2",
             "match_regex": None,
             "app_dirname": "templates",

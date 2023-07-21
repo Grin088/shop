@@ -27,6 +27,9 @@ class Offer(models.Model):
     free_shipping = models.BooleanField(default=False, verbose_name=_('бесплатная доставка'))
     date_of_creation = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"shop{self.shop.name}, product: {self.product.name}"
+
 
 class Banner(models.Model):
     """Модель баннеров"""

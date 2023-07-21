@@ -1,9 +1,8 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext as g
 from discounts.models import ShopItemDiscount, CartItemDiscount
 from discounts.forms import ShopDiscountCreationForm, CartDiscountCreationForm
+from discounts.services.admin_service import formatted_last_time_service
 
 
 @admin.register(ShopItemDiscount)
@@ -13,18 +12,26 @@ class ShopDiscountAdmin(admin.ModelAdmin):
     form = ShopDiscountCreationForm
     list_display = ("name", "active", "formatted_last_time")
     search_fields = ["name"]
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "description",
+                    "discount_amount",
+                    "discount_amount_type",
+                    "start_date",
+                    "end_date",
+                )
+            },
+        ),
+        (_("Активировать скидку"), {"fields": ("active",)}),
+    )
 
     def formatted_last_time(self, obj):
         """Функция для отображения окончания действия скидки"""
-        last_time = obj.last_discount_time
-        # Если срок действия скидки <= 0, выводится значение "
-        if not last_time:
-            obj.active = False
-            obj.save()
-            return mark_safe(
-                f'<span style="color: red;">{g("Время действия скидки истекло !")}</span>'
-            )
-        return last_time
+        return formatted_last_time_service(obj)
 
     formatted_last_time.short_description = _("Время до окончания действия скидки")
 
@@ -46,7 +53,6 @@ class CartDiscountAdmin(admin.ModelAdmin):
                     "description",
                     "discount_amount",
                     "discount_amount_type",
-                    "active",
                     "start_date",
                     "end_date",
                 )
@@ -54,31 +60,22 @@ class CartDiscountAdmin(admin.ModelAdmin):
         ),
         (
             _("Скидка на группу товаров"),
-            {"fields": ("products_group_1", "products_group_2")},
+            {"fields": ("products", "categories")},
         ),
         (
             _("Дополнительные параметры"),
             {
                 "fields": (
-                    "min_total_price_of_cart",
-                    "max_total_price_of_cart",
-                    "min_amount_product_in_cart",
-                    "max_amount_product_in_cart",
+                    "total_price_of_cart",
+                    "amount_product_in_cart",
                 )
             },
         ),
+        (_("Активировать скидку"), {"fields": ("active",)}),
     )
 
     def formatted_last_time(self, obj):
         """Функция для отображения окончания действия скидки"""
-        last_time = obj.last_discount_time
-        # Если срок действия скидки <= 0, выводится значение "
-        if not last_time:
-            obj.active = False
-            obj.save()
-            return mark_safe(
-                f'<span style="color: red;">{g("Время действия скидки истекло !")}</span>'
-            )
-        return last_time
+        return formatted_last_time_service(obj)
 
     formatted_last_time.short_description = _("Время до окончания действия скидки")
