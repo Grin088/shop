@@ -139,4 +139,4 @@ class OrderStatusChange(models.Model):
 class PaymentQueue(models.Model):
     """модель для представления задания оплаты в очереди"""
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_('заказ'))
-    card_number = models.IntegerField(max_length=16, verbose_name=_('номер карты'))
+    card_number = models.IntegerField(verbose_name=_('номер карты'))
