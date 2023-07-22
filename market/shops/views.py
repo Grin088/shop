@@ -12,10 +12,7 @@ from users.views import MyLoginView
 from shops.forms import OderLoginUserForm
 from shops.services import banner
 from shops.services.catalog import get_featured_categories
-from shops.services.compare import (compare_list_check,
-                                    splitting_into_groups_by_category,
-                                    comparison_lists_and_properties,
-                                    )
+from shops.services.compare import (CompareMixin)
 from shops.services.order import pryce_delivery
 from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
@@ -65,42 +62,9 @@ def seller_detail(request):
         return render(request, 'market/shops/seller_detail.jinja2', context)
 
 
-class ComparePageView(View):
+class ComparePageView(CompareMixin, View):
     """Страница сравнения"""
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        """Отображение страницы сравнения """
-        comp_list = self.request.session.get("comp_list", [])
-        if comp_list and len(comp_list) > 1:
-            category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
-            list_compare, list_property = comparison_lists_and_properties(list(category_offer_dict.values())[0])
-            context = {
-                "category_offer_dict": category_count_product,
-                "list_compare": list_compare,
-                "list_property": list_property
-            }
-            return render(request, "market/shops/comparison.jinja2", context=context)
-        return render(request, "market/shops/comparison.jinja2",
-                      context={"text": "Не достаточно данных для сравнения."})
-
-    def post(self, request: HttpRequest) -> HttpResponse:
-        """Переключение категории сравнения и удаление из списка сравнений"""
-        delete_id = self.request.POST.get('delete_id')
-        if delete_id:
-            compare_list_check(request.session, int(delete_id))
-        comp_list = request.session.get("comp_list", [])
-        if len(comp_list) > 1:
-            category_name = self.request.POST.get("category")
-            category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
-            list_compare, list_property = comparison_lists_and_properties(category_offer_dict[category_name])
-            context = {"category_offer_dict": category_count_product,
-                       "list_compare": list_compare,
-                       "list_property": list_property,
-                       }
-            return render(request, 'market/shops/comparison.jinja2', context=context)
-
-        return render(request, "market/shops/comparison.jinja2",
-                      context={"text": "Не достаточно данных для сравнения."})
+    pass
 
 
 class CartItem():  # TODO Не забыть удалить

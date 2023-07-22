@@ -1,9 +1,48 @@
 from typing import Dict, Union
 
 from django.conf import settings
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
+
 from shops.models import Offer
 
 ListCompare = list[Dict[str, Union[str, float, Dict[str, list[str, bool]], int]]]
+
+
+class CompareMixin:
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """Отображение страницы сравнения """
+        comp_list = request.session.get("comp_list", [])
+        if comp_list and len(comp_list) > 1:
+            category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
+            list_compare, list_property = comparison_lists_and_properties(list(category_offer_dict.values())[0])
+            context = {
+                "category_offer_dict": category_count_product,
+                "list_compare": list_compare,
+                "list_property": list_property
+            }
+            return render(request, "market/shops/comparison.jinja2", context=context)
+        return render(request, "market/shops/comparison.jinja2",
+                      context={"text": "Не достаточно данных для сравнения."})
+
+    def post(self, request) -> HttpResponse:
+        """Переключение категории сравнения и удаление из списка сравнений"""
+        delete_id = request.POST.get('delete_id')
+        if delete_id:
+            compare_list_check(request.session, int(delete_id))
+        comp_list = request.session.get("comp_list", [])
+        if len(comp_list) > 1:
+            category_name = request.POST.get("category")
+            category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
+            list_compare, list_property = comparison_lists_and_properties(category_offer_dict[category_name])
+            context = {"category_offer_dict": category_count_product,
+                       "list_compare": list_compare,
+                       "list_property": list_property,
+                       }
+            return render(request, 'market/shops/comparison.jinja2', context=context)
+
+        return render(request, "market/shops/comparison.jinja2",
+                      context={"text": "Не достаточно данных для сравнения."})
 
 
 def compare_list_check(session, id_offer) -> None:

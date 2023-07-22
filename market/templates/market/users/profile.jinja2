@@ -11,7 +11,7 @@
                     <h1 class="Middle-title">{% trans %} Профиль {% endtrans %}
                     </h1>
                     <ul class="breadcrumbs Middle-breadcrumbs">
-                        <li class="breadcrumbs-item"><a href="index.html">{% trans %}Домой{% endtrans %}</a>
+                        <li class="breadcrumbs-item"><a href="{{ url('home') }}">{% trans %}Домой{% endtrans %}</a>
                         </li>
                         <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans %}Профиль{% endtrans %}</span>
                         </li>
@@ -37,7 +37,7 @@
                                                                               href="{{ url('users:users_profile') }}">
                                         {% trans %}Профиль{% endtrans %}</a>
                                     </li>
-                                    <li class="menu-item"><a class="menu-link" href="historyorder.html">
+                                    <li class="menu-item"><a class="menu-link" href="{{ url('order_history') }}">
                                         {% trans %}История заказов{% endtrans %}</a>
                                     </li>
                                     <li class="menu-item"><a class="menu-link" href="{{ url('users:browsing-history') }}">
@@ -58,7 +58,8 @@
 
                                     {% if user.avatar.image != 'users/avatars/default/default_avatar1.png' %}
                                         <div class="Profile-avatar">
-                                            <div class="Profile-img"><img src="{{ user.avatar.image.url }}"
+                                            <div class="Profile-img">
+                                                <img src="{{ user.avatar.image.url }}"
                                                                           alt="card.jpg"/>
                                             </div>
                                             <label class="Profile-fileLabel"

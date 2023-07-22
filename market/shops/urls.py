@@ -9,7 +9,6 @@ from .views import (BaseView,
                     OrderDetailsView,
                     )
 
-
 urlpatterns = [
     path('', BaseView.as_view(), name='index'),
     path('', BaseView.as_view(), name='login'),

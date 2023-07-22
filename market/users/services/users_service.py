@@ -33,6 +33,8 @@ class MyProfileService:
         """Метод для проверки формы при и сохранения аватара"""
         if form.is_valid() and second_form.is_valid():
             select_avatar = second_form.cleaned_data.get('avatar')
+            if not select_avatar:
+                return True
             avatar = UserAvatar.objects.get(user_id=request.user.pk)
             avatar.image = select_avatar
             avatar.save()
