@@ -39,7 +39,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [
         OrderOfferAdminInline,
     ]
-    list_display = 'id', 'custom_user', 'status', 'data', 'delivery', 'citi', 'address',
+    list_display = 'id', 'custom_user', 'status', 'data', 'delivery', 'city', 'address',
 
 
 @admin.register(OrderStatus)

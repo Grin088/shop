@@ -1,11 +1,25 @@
-from django.contrib.auth.forms import BaseUserCreationForm
+from django import forms
+from shops.models import StatusDeliveryOrder, StatusPayOrder, Order
 
-from users.models import CustomUser
 
 
-class OderLoginUserForm(BaseUserCreationForm):
+class OderLoginUserForm(forms.Form):
     """Форма для логирования пользователя"""
+    email = forms.EmailField(widget=forms.EmailInput)
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100,)
 
-    class Meta:
-        model = CustomUser
-        fields = ['email', 'password']
+
+# class OderForm(forms.ModelForm):
+#     """Форма для логирования пользователя"""
+#     delivery = forms.ChoiceField(widget=forms.RadioSelect,
+#                                  choices=StatusDeliveryOrder.choices,
+#                                  initial=StatusDeliveryOrder.ordinary)
+#     pay = forms.ChoiceField(widget=forms.RadioSelect,
+#                             choices=StatusPayOrder.choices,
+#                             initial=StatusPayOrder.online,
+#                             )
+#     address = forms.CharField(widget=forms.Textarea, max_length=200, required=True )
+#
+#     class Meta:
+#         model = Order
+#         fields = ["delivery", "city", "address", "pay"]

@@ -1,4 +1,5 @@
-from django.shortcuts import render  # noqa F401
+from django.db.models import F
+from django.shortcuts import render, redirect  # noqa F401
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView, View
@@ -8,6 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from cart.models import CartItem, Cart
 from users.views import MyLoginView
 from shops.forms import OderLoginUserForm
 from shops.services import banner
@@ -19,7 +21,7 @@ from shops.services.compare import (compare_list_check,
 from shops.services.order import pryce_delivery
 from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from shops.models import Shop, Order, OrderOffer, Offer
+from shops.models import Shop, Order, OrderOffer, OrderStatus, OrderStatusChange
 from shops.services.is_member_of_group import is_member_of_group
 
 
@@ -103,46 +105,78 @@ class ComparePageView(View):
                       context={"text": "Не достаточно данных для сравнения."})
 
 
-class CartItem():  # TODO Не забыть удалить
-    def __init__(self, cart=None, offer=None, quantity=None):
-        self.cart = cart
-        self.offer = Offer.objects.select_related("product").get(id=offer)
-        self.quantity = quantity
-        self.created_at = "11111"
-
-
 class OrderView(TemplateView):
     """Оформление заказа"""
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
-        cart = [CartItem(1, 2, 4), CartItem(1, 4, 7), CartItem(1, 3, 2)]
-        cart_id = 1
-        total_cost = 2000
-
+        cart_list = None
+        if request.user.is_authenticated:
+            cart_list = CartItem.objects.filter(cart__user=self.request.user).annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+        if not cart_list:
+            return redirect("show_product")
+        cart_count_offer = len(set([x.offer_id for x in cart_list]))
+        total_cost = sum([x.summ_offer for x in cart_list])
+        print(pryce_delivery(cart_count_offer, total_cost))
         context = {
                    "user": request.user,
-                   "form": OderLoginUserForm,
-                   "cart": cart,
-                   "delivery_price": pryce_delivery(cart_id, total_cost)
+                   "form_log": OderLoginUserForm(),
+                   "cart_list": cart_list,
+                   "delivery": pryce_delivery(cart_count_offer, total_cost),
+                   "summ_order": total_cost,
                    }
         return render(request, "market/order/order.jinja2", context=context)
 
     def post(self, request: HttpRequest) -> HttpResponse:
 
         if not request.user.is_authenticated:
-            user = authenticate(email=self.request.POST.get("email"), password=self.request.POST.get("password"))
+            form_log = OderLoginUserForm(request.POST)
+            if form_log.is_valid():
+                user = authenticate(email=form_log.cleaned_data["email"], password=form_log.cleaned_data["password"])
 
-            if user:
-                login(request, user)
-            else:
-                return render(request, "market/order/order.jinja2",
-                              context={"text": "Неправильный ввод эмейла или пароля",
-                                       "user": request.user, })
+                if user:
+                    login(request, user)
+                else:
+                    return render(request, "market/order/order.jinja2",
+                                  context={"text": "Неправильный ввод эмейла или пароля",
+                                           "user": request.user, })
 
-        context = {
-                   "user": request.user,
-                   }
-        return render(request, "market/order/order.jinja2", context=context)
+        cart_list = CartItem.objects.filter(cart__user=self.request.user).annotate(
+            summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+
+        if not cart_list:
+            return redirect("show_product")
+        cart_count_offer = len(set([x.offer_id for x in cart_list]))
+        total_cost = sum([x.summ_offer for x in cart_list])
+
+        if self.request.POST.get('delivery') == "ORDINARY":
+            total_cost = pryce_delivery(cart_count_offer, total_cost)["total_cost_ordinary"]
+        else:
+            total_cost = pryce_delivery(cart_count_offer, total_cost)["total_cost_express"]
+
+        new_order = Order()
+        new_order.custom_user = self.request.user
+        new_order.status = OrderStatus.objects.get(sort_index=1)
+        new_order.delivery = self.request.POST.get('delivery')
+        new_order.city = self.request.POST.get('city')
+        new_order.address = self.request.POST.get('address')
+        new_order.pay = self.request.POST.get('pay')
+        new_order.total_cost = total_cost
+        new_order.save()
+
+        for item_cart_i in cart_list:
+            cart2order = OrderOffer()
+            cart2order.offer = item_cart_i.offer
+            cart2order.order = new_order
+            cart2order.count = item_cart_i.quantity
+            cart2order.price = item_cart_i.offer.price
+            cart2order.save()
+
+        order_status = OrderStatusChange()
+        order_status.order = new_order
+        order_status.src_status = OrderStatus.objects.get(sort_index=1)
+        order_status.dst_status = OrderStatus.objects.get(sort_index=2)
+        order_status.save()
+        return redirect("show_product")
 
 
 class OrderLoginView(MyLoginView):
