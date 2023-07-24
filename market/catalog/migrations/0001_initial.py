@@ -5,26 +5,33 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Catalog',
+            name="Catalog",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='наименование', max_length=100)),
-                ('image', models.FileField(upload_to='catalog/icon/', verbose_name='картинка')),
-                ('is_featured', models.BooleanField(default=False, verbose_name='избранная категория')),
-                ('parent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='catalog.catalog')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(help_text="наименование", max_length=100)),
+                ("image", models.FileField(upload_to="catalog/icon/", verbose_name="картинка")),
+                ("is_featured", models.BooleanField(default=False, verbose_name="избранная категория")),
+                (
+                    "parent",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="children",
+                        to="catalog.catalog",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'категория',
-                'verbose_name_plural': 'категории',
-                'ordering': ['name'],
+                "verbose_name": "категория",
+                "verbose_name_plural": "категории",
+                "ordering": ["name"],
             },
         ),
     ]

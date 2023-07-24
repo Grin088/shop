@@ -19,9 +19,7 @@ class ShopDiscountCreationForm(forms.ModelForm):
 
         if "total_price_of_cart" not in cleaned_data:
             if not (cleaned_data.get("products") or cleaned_data.get("categories")):
-                self.add_error(
-                    None, _("Заполните хотя бы одно поле для категории или товаров")
-                )
+                self.add_error(None, _("Заполните хотя бы одно поле для категории или товаров"))
 
         discount_amount = cleaned_data.get("discount_amount")
         discount_amount_type = cleaned_data.get("discount_amount_type")
@@ -34,9 +32,7 @@ class ShopDiscountCreationForm(forms.ModelForm):
         if start_date > end_date:
             self.add_error(
                 "end_date",
-                _(
-                    "Дата окончания действия скидки должна быть больше даты начала действия скидки"
-                ),
+                _("Дата окончания действия скидки должна быть больше даты начала действия скидки"),
             )
 
         if discount_amount_type == 1 and discount_amount > 99:
@@ -55,15 +51,11 @@ class CartDiscountCreationForm(ShopDiscountCreationForm):
         """Функция проверки введенных данных"""
         cleaned_data = super().clean()
 
-        if "total_price_of_cart" in cleaned_data and (
-            cleaned_data.get("products") or cleaned_data.get("categories")
-        ):
+        if "total_price_of_cart" in cleaned_data and (cleaned_data.get("products") or cleaned_data.get("categories")):
             if cleaned_data.get("products"):
                 self.add_error(
                     "categories",
-                    _(
-                        "При выборе продукта поле категории товаров должно быть заполнено "
-                    ),
+                    _("При выборе продукта поле категории товаров должно быть заполнено "),
                 )
             elif cleaned_data.get("categories"):
                 self.add_error(
@@ -77,8 +69,6 @@ class CartDiscountCreationForm(ShopDiscountCreationForm):
             or cleaned_data.get("total_price_of_cart")
             or cleaned_data.get("amount_product_in_cart")
         ):
-            self.add_error(
-                None, _("Заполните хотя бы одно условие для получения скидки")
-            )
+            self.add_error(None, _("Заполните хотя бы одно условие для получения скидки"))
 
         return cleaned_data

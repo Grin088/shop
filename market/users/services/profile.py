@@ -13,21 +13,19 @@ from users.models import CustomUser
 class ProfileMixin(LoginRequiredMixin, FormMixin, View):
     form_class = ChangePasswordForm
     second_form_class = UserProfileForm
-    template_name = 'market/users/profile.jinja2'
-    success_url = reverse_lazy('users:users_profile')
+    template_name = "market/users/profile.jinja2"
+    success_url = reverse_lazy("users:users_profile")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        kwargs["user"] = self.request.user
         return kwargs
 
     def get(self, request):
         second_form = self.second_form_class(instance=request.user)
         user = CustomUser.objects.get(pk=request.user.pk)
         form = self.get_form()
-        return render(request, self.template_name, {'form': form,
-                                                    'second_form': second_form,
-                                                    'user': user})
+        return render(request, self.template_name, {"form": form, "second_form": second_form, "user": user})
 
     def post(self, request):
         form = self.get_form()
