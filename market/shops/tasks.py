@@ -27,16 +27,12 @@ def process_payment_queue(name='Process payment queue'):
         order = job.order
         card_number = job.card_number
 
-        # Вызов метода API фиктивной оплаты
         payment_status = fake_payment_service.pay_order(card_number=card_number)
 
-        # Обновление статуса заказа на основе результата оплаты
         if payment_status == 'success':
             order.status = 'paid'
         else:
             order.status = 'unpaid'
 
         order.save()
-
-        # Удаление задания из очереди
         job.delete()
