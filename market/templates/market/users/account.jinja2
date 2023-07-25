@@ -62,9 +62,9 @@
                                         <div class="row">
                                             <div class="row-block">
 {#                                            Не готово!!!!!!!!#}
-                                                <a class="Order-title" href="#">{% trans %}Заказ{% endtrans %}&#32;<span
-                                                    class="Order-numberOrder">№200</span>&#32;{% trans %}от{% endtrans %}&#32;<span
-                                                    class="Order-dateOrder">21.07.2020</span></a>
+                                                <a class="Order-title" href="{{ url('order_details', pk=order.order.id) }}">{% trans %}Заказ{% endtrans %}&#32;<span
+                                                    class="Order-numberOrder">№{{ order.order.id }}</span>&#32;{% trans %}от{% endtrans %}&#32;<span
+                                                    class="Order-dateOrder">{{ order.order.data.strftime('%d.%m.%Y') }}</span></a>
                                                 <div class="Account-editLink">
                                                     <a href="{{ url('order_history') }}">{% trans %}История заказов{% endtrans %}</a>
                                                 </div>
@@ -73,25 +73,25 @@
                                                 <div class="Order-info Order-info_delivery">
                                                     <div class="Order-infoType">{% trans %}Тип доставки:{% endtrans %}
                                                     </div>
-                                                    <div class="Order-infoContent">{% trans %}Обычная доставка{% endtrans %}
+                                                    <div class="Order-infoContent">{{ order.order.delivery }}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info Order-info_pay">
                                                     <div class="Order-infoType">{% trans %}Оплата:{% endtrans %}
                                                     </div>
-                                                    <div class="Order-infoContent">{% trans %}Онлайн картой{% endtrans %}
+                                                    <div class="Order-infoContent">{{order.order.pay}}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info">
                                                     <div class="Order-infoType">{% trans %}Общая стоимость:{% endtrans %}
                                                     </div>
-                                                    <div class="Order-infoContent">200.99$
+                                                    <div class="Order-infoContent">{{ order.order.total_cost }}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info Order-info_status">
-                                                    <div class="Order-infoType">{% trans %}Статус:{% endtrans %}
+                                                    <div class="Order-infoType">{% trans %}Статус{% endtrans %}:
                                                     </div>
-                                                    <div class="Order-infoContent">{% trans %}Не оплачен{% endtrans %}
+                                                    <div class="Order-infoContent">{{order.order.status}}
                                                     </div>
                                                 </div>
                                             </div>

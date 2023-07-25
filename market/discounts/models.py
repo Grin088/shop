@@ -7,8 +7,9 @@ from django.utils.translation import gettext_lazy as _
 
 class StatusDiscount(models.IntegerChoices):
     """Класс для выбора вида скидки"""
-    percentages = 1, _('проценты')
-    amount = 2, _('сумма')
+
+    percentages = 1, _("проценты")
+    amount = 2, _("сумма")
 
 
 class Discount(models.Model):

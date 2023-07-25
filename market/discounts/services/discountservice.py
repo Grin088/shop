@@ -4,7 +4,6 @@ from cart.cart import Cart
 
 
 class DiscountService:
-
     def __init__(self, cart: Cart):
         self.cart = cart
         self.products = self.cart.get_products()
@@ -25,22 +24,21 @@ class DiscountService:
         return self._total_price_with_discount
 
     def discounts_handler(self, product, values, **kwargs):
-
         products_quantity = values.get("pcs")
         product_price = values.get("unit_price")
 
-        discount = max(
-            [
-                discount.discount_amount
-                if discount.discount_amount_type == 2
-                else round(product_price / 100 * float(discount.discount_amount), 2)
-                for discount in product.filter(
-                    active=True,
-                    **kwargs
-                )
-            ],
-            default=0,
-        ) * products_quantity
+        discount = (
+            max(
+                [
+                    discount.discount_amount
+                    if discount.discount_amount_type == 2
+                    else round(product_price / 100 * float(discount.discount_amount), 2)
+                    for discount in product.filter(active=True, **kwargs)
+                ],
+                default=0,
+            )
+            * products_quantity
+        )
         return discount
 
     def _get_shop_discount(self) -> int:
@@ -48,12 +46,13 @@ class DiscountService:
 
         shop_products = {}
         for product, values in self.products.items():
-
             products_quantity = values.get("pcs")
             product_price = values.get("unit_price")
             total_units_price = products_quantity * product_price
             product_discount = self.discounts_handler(product.shopitemdiscount, values)
-            category_discount = self.discounts_handler(product.category.shopitemdiscount, values)
+            category_discount = self.discounts_handler(
+                product.category.shopitemdiscount, values
+            )
 
             if product_discount or category_discount:
                 products_discount = max(product_discount, category_discount)
@@ -77,21 +76,22 @@ class DiscountService:
         categories = {product.category for product in self.products.keys()}
 
         for product, values in self.products.items():
-
-            var1 = self.discounts_handler(product.cartitemdiscount, values, categories__in=categories)
+            var1 = self.discounts_handler(
+                product.cartitemdiscount, values, categories__in=categories
+            )
             var2 = self.discounts_handler(
                 product.cartitemdiscount,
                 values,
                 categories__in=categories,
                 total_price_of_cart__gte=self.total_price,
-                amount_product_in_cart__gte=self.total_quantity
+                amount_product_in_cart__gte=self.total_quantity,
             )
             var3 = self.discounts_handler(
                 product.cartitemdiscount,
                 values,
                 categories__in=categories,
                 total_price_of_cart=None,
-                amount_product_in_cart__gte=self.total_quantity
+                amount_product_in_cart__gte=self.total_quantity,
             )
 
             var4 = self.discounts_handler(
@@ -99,7 +99,7 @@ class DiscountService:
                 values,
                 categories__in=categories,
                 total_price_of_cart__gte=self.total_price,
-                amount_product_in_cart=None
+                amount_product_in_cart=None,
             )
 
             if var1 or var2 or var3 or var4:
@@ -107,7 +107,8 @@ class DiscountService:
                 max_discount = max(var1, var2, var3, var4)
                 cart_products_discount[product] = max_discount
                 self._products_wit_cart_discount[product] = (
-                    unit_price - max_discount if unit_price > max_discount else 1)
+                    unit_price - max_discount if unit_price > max_discount else 1
+                )
 
         cart_products_discount = sum(cart_products_discount.values())
         return cart_products_discount

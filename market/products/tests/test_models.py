@@ -1,6 +1,8 @@
 from django.test import TestCase
+
 # from django.urls import reverse_lazy
-from products.models import Product, Property, ProductProperty, Review # noqa F401
+from products.models import Product, Property, ProductProperty, Review  # noqa F401
+
 # from users.models import CustomUser as User
 
 

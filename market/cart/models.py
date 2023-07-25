@@ -14,9 +14,17 @@ class Cart(models.Model):
         verbose_name = _("корзина")
         verbose_name_plural = _("корзины")
 
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='carts',
-                             verbose_name=_("пользователь"))
-    offer = models.ManyToManyField("shops.Offer", through="CartItem", verbose_name=_("предложение"))
+    user = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="carts",
+        verbose_name=_("пользователь"),
+    )
+    offer = models.ManyToManyField(
+        "shops.Offer", through="CartItem", verbose_name=_("предложение")
+    )
 
 
 class CartItem(models.Model):
@@ -28,9 +36,18 @@ class CartItem(models.Model):
         verbose_name = _("товар в корзине")
         verbose_name_plural = _("товары в корзине")
 
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='offers', verbose_name=_("корзина клиента"))
-    offer = models.ForeignKey("shops.Offer",
-                              on_delete=models.CASCADE, verbose_name=_("товар магазина"))
-    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)],
-                                           verbose_name=_("количество товара в корзине"), default=1)
+    cart = models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        related_name="offers",
+        verbose_name=_("корзина клиента"),
+    )
+    offer = models.ForeignKey(
+        "shops.Offer", on_delete=models.CASCADE, verbose_name=_("товар магазина")
+    )
+    quantity = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)],
+        verbose_name=_("количество товара в корзине"),
+        default=1,
+    )
     created_at = models.DateTimeField(auto_now_add=True)

@@ -16,6 +16,7 @@ def product_preview_directory_path(instance: "Product", filename: str) -> str:
 
 class Product(models.Model):
     """Продукт"""
+
     tags = TaggableManager()
 
     class Meta:
@@ -23,8 +24,10 @@ class Product(models.Model):
         verbose_name = _("продукт")
 
     name = models.CharField(max_length=512, verbose_name=_("наименование"))
-    limited_edition = models.BooleanField(default=False, verbose_name=_('ограниченный тираж'))
-    index = models.PositiveIntegerField(default=0, verbose_name=_('индекс сортировки'))
+    limited_edition = models.BooleanField(
+        default=False, verbose_name=_("ограниченный тираж")
+    )
+    index = models.PositiveIntegerField(default=0, verbose_name=_("индекс сортировки"))
     preview = models.ImageField(
         null=True,
         blank=True,
@@ -32,9 +35,7 @@ class Product(models.Model):
         verbose_name=_("предварительный просмотр"),
     )
     property: ManyToManyField = models.ManyToManyField(
-        "Property",
-        through="ProductProperty",
-        verbose_name=_("характеристики")
+        "Property", through="ProductProperty", verbose_name=_("характеристики")
     )
     category = models.ForeignKey(
         "catalog.Catalog",
@@ -56,7 +57,6 @@ class Product(models.Model):
         return Review.objects.filter(product=self).count()
 
     def get_average_rating(self) -> float:
-
         """Вывод средней оценки продукта"""
         return (
             Review.objects.filter(product=self)
@@ -123,11 +123,11 @@ class ProductImage(models.Model):
 
 
 class StatusReview(models.IntegerChoices):
-    very_bad = 1, '1'
-    bad = 2, '2'
-    satisfactory = 3, '3'
-    well = 4, '4'
-    very_well = 5, '5'
+    very_bad = 1, "1"
+    bad = 2, "2"
+    satisfactory = 3, "3"
+    well = 4, "4"
+    very_well = 5, "5"
 
 
 class Review(models.Model):
@@ -183,25 +183,29 @@ class Review(models.Model):
 
 class Browsing_history(models.Model):
     """Подсчет просмотра товаров"""
+
     users = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="products"
+    )
     data_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-data_at']
+        ordering = ["-data_at"]
         verbose_name = _("просмотр продута")
         verbose_name_plural = _("просмотр продуктов")
 
 
 class Status(models.TextChoices):
-    pending = 'pending', 'В ожидании'
-    running = 'running', 'В процессе выполнения'
-    completed = 'completed', 'Выполнен'
-    failed = 'failed', 'Завершен с ошибкой'
+    pending = "pending", "В ожидании"
+    running = "running", "В процессе выполнения"
+    completed = "completed", "Выполнен"
+    failed = "failed", "Завершен с ошибкой"
 
 
 class Import(models.Model):
-    """модель для импорта товаров и отслеживания статуса выполнения """
+    """модель для импорта товаров и отслеживания статуса выполнения"""
+
     # STATUS_CHOICES = (
     #     ('pending', 'В ожидании'),
     #     ('running', 'В процессе выполнения'),
@@ -209,18 +213,29 @@ class Import(models.Model):
     #     ('failed', 'Завершен с ошибкой'),
     # )
 
-    source = models.CharField(max_length=255, verbose_name=_('имя файла или URL для импорта'))
-    start_time = models.DateTimeField(null=True, verbose_name=_('дата и время начала импорта'))
-    end_time = models.DateTimeField(null=True, verbose_name=_('дата и время окончания импорта'))
+    source = models.CharField(
+        max_length=255, verbose_name=_("имя файла или URL для импорта")
+    )
+    start_time = models.DateTimeField(
+        null=True, verbose_name=_("дата и время начала импорта")
+    )
+    end_time = models.DateTimeField(
+        null=True, verbose_name=_("дата и время окончания импорта")
+    )
     status = models.CharField(
         max_length=10,
         choices=Status.choices,
         default=Status.pending,
-        verbose_name=_('статус импорта'))
-    imported_count = models.IntegerField(default=0, verbose_name=_('количество импортированных товаров'))
-    errors = models.JSONField(default=list, verbose_name=_('список ошибок при импорте'))
-    email = models.EmailField(null=True, verbose_name=_('email получателя уведомления'))
-    task_id = models.CharField(max_length=36, blank=True, null=True, verbose_name=_('идентификатор задачи'))
+        verbose_name=_("статус импорта"),
+    )
+    imported_count = models.IntegerField(
+        default=0, verbose_name=_("количество импортированных товаров")
+    )
+    errors = models.JSONField(default=list, verbose_name=_("список ошибок при импорте"))
+    email = models.EmailField(null=True, verbose_name=_("email получателя уведомления"))
+    task_id = models.CharField(
+        max_length=36, blank=True, null=True, verbose_name=_("идентификатор задачи")
+    )
 
     def __str__(self):
-        return f'Импорт из {self.source}'
+        return f"Импорт из {self.source}"
