@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib import admin
 from .views import (BaseView,
                     seller_detail,
                     home,
@@ -12,12 +13,8 @@ from .views import (BaseView,
 
 urlpatterns = [
     path('', BaseView.as_view(), name='index'),
-    path('', BaseView.as_view(), name='login'),
-    path('', BaseView.as_view(), name='registr'),
-    path('', BaseView.as_view(), name='catalog'),
+    path("admin/", admin.site.urls, name='admin'),
     path('comparison/', ComparePageView.as_view(), name='comparison'),
-    path('', BaseView.as_view(), name='cart'),
-    path('', BaseView.as_view(), name='account'),
     path('home/', home, name='home'),
     path('seller/', seller_detail, name='seller_detail'),
     path('order/', OrderView.as_view(), name='order'),
