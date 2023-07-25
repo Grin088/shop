@@ -18,7 +18,7 @@ from shops.services.compare import (compare_list_check,
                                     splitting_into_groups_by_category,
                                     comparison_lists_and_properties,
                                     )
-from shops.services.order import pryce_delivery
+from shops.services.order import pryce_delivery, save_order_model
 from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from shops.models import Shop, Order, OrderOffer, OrderStatus, OrderStatusChange
@@ -109,30 +109,29 @@ class OrderView(TemplateView):
     """Оформление заказа"""
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
-        cart_list = None
-        if request.user.is_authenticated:
-            cart_list = CartItem.objects.filter(cart__user=self.request.user).annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+        """Оформления заказа если корзина не пуста и пользователь залогинен"""
+        global cart_list
+        if self.request.user.is_authenticated:
+            cart_list = CartItem.objects.filter(cart__user=self.request.user).\
+                annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+
         if not cart_list:
             return redirect("show_product")
-        cart_count_offer = len(set([x.offer_id for x in cart_list]))
-        total_cost = sum([x.summ_offer for x in cart_list])
-        print(pryce_delivery(cart_count_offer, total_cost))
-        context = {
-                   "user": request.user,
-                   "form_log": OderLoginUserForm(),
+        context = {"form_log": OderLoginUserForm(),
                    "cart_list": cart_list,
-                   "delivery": pryce_delivery(cart_count_offer, total_cost),
-                   "summ_order": total_cost,
+                   "delivery": pryce_delivery(cart_list),
                    }
         return render(request, "market/order/order.jinja2", context=context)
 
     def post(self, request: HttpRequest) -> HttpResponse:
-
+        """
+        Аутентификация пользователя если незалогиненный.
+        Сохранение заказа и истории изменения статуса
+        """
         if not request.user.is_authenticated:
             form_log = OderLoginUserForm(request.POST)
             if form_log.is_valid():
                 user = authenticate(email=form_log.cleaned_data["email"], password=form_log.cleaned_data["password"])
-
                 if user:
                     login(request, user)
                 else:
@@ -140,42 +139,7 @@ class OrderView(TemplateView):
                                   context={"text": "Неправильный ввод эмейла или пароля",
                                            "user": request.user, })
 
-        cart_list = CartItem.objects.filter(cart__user=self.request.user).annotate(
-            summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
-
-        if not cart_list:
-            return redirect("show_product")
-        cart_count_offer = len(set([x.offer_id for x in cart_list]))
-        total_cost = sum([x.summ_offer for x in cart_list])
-
-        if self.request.POST.get('delivery') == "ORDINARY":
-            total_cost = pryce_delivery(cart_count_offer, total_cost)["total_cost_ordinary"]
-        else:
-            total_cost = pryce_delivery(cart_count_offer, total_cost)["total_cost_express"]
-
-        new_order = Order()
-        new_order.custom_user = self.request.user
-        new_order.status = OrderStatus.objects.get(sort_index=1)
-        new_order.delivery = self.request.POST.get('delivery')
-        new_order.city = self.request.POST.get('city')
-        new_order.address = self.request.POST.get('address')
-        new_order.pay = self.request.POST.get('pay')
-        new_order.total_cost = total_cost
-        new_order.save()
-
-        for item_cart_i in cart_list:
-            cart2order = OrderOffer()
-            cart2order.offer = item_cart_i.offer
-            cart2order.order = new_order
-            cart2order.count = item_cart_i.quantity
-            cart2order.price = item_cart_i.offer.price
-            cart2order.save()
-
-        order_status = OrderStatusChange()
-        order_status.order = new_order
-        order_status.src_status = OrderStatus.objects.get(sort_index=1)
-        order_status.dst_status = OrderStatus.objects.get(sort_index=2)
-        order_status.save()
+        save_order_model(request.user, request.POST, cart_list)
         return redirect("show_product")
 
 

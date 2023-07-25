@@ -36,27 +36,27 @@
                                 </h2>
                             </header>
                             <div class="row">
-                                {% if user.is_authenticated %}
+                                {% if request.user.is_authenticated %}
                                 <div class="row-block">
                                     <div class="form-group">
                                         <label class="form-label" for="name">{% trans %}ФИО{% endtrans %}
                                         </label>
                                             <div class="form-input" >
-                                                <p> {{ user.username }} </p>
+                                                <p> {{ request.user.username }} </p>
                                             </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="phone">{% trans %}Телефон{% endtrans %}
                                         </label>
                                             <div class="form-input">
-                                                <p> {{ user.phone_number }} </p>
+                                                <p> {{ request.user.phone_number }} </p>
                                             </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="mail">E-mail
                                         </label>
                                            <div class="form-input">
-                                               <p> {{ user.email }} </p>
+                                               <p> {{ request.user.email }} </p>
                                            </div>
                                     </div>
                                 </div>
@@ -120,12 +120,12 @@
                             <div class="form-group">
                                 <label class="form-label" for="city">{% trans %}Город{% endtrans %}
                                 </label>
-                                <input class="form-input" id="city" name="city" type="text"  data-validate="require" required/>
+                                <input class="form-input" id="city" name="city" type="text" maxlength="100" data-validate="require" required/>
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="address" >{% trans %}Адрес{% endtrans %}
                                 </label>
-                                <textarea class="form-textarea" name="address" id="address"  data-validate="require" required></textarea>
+                                <textarea class="form-textarea" name="address" id="address" maxlength="200" data-validate="require" required></textarea>
                             </div>
                             <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3" onclick=illumination("step-3",)>{% trans %}Дальше{% endtrans %}</a>
                             </div>
@@ -157,7 +157,7 @@
                             </header>
                             <!--+div.Order.-confirmation-->
 
-                            {% if user.is_authenticated %}
+                            {% if request.user.is_authenticated %}
                             <div class="Order-infoBlock">
                                 <div class="Order-personal">
                                     <div class="row">
@@ -165,19 +165,19 @@
                                             <div class="Order-info">
                                                 <div class="Order-infoType">{% trans %}ФИО{% endtrans %}:
                                                 </div>
-                                                <div class="Order-infoContent">{{ user.username }}
+                                                <div class="Order-infoContent">{{ request.user.username }}
                                                 </div>
                                             </div>
                                             <div class="Order-info">
                                                 <div class="Order-infoType">{% trans %}Телефон{% endtrans %}:
                                                 </div>
-                                                <div class="Order-infoContent">{{ user.phone_number }}
+                                                <div class="Order-infoContent">{{ request.user.phone_number }}
                                                 </div>
                                             </div>
                                             <div class="Order-info">
                                                 <div class="Order-infoType">E-mail:
                                                 </div>
-                                                <div class="Order-infoContent">{{ user.email }}
+                                                <div class="Order-infoContent">{{ request.user.email }}
                                                 </div>
                                             </div>
                                         </div>
@@ -240,7 +240,7 @@
                                             </strong><span class="Cart-price" id="total-express">{{ delivery.total_cost_ordinary }}Руб</span>
                                         </div>
                                         <div class="Cart-block">
-                                            <button  class="btn btn_primary btn_lg" type="submit">{% trans %}Оплатить{% endtrans %}
+                                            <button  class="btn btn_primary btn_lg" type="submit">{% trans %}Создать заказ и оплатить{% endtrans %}
                                             </button>
                                         </div>
                                     </div>
