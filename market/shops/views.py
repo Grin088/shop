@@ -188,8 +188,8 @@ class OrderDetailsView(LoginRequiredMixin, View):
 @api_view(['POST'])
 def process_payment(request):
     """метод API для обработки запросов оплаты"""
-    order_number = request.data.get('order_number')
-    card_number = request.data.get('card_number')
+    order_number = request.data['order_number']
+    card_number = request.data['card_number']
 
     order = Order.objects.get(id=order_number)
 
