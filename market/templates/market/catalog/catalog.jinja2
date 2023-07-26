@@ -84,15 +84,23 @@
                     <div class="Cards">
                         {% for offer in page_obj %}
                             {% set score = [] %}
+                            {% set list_offer = [] %}
                             {% for shop in offer.offers.filter(product=offer) %}
+                                {% if list_offer.append(shop.id) %}
+                                {% endif %}
                                 {% if score.append(shop.price) %}
                                 {% endif %}
                             {% endfor %}
+
                             <div class="Card">
                                 <p>{{ offer.name }}</p>
-                                <a class="Card-picture" href="{{ url('products:product_detail' ,product_id=offer.pk)}}"><img src="{{ offer.preview.url }}" alt="{{ offer.preview }}" /></a>
+                                <a class="Card-picture"
+                                   href="{{ url('products:product_detail' ,product_id=offer.pk)}}">
+                                    <img src="{{ offer.preview.url }}" alt="{{ offer.preview }}" />
+                                </a>
                                 <div class="Card-content">
-                                    <strong class="Card-title"><a href="{{ url('products:product_detail' ,product_id=offer.pk)}}">Corsair Carbide Series Arctic White Steel</a>
+                                    <strong class="Card-title">
+                                        <a href="{{ url('products:product_detail' ,product_id=offer.pk)}}">Corsair Carbide Series Arctic White Steel</a>
                                     </strong>
                                     <div class="Card-description">
                                         <div class="Card-cost"><span class="Card-price">
@@ -101,11 +109,21 @@
                                         <div class="Card-category">
                                             {{ _(offer.category.name) }}
                                         </div>
-                                        <div class="Card-hover">
-                                            <a class="Card-btn" href="#">
-                                                <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" /></a>
-                                        </div>
+                                        <form class="Card-hover" method="post" action="{{ url('cart:cart_add', offer.id, 1) }}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="value_amount" value="+">
+                                            <a class="Card-btn" href="#" onclick="$(this).closest('form').submit()">
+                                                <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" />
+                                            </a>
+                                        </form>
                                     </div>
+                                    <form class="Card-btn" method="post">
+                                        {% csrf_token %}
+                                        <button name="add_compare" type="submit" value="{{ list_offer | min }}">
+                                            <img src="{{ static('market/assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg" />
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                         {% endfor %}

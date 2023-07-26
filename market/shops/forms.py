@@ -1,5 +1,6 @@
-from users.models import CustomUser
 from django.contrib.auth.forms import BaseUserCreationForm
+
+from users.models import CustomUser
 
 
 class OderLoginUserForm(BaseUserCreationForm):
@@ -7,4 +8,4 @@ class OderLoginUserForm(BaseUserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'password',]
+        fields = ['email', 'password']
