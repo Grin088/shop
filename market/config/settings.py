@@ -57,10 +57,11 @@ INSTALLED_APPS = [
     "shops",
     "users",
     "catalog",
-    'django_celery_beat',
-    'django_celery_results',
-    'discounts',
-    'site_settings',
+    "cart"
+    "django_celery_beat",
+    "django_celery_results",
+    "discounts",
+    "site_settings",
 ]
 
 MIDDLEWARE = [
