@@ -133,7 +133,7 @@
                                             <div class="Order-personal">
                                                 <div class="row">
                                                     <div class="row-block">
-                                                        <a class="Order-title" href="oneorder.html">
+                                                        <a class="Order-title" href="{{ url('order_details', pk=shop.pk) }}">
                                                             {{ shop }}
                                                         </a>
                                                         <div class="ProductCard-cartElement" style="margin-top: 10px;">
@@ -221,11 +221,9 @@
                                     </form>
                                 </div>
                             </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

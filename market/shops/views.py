@@ -9,6 +9,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from cart.models import CartItem, Cart
 from users.views import MyLoginView
 from shops.forms import OderLoginUserForm
@@ -19,9 +22,15 @@ from shops.services.compare import (compare_list_check,
                                     comparison_lists_and_properties,
                                     )
 from shops.services.order import pryce_delivery, save_order_model
-from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
+from shops.services.limited_products import (
+    get_random_limited_edition_product,
+    get_top_products,
+    get_limited_edition,
+)
+
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from shops.models import Shop, Order, OrderOffer, OrderStatus, OrderStatusChange
+
+from shops.models import Shop, Order, OrderOffer, OrderStatus, OrderStatusChange, Offer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
 
 
@@ -38,33 +47,31 @@ def home(request):
         limited_product = get_random_limited_edition_product()
         limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
         context = {
-            'featured_categories': featured_categories,
-            'random_banners': random_banners,
+            "featured_categories": featured_categories,
+            "random_banners": random_banners,
             # 'update_time': update_time,  # пока не может использоваться из-за celery
-            'limited_product': limited_product,
-            'top_products': top_products,
-            'limited_edition': limited_edition,
+            "limited_product": limited_product,
+            "top_products": top_products,
+            "limited_edition": limited_edition,
         }
-        return render(request, 'market/index.jinja2', context=context)
+        return render(request, "market/index.jinja2", context=context)
 
 
 class BaseView(TemplateView):
     """Базовое представление страницы"""
-    template_name = 'market/base.jinja2'
+
+    template_name = "market/base.jinja2"
 
 
-@user_passes_test(
-    is_member_of_group('Sellers'),
-    login_url=reverse_lazy('account')
-)
+@user_passes_test(is_member_of_group("Sellers"), login_url=reverse_lazy("account"))
 def seller_detail(request):
     """Детальная страница продавца"""
-    if request.method == 'GET':
+    if request.method == "GET":
         shop = Shop.objects.filter(user=request.user.id)
         context = {
-            'shop': shop,
+            "shop": shop,
         }
-        return render(request, 'market/shops/seller_detail.jinja2', context)
+        return render(request, "market/shops/seller_detail.jinja2", context)
 
 
 class ComparePageView(View):
@@ -143,24 +150,28 @@ class CreateOrderView(TemplateView):
 
 class OrderLoginView(MyLoginView):
     """Вход пользователя"""
-    next_page = reverse_lazy('order')
+
+    next_page = reverse_lazy("order")
 
 
 class HistoryOrderView(LoginRequiredMixin, View):
     """Страница история заказов"""
+
     login_url = reverse_lazy("users:users_login")
 
     def get(self, request: HttpRequest) -> HttpResponse:
         """Обработка GET запроса стр. истории заказов"""
         context = {
-            "orders": Order.objects.filter(custom_user_id=self.request.user).
-            prefetch_related("status").order_by("-data")
+            "orders": Order.objects.filter(custom_user_id=self.request.user)
+            .prefetch_related("status")
+            .order_by("-data")
         }
         return render(request, "market/order/historyorder.jinja2", context=context)
 
 
 class OrderDetailsView(LoginRequiredMixin, View):
     """Отображение деталей заказа"""
+
     login_url = reverse_lazy("users:users_login")
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
@@ -171,6 +182,23 @@ class OrderDetailsView(LoginRequiredMixin, View):
             return HttpResponse("<h1>HTTP 403 Forbidden</h1>")
         context = {
             "order": query,
-            "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related("offer__product"),
+            "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related(
+                "offer__product"
+            ),
         }
         return render(request, "market/order/oneorder.jinja2", context=context)
+
+
+@api_view(["POST"])
+def process_payment(request):
+    """метод API для обработки запросов оплаты"""
+    order_number = request.data["order_number"]
+    card_number = request.data["card_number"]
+
+    order = Order.objects.get(id=order_number)
+
+    # Добавление заказа в очередь оплаты
+    queue_job = PaymentQueue(order=order, card_number=card_number)
+    queue_job.save()
+
+    return Response({"message": "Payment request added to the queue"})

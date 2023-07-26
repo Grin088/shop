@@ -84,10 +84,14 @@
                     <div class="Cards">
                         {% for offer in page_obj %}
                             {% set score = [] %}
+                            {% set list_offer = [] %}
                             {% for shop in offer.offers.filter(product=offer) %}
+                                {% if list_offer.append(shop.id) %}
+                                {% endif %}
                                 {% if score.append(shop.price) %}
                                 {% endif %}
                             {% endfor %}
+
                             <div class="Card">
                                 <p>{{ offer.name }}</p>
                                 <a class="Card-picture"
@@ -113,6 +117,13 @@
                                             </a>
                                         </form>
                                     </div>
+                                    <form class="Card-btn" method="post">
+                                        {% csrf_token %}
+                                        <button name="add_compare" type="submit" value="{{ list_offer | min }}">
+                                            <img src="{{ static('market/assets/img/icons/card/bookmark.svg') }}" alt="bookmark.svg" />
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                         {% endfor %}

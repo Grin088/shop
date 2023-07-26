@@ -65,9 +65,8 @@
                             </div>
                         </div>
                         {% else %}
-                        <form  method="post">
+                        <form method="post">
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-
                             <div class="row-block">
                                  <div class="form-group">
                                     <label class="form-label" for="{{ form_log.email.id_for_label }}">E-mail
@@ -79,7 +78,6 @@
                                     </label>
                                     {{ form_log.password }}
                                 </div>
-
 
                                 <div class="form-group">
                                     <button class="btn btn_muted Order-btnReg" type="submit">{% trans %}Войдите в свою учётную запись{% endtrans %}</button>
