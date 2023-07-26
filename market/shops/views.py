@@ -110,16 +110,15 @@ class CreateOrderView(TemplateView):
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         """Оформления заказа если корзина не пуста и пользователь залогинен"""
-        global cart_list_global
+        cart_list = None
         if self.request.user.is_authenticated:
-            cart_list_global = CartItem.objects.filter(cart__user=self.request.user).\
+            cart_list = CartItem.objects.filter(cart__user=self.request.user).\
                 annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
-
-        if not cart_list_global:
-            return redirect("show_product")
+            if not cart_list:
+                return redirect("show_product")
         context = {"form_log": OderLoginUserForm(),
-                   "cart_list": cart_list_global,
-                   "delivery": pryce_delivery(cart_list_global),
+                   "cart_list": cart_list,
+                   "delivery": pryce_delivery(cart_list),
                    }
         return render(request, "market/order/order.jinja2", context=context)
 
@@ -138,7 +137,7 @@ class CreateOrderView(TemplateView):
                     return render(request, "market/order/order.jinja2",
                                   context={"text": "Неправильный ввод эмейла или пароля",
                                            "user": request.user, })
-        save_order_model(request.user, request.POST, cart_list_global)
+        save_order_model(request.user, request.POST)
         return redirect("show_product")
 
 
@@ -162,7 +161,6 @@ class HistoryOrderView(LoginRequiredMixin, View):
 
 class OrderDetailsView(LoginRequiredMixin, View):
     """Отображение деталей заказа"""
-
     login_url = reverse_lazy("users:users_login")
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:

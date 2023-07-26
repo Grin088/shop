@@ -65,13 +65,15 @@ class OrderStatus(models.Model):
 
 
 class StatusDeliveryOrder(models.TextChoices):
-    ordinary = 'ORDINARY', _('Обычная')
-    express = 'EXPRESS', _('Экспрес')
+    """Варианты выбор доставки"""
+    ORDINARY = 'ORDINARY', _('Обычная')
+    EXPRESS = 'EXPRESS', _('Экспрес')
 
 
 class StatusPayOrder(models.TextChoices):
-    online = 'ONLINE', _('Онлайн')
-    someone = 'SOMEONE', _('Онлайн со случайного чужого счета')
+    """Варианты выбора способа оплаты"""
+    ONLINE = 'ONLINE', _('Онлайн')
+    SOMEONE = 'SOMEONE', _('Онлайн со случайного чужого счета')
 
 
 class Order(models.Model):
@@ -96,11 +98,11 @@ class Order(models.Model):
                                verbose_name=_('статус'))
     data = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
     delivery = models.CharField(max_length=8, choices=StatusDeliveryOrder.choices, verbose_name=_('доставка'),
-                                default=StatusDeliveryOrder.ordinary)
+                                default=StatusDeliveryOrder.ORDINARY)
     city = models.CharField(max_length=100, verbose_name=_('город'))
     address = models.CharField(max_length=200, verbose_name=_('адрес'))
     pay = models.CharField(max_length=8, choices=StatusPayOrder.choices, verbose_name=_('вид оплаты'),
-                           default=StatusPayOrder.online)
+                           default=StatusPayOrder.ONLINE)
     total_cost = models.DecimalField(decimal_places=2, max_digits=10)
 
 
