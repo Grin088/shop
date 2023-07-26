@@ -122,7 +122,7 @@ class CreateOrderView(TemplateView):
             cart_list = CartItem.objects.filter(cart__user=self.request.user).\
                 annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
             if not cart_list:
-                return redirect("show_product")
+                return redirect("catalog:show_product")
         context = {"form_log": OderLoginUserForm(),
                    "cart_list": cart_list,
                    "delivery": pryce_delivery(cart_list),
@@ -145,7 +145,7 @@ class CreateOrderView(TemplateView):
                                   context={"text": "Неправильный ввод эмейла или пароля",
                                            "user": request.user, })
         save_order_model(request.user, request.POST)
-        return redirect("show_product")
+        return redirect("catalog:show_product")
 
 
 class OrderLoginView(MyLoginView):
