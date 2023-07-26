@@ -1,11 +1,10 @@
-from django.contrib.auth import user_logged_in
+from django.db.models import F
 from django.test import TestCase
 from django.urls import reverse
 
-from cart import signals
-from cart.cart import Cart
-from cart.signals import after_user_logged_in
+from cart.models import CartItem
 from shops.models import Order
+from shops.services.order import pryce_delivery, save_order_model
 from shops.tests.test_comparison import CompareTestCase
 from users.models import CustomUser
 
@@ -17,14 +16,17 @@ class OrderTestCase(TestCase):
                                            "fixtures/055_order.json",
                                            "fixtures/065_order_offer.json",
                                            "fixtures/070_order_status_change.json",
-
+                                           "shops/tests/cart_damp.json"
                                            }
+    login_url = "/users/login/"
 
     def setUp(self) -> None:
         self.user = CustomUser.objects.get(pk=11)
-        self.client.force_login(self.user)
-        # signals.user_logged_in.disconnect(????)
-
+        login_data = {
+            "username": self.user.email,
+            "password": "123",
+        }
+        self.client.post(self.login_url,  login_data)
 
     def test_history_order_view_success(self):
         """Тестирование истории заказа"""
@@ -40,3 +42,28 @@ class OrderTestCase(TestCase):
         response = self.client.get(reverse("order_details", kwargs={"pk": order[0].id}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, order[0].address)
+    def test_pryce_delivery_saccess(self):
+        """Тестирование срабатывания функции"""
+        cart_list = CartItem.objects.filter(cart__user=self.user). \
+            annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+        result = pryce_delivery(cart_list)
+        self.assertEqual(len(result), 4)
+
+    def test_save_order_model_saccess(self):
+        """Проверка создания  нового заказа"""
+        cart_list = CartItem.objects.filter(cart__user=self.user). \
+            annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+
+        forma_order = {'delivery': 'ORDINARY',
+                                'city': 'Москва',
+                                'address': 'Пупкина 4',
+                                'pay': 'ONLINE'}
+        expected_result1 = Order.objects.all().count() +1
+        save_order_model(self.user,  forma_order, cart_list)
+        self.assertEqual(expected_result1, Order.objects.all().count())
+
+    def test_create_order_view_success(self):
+        """ Проверка отображения страницы"""
+        response = self.client.get(reverse("order"))
+        self.assertEqual(response.status_code, 200)
+

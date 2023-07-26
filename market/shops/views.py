@@ -105,21 +105,21 @@ class ComparePageView(View):
                       context={"text": "Не достаточно данных для сравнения."})
 
 
-class OrderView(TemplateView):
+class CreateOrderView(TemplateView):
     """Оформление заказа"""
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         """Оформления заказа если корзина не пуста и пользователь залогинен"""
-        global cart_list
+        global cart_list_global
         if self.request.user.is_authenticated:
-            cart_list = CartItem.objects.filter(cart__user=self.request.user).\
+            cart_list_global = CartItem.objects.filter(cart__user=self.request.user).\
                 annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
 
-        if not cart_list:
+        if not cart_list_global:
             return redirect("show_product")
         context = {"form_log": OderLoginUserForm(),
-                   "cart_list": cart_list,
-                   "delivery": pryce_delivery(cart_list),
+                   "cart_list": cart_list_global,
+                   "delivery": pryce_delivery(cart_list_global),
                    }
         return render(request, "market/order/order.jinja2", context=context)
 
@@ -138,8 +138,7 @@ class OrderView(TemplateView):
                     return render(request, "market/order/order.jinja2",
                                   context={"text": "Неправильный ввод эмейла или пароля",
                                            "user": request.user, })
-
-        save_order_model(request.user, request.POST, cart_list)
+        save_order_model(request.user, request.POST, cart_list_global)
         return redirect("show_product")
 
 
