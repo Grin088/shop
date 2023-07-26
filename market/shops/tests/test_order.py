@@ -42,6 +42,7 @@ class OrderTestCase(TestCase):
         response = self.client.get(reverse("order_details", kwargs={"pk": order[0].id}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, order[0].address)
+
     def test_pryce_delivery_saccess(self):
         """Тестирование срабатывания функции"""
         cart_list = CartItem.objects.filter(cart__user=self.user). \

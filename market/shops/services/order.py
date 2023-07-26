@@ -1,6 +1,6 @@
 from decimal import Decimal
 from typing import Any
-from django.db.models import F, Sum, Count
+from django.db.models import F, Sum
 from django.db import transaction
 from django.db.models import QuerySet
 

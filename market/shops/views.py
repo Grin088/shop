@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from cart.models import CartItem, Cart
+from cart.models import CartItem
 from users.views import MyLoginView
 from shops.forms import OderLoginUserForm
 from shops.services import banner
@@ -30,7 +30,7 @@ from shops.services.limited_products import (
 
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 
-from shops.models import Shop, Order, OrderOffer, OrderStatus, OrderStatusChange, Offer, PaymentQueue
+from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
 
 

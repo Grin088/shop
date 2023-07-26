@@ -101,7 +101,6 @@ class Order(models.Model):
         verbose_name = _("заказ")
         verbose_name_plural = _("заказы")
 
-
     custom_user = models.ForeignKey(CustomUser,
                                     on_delete=models.PROTECT,
                                     related_name="orders",
