@@ -9,9 +9,9 @@ from shops.models import OrderOffer, OrderStatusChange, OrderStatus, Order
 
 
 # TODO добавить из настроек 200 и 2000
-def pryce_delivery(cart_list: QuerySet) -> (dict):
+def pryce_delivery(r_user: Any) -> (dict):
     """ Расчет стоимости доставки """
-    cart_list = CartItem.objects.filter(cart__user_id=11). \
+    cart_list = CartItem.objects.filter(cart__user=r_user). \
         annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product", "offer__shop")
 
     delivery_express = Decimal(500.00)
@@ -39,9 +39,9 @@ def save_order_model(r_user: Any, r_post: Any) -> None:
         annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
 
     if r_post.get('delivery') == "ORDINARY":
-        total_cost = pryce_delivery(cart_list)["total_cost_ordinary"]
+        total_cost = pryce_delivery(r_user)["total_cost_ordinary"]
     else:
-        total_cost = pryce_delivery(cart_list)["total_cost_express"]
+        total_cost = pryce_delivery(r_user)["total_cost_express"]
 
     new_order = Order()
     new_order.custom_user = r_user

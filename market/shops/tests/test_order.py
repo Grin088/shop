@@ -45,9 +45,7 @@ class OrderTestCase(TestCase):
 
     def test_pryce_delivery_saccess(self):
         """Тестирование срабатывания функции"""
-        cart_list = CartItem.objects.filter(cart__user=self.user). \
-            annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product", "offer__shop_id")
-        result = pryce_delivery(cart_list)
+        result = pryce_delivery(self.user)
         self.assertEqual(len(result), 4)
 
     # def test_save_order_model_saccess(self):

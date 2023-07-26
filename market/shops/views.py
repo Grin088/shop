@@ -125,7 +125,7 @@ class CreateOrderView(TemplateView):
                 return redirect("catalog:show_product")
         context = {"form_log": OderLoginUserForm(),
                    "cart_list": cart_list,
-                   "delivery": pryce_delivery(cart_list),
+                   "delivery": pryce_delivery(self.request.user),
                    }
         return render(request, "market/order/order.jinja2", context=context)
 
