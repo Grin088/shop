@@ -1,6 +1,4 @@
 from django.shortcuts import render  # noqa F401
-from django.conf import settings
-from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
