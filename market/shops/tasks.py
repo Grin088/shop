@@ -13,4 +13,4 @@ def update_product_of_the_day(name="Task time left"):
     time_left = (midnight + timedelta(days=1) - now).seconds
     products = Product.objects.filter(limited_edition=True)
     product = random.choice(products)
-    cache.set('limited_products', product, time_left)
+    cache.set("limited_products", product, time_left)
