@@ -1,8 +1,6 @@
-from django.db.models import F
 from django.test import TestCase
 from django.urls import reverse
 
-from cart.models import CartItem
 from shops.models import Order
 from shops.services.order import pryce_delivery, save_order_model
 from shops.tests.test_comparison import CompareTestCase
@@ -51,10 +49,10 @@ class OrderTestCase(TestCase):
     def test_save_order_model_saccess(self):
         """Проверка создания  нового заказа"""
         forma_order = {'delivery': 'ORDINARY',
-                                'city': 'Москва',
-                                'address': 'Пупкина 4',
-                                'pay': 'ONLINE'}
-        expected_result1 = Order.objects.all().count() +1
+                       'city': 'Москва',
+                       'address': 'Пупкина 4',
+                       'pay': 'ONLINE'}
+        expected_result1 = Order.objects.all().count() + 1
         save_order_model(self.user,  forma_order)
         self.assertEqual(expected_result1, Order.objects.all().count())
 
