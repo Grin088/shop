@@ -15,11 +15,11 @@ def update_product_of_the_day(name="Task time left"):
     time_left = (midnight + timedelta(days=1) - now).seconds
     products = Product.objects.filter(limited_edition=True)
     product = random.choice(products)
-    cache.set('limited_products', product, time_left)
+    cache.set("limited_products", product, time_left)
 
 
 @shared_task
-def process_payment_queue(name='Process payment queue'):
+def process_payment_queue(name="Process payment queue"):
     """обработчик очереди оплаты"""
     jobs = PaymentQueue.objects.all()
     fake_payment_service = FakePaymentService()
@@ -29,10 +29,10 @@ def process_payment_queue(name='Process payment queue'):
 
         payment_status = fake_payment_service.pay_order(card_number=card_number)
 
-        if payment_status == 'success':
-            order.status = 'paid'
+        if payment_status == "success":
+            order.status = "paid"
         else:
-            order.status = 'unpaid'
+            order.status = "unpaid"
 
         order.save()
         job.delete()
