@@ -3,7 +3,6 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, LogoutView, FormView
-from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.views.generic.base import View
 from django.utils.translation import gettext_lazy as _
