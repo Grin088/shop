@@ -4,12 +4,17 @@
         <strong class="Card-title"><a href="#">{{ product.name}}</a>
         </strong>
         <div class="Card-description">
-            <div class="Card-cost"><span class="Card-price">$85.00</span>
+            <div class="Card-cost"><span class="Card-price">${{ product.price }}</span>
             </div>
-            <div class="Card-category">{{ product.category_id.name }}
+            <div class="Card-category">{{ product.category.name }}
             </div>
-            <div class="Card-hover"><a class="Card-btn" href="#"><img src="market/uploads/media/icons/card/cart.svg" alt="cart.svg" /></a>
-            </div>
+            <form class="Card-hover" method="post" action="{{ url('cart:cart_add', product.id, 1) }}">
+              {% csrf_token %}
+              <input type="hidden" name="value_amount" value="+">
+              <a class="Card-btn" href="#" onclick="$(this).closest('form').submit()">
+                <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" />
+              </a>
+            </form>
         </div>
     </div>
 </div>

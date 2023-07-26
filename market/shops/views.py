@@ -1,6 +1,4 @@
 from django.shortcuts import render  # noqa F401
-from django.conf import settings
-from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -21,7 +19,7 @@ from shops.models import Shop, Order, OrderOffer, Offer
 from shops.services.is_member_of_group import is_member_of_group
 
 
-@cache_page(settings.CACHE_CONSTANT)
+# @cache_page(settings.CACHE_CONSTANT)
 def home(request):
     """Главная страница"""
     if request.method == "GET":
