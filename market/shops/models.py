@@ -173,3 +173,10 @@ class OrderStatusChange(models.Model):
     dst_status = models.ForeignKey(
         OrderStatus, related_name="orders_order_change_dst", on_delete=models.PROTECT
     )
+
+
+class PaymentQueue(models.Model):
+    """модель для представления задания оплаты в очереди"""
+
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("заказ"))
+    card_number = models.IntegerField(verbose_name=_("номер карты"))
