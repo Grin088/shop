@@ -19,7 +19,7 @@ def get_limited_edition():
 
 def get_top_products():
     """Представление топ-продуктов (первые 8)"""
-    settings = SiteSettings.load()
+    site_settings = SiteSettings.load()
     products_history = Browsing_history.objects.all()
     products = sorted(list(Counter(Product.objects.filter(products__in=products_history)).
                            items()), key=lambda key: key[1])[:-settings.top_elements_count-1:-1]

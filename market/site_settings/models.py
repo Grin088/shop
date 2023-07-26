@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class OneObjectModel(models.Model):
+    """Модель, которая имеет один объект"""
     class Meta:
         abstract = True
 
@@ -24,18 +25,18 @@ class SiteSettings(OneObjectModel):
 
     # Пагинация
     pagination_size = models.PositiveIntegerField(validators=[MaxValueValidator(8)], default=4,
-                                                  verbose_name=_('размер страницы'))
+                                                  verbose_name=_('размер пагинации, объектов'))
     # Главная страница
     banners_count = models.PositiveIntegerField(validators=[MaxValueValidator(3)], default=3,
                                                 verbose_name=_('количество баннеров'))
     deal_of_the_day = models.PositiveIntegerField(validators=[MaxValueValidator(1)], default=1,
                                                   verbose_name=_('количество предложений дня'))
     hot_deals_slider = models.PositiveIntegerField(validators=[MaxValueValidator(9)], default=9,
-                                                   verbose_name=_('слайдер горячих предложений'))
+                                                   verbose_name=_('количество горячих предложений'))
     top_elements_count = models.PositiveIntegerField(validators=[MaxValueValidator(8)], default=8,
-                                                     verbose_name=_('количество элементов в топе'))
+                                                     verbose_name=_('количество товаров в топе'))
     limited_edition_count = models.PositiveIntegerField(validators=[MaxValueValidator(16)], default=16,
-                                                        verbose_name=_('ограниченные тираж'))
+                                                        verbose_name=_('количество ограниченного тиража'))
     # Детальная страница товара
     maximum_number_of_viewed_products = models.PositiveIntegerField(validators=[MaxValueValidator(20)], default=10,
                                                                     verbose_name=_(
