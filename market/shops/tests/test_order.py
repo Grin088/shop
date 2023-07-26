@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from cart.models import CartItem
 from shops.models import Order
-from shops.services.order import pryce_delivery
+from shops.services.order import pryce_delivery, save_order_model
 from shops.tests.test_comparison import CompareTestCase
 from users.models import CustomUser
 
@@ -48,17 +48,17 @@ class OrderTestCase(TestCase):
         result = pryce_delivery(self.user)
         self.assertEqual(len(result), 4)
 
-    # def test_save_order_model_saccess(self):
-    #     """Проверка создания  нового заказа"""
-    #     forma_order = {'delivery': 'ORDINARY',
-    #                             'city': 'Москва',
-    #                             'address': 'Пупкина 4',
-    #                             'pay': 'ONLINE'}
-    #     expected_result1 = Order.objects.all().count() +1
-    #     save_order_model(self.user,  forma_order)
-    #     self.assertEqual(expected_result1, Order.objects.all().count())
-    #
-    # def test_create_order_view_success(self):
-    #     """ Проверка отображения страницы"""
-    #     response = self.client.get(reverse("order"))
-    #     self.assertEqual(response.status_code, 200)
+    def test_save_order_model_saccess(self):
+        """Проверка создания  нового заказа"""
+        forma_order = {'delivery': 'ORDINARY',
+                                'city': 'Москва',
+                                'address': 'Пупкина 4',
+                                'pay': 'ONLINE'}
+        expected_result1 = Order.objects.all().count() +1
+        save_order_model(self.user,  forma_order)
+        self.assertEqual(expected_result1, Order.objects.all().count())
+
+    def test_create_order_view_success(self):
+        """ Проверка отображения страницы"""
+        response = self.client.get(reverse("order"))
+        self.assertEqual(response.status_code, 200)

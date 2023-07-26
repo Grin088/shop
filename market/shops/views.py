@@ -135,16 +135,16 @@ class CreateOrderView(TemplateView):
         Сохранение заказа и истории изменения статуса
         """
         if not request.user.is_authenticated:
-            form_log = OderLoginUserForm(request.POST)
+            form_log = OderLoginUserForm(self.request.POST)
             if form_log.is_valid():
                 user = authenticate(email=form_log.cleaned_data["email"], password=form_log.cleaned_data["password"])
                 if user:
-                    login(request, user)
+                    login(self.request, user)
                 else:
-                    return render(request, "market/order/order.jinja2",
+                    return render(self.request, "market/order/order.jinja2",
                                   context={"text": "Неправильный ввод эмейла или пароля",
-                                           "user": request.user, })
-        save_order_model(request.user, request.POST)
+                                           "user": self.request.user, })
+        save_order_model(self.request.user, self.request.POST)
         return redirect("catalog:show_product")
 
 
