@@ -7,8 +7,9 @@ from django.utils.translation import gettext_lazy as _
 
 class StatusDiscount(models.IntegerChoices):
     """Класс для выбора вида скидки"""
-    percentages = 1, _('проценты')
-    amount = 2, _('сумма')
+
+    percentages = 1, _("проценты")
+    amount = 2, _("сумма")
 
 
 class Discount(models.Model):
@@ -17,9 +18,7 @@ class Discount(models.Model):
     class Meta:
         abstract = True
 
-    name = models.CharField(
-        max_length=50, null=False, blank=False, verbose_name=_("название скидки")
-    )
+    name = models.CharField(max_length=50, null=False, blank=False, verbose_name=_("название скидки"))
     description = models.TextField(max_length=150, verbose_name=_("Описание скидки"))
     discount_amount = models.DecimalField(
         max_digits=10,
@@ -28,18 +27,10 @@ class Discount(models.Model):
         null=False,
         blank=False,
     )
-    discount_amount_type = models.PositiveSmallIntegerField(
-        choices=StatusDiscount.choices, null=False, blank=False
-    )
-    active = models.BooleanField(
-        verbose_name=_("скидка активна"), null=False, blank=False
-    )
-    start_date = models.DateTimeField(
-        null=False, blank=False, verbose_name=_("дата начала действия скидки")
-    )
-    end_date = models.DateTimeField(
-        null=False, blank=False, verbose_name=_("дата окончания действия скидки")
-    )
+    discount_amount_type = models.PositiveSmallIntegerField(choices=StatusDiscount.choices, null=False, blank=False)
+    active = models.BooleanField(verbose_name=_("скидка активна"), null=False, blank=False)
+    start_date = models.DateTimeField(null=False, blank=False, verbose_name=_("дата начала действия скидки"))
+    end_date = models.DateTimeField(null=False, blank=False, verbose_name=_("дата окончания действия скидки"))
 
     products = models.ManyToManyField(
         "products.Product",
