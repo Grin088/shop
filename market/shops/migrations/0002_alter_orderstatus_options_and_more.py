@@ -52,4 +52,27 @@ class Migration(migrations.Migration):
             name="count",
             field=models.PositiveSmallIntegerField(verbose_name="количество"),
         ),
+        migrations.CreateModel(
+            name="PaymentQueue",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("card_number", models.IntegerField(verbose_name="номер карты")),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="shops.order",
+                        verbose_name="заказ",
+                    ),
+                ),
+            ],
+        ),
     ]
