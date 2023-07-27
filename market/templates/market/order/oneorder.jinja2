@@ -54,7 +54,7 @@
                                         <div class="Order-info">
                                             <div class="Order-infoType">{% trans %}Город{% endtrans %}:
                                             </div>
-                                            <div class="Order-infoContent">{{ order.citi }}
+                                            <div class="Order-infoContent">{{ order.city }}
                                             </div>
                                         </div>
                                         <div class="Order-info">
@@ -116,9 +116,8 @@
                                         <strong class="Cart-title">{% trans %}Итого{% endtrans %}:<span class="Cart-price">{{ order.total_cost }}$</span>
                                         </strong>
                                     </div>
-                                    {%  if order.status |string() == "Оплата не выполнена" %}
-                                    <div class="Cart-block">
-                                        <a class="btn btn_primary btn_lg" href="#">{% trans %}Оплатить{% endtrans %}</a>
+                                    {%  if order.status |string() == "Оплата не выполнена" or "Новый" %}
+                                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="#">{% trans %}Оплатить{% endtrans %}</a>
                                     </div>
                                     {% endif %}
                                 </div>
