@@ -3,6 +3,7 @@ import shutil
 from django.test import TestCase
 from django.urls import reverse_lazy, reverse
 from users.models import CustomUser, PhoneNumberValidator, UserAvatar
+
 from django.contrib.auth.hashers import check_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from io import BytesIO
@@ -22,11 +23,11 @@ class UserProfileTest(TestCase):
             'username': 'test_user',
             'email': 'test1@admin.com',
             'password': '123'}
-        cls.user = CustomUser.objects.create_user(username='test_user', email='test1@admin.com', password="123")
+        cls.user = CustomUser.objects.create_user(username="test_user", email="test1@admin.com", password="123")
 
     @classmethod
     def tearDownClass(cls):
-        """ Удаление пользователя"""
+        """Удаление пользователя"""
         super().tearDownClass()
         cls.user.delete()
 
@@ -40,32 +41,32 @@ class UserProfileTest(TestCase):
         phone = self.user.phone_number
         self.assertEqual(avatar, "users/avatars/default/default_avatar1.png")
         self.assertEqual(avatar_user.image, "users/avatars/default/default_avatar1.png")
-        self.assertEqual(phone, '+0000000000')
+        self.assertEqual(phone, "+0000000000")
 
 
 class RegistrationFormTest(TestCase):
-    """ Проверка страницы регистрации и входа """
+    """Проверка страницы регистрации и входа"""
 
     def setUp(self):
-        self.user = CustomUser.objects.create_user(email='test_user@example.com',
-                                                   username='Admin12',
-                                                   password='Pass123456')
+        self.user = CustomUser.objects.create_user(
+            email="test_user@example.com", username="Admin12", password="Pass123456"
+        )
 
-        self.url = reverse_lazy('users:users_register')
+        self.url = reverse_lazy("users:users_register")
         self.data1 = {
-            'username': 'test_user',
-            'email': 'test_user22@example.com',
-            'password1': 'Pass123456',
-            'password2': 'Pass123456',
+            "username": "test_user",
+            "email": "test_user22@example.com",
+            "password1": "Pass123456",
+            "password2": "Pass123456",
         }
 
         self.data2 = {
-            'username': 'test_user1',
-            'first_name': 'Test1',
-            'last_name': 'User1',
-            'email': 'Test_user@example.com',
-            'password1': 'Pass123456',
-            'password2': 'Pass123456',
+            "username": "test_user1",
+            "first_name": "Test1",
+            "last_name": "User1",
+            "email": "Test_user@example.com",
+            "password1": "Pass123456",
+            "password2": "Pass123456",
         }
 
     def tearDown(self) -> None:
@@ -75,39 +76,35 @@ class RegistrationFormTest(TestCase):
         """Проверка формы регистрации"""
         response = self.client.post(self.url, data=self.data1)
         self.assertEqual(response.status_code, 302)
-        user = CustomUser.objects.get(username=self.data1['username'])
-        self.assertEqual(user.email, self.data1['email'])
-        self.assertEqual(user.phone_number, '+0000000000')
+        user = CustomUser.objects.get(username=self.data1["username"])
+        self.assertEqual(user.email, self.data1["email"])
+        self.assertEqual(user.phone_number, "+0000000000")
         self.assertEqual(user.avatar.image, "users/avatars/default/default_avatar1.png")
 
     def test_login(self):
-        """Проверка входа """
-        login_data = {'username': 'test_user@example.com',
-                      'password': 'Pass123456'
-                      }
-        response = self.client.post(reverse_lazy('users:users_login'), login_data)
+        """Проверка входа"""
+        login_data = {"username": "test_user@example.com", "password": "Pass123456"}
+        response = self.client.post(reverse_lazy("users:users_login"), login_data)
         self.assertEqual(response.status_code, 302)
-        response = self.client.post(reverse_lazy('users:users_logout'))
+        response = self.client.post(reverse_lazy("users:users_logout"))
         self.assertEqual(response.status_code, 302)
 
-        login_data = {'username': 'TeSt_uSEr@example.com',
-                      'password': 'Pass123456'
-                      }
-        response = self.client.post(reverse_lazy('users:users_login'), login_data)
+        login_data = {"username": "TeSt_uSEr@example.com", "password": "Pass123456"}
+        response = self.client.post(reverse_lazy("users:users_login"), login_data)
         self.assertEqual(response.status_code, 302)
-        response = self.client.post(reverse_lazy('users:users_logout'))
+        response = self.client.post(reverse_lazy("users:users_logout"))
         self.assertEqual(response.status_code, 302)
 
-        login_data = {'username': 'TeSt_uSEr@example.com',
-                      'password': 'Pass12345'
-                      }
-        response = self.client.post(reverse_lazy('users:users_login'), login_data)
-        self.assertContains(response, "Please enter a correct email and password."
-                                      " Note that both fields may be case-sensitive.")
+        login_data = {"username": "TeSt_uSEr@example.com", "password": "Pass12345"}
+        response = self.client.post(reverse_lazy("users:users_login"), login_data)
+        self.assertContains(
+            response,
+            "Please enter a correct email and password." " Note that both fields may be case-sensitive.",
+        )
 
     def test_logout(self):
         """Проверка url выхода пользователя"""
-        response = self.client.post(reverse_lazy('users:users_logout'))
+        response = self.client.post(reverse_lazy("users:users_logout"))
         self.assertEqual(response.status_code, 302)
 
 

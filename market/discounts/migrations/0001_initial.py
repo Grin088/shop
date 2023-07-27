@@ -4,55 +4,173 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('products', '__first__'),
-        ('catalog', '0001_initial'),
+        ("products", "__first__"),
+        ("catalog", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ShopItemDiscount',
+            name="ShopItemDiscount",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, verbose_name='название скидки')),
-                ('description', models.TextField(max_length=150, verbose_name='описание скидки')),
-                ('discount_amount', models.PositiveIntegerField(verbose_name='размер скидки')),
-                ('discount_amount_type', models.PositiveSmallIntegerField(choices=[(1, 'проценты'), (2, 'сумма')])),
-                ('active', models.BooleanField(verbose_name='скидка активна')),
-                ('start_date', models.DateTimeField(verbose_name='дата начала действия скидки')),
-                ('end_date', models.DateTimeField(verbose_name='дата окончания действия скидки')),
-                ('categories', models.ManyToManyField(blank=True, related_name='shop_items_discounts', to='catalog.catalog', verbose_name='категории товаров')),
-                ('products', models.ManyToManyField(blank=True, related_name='shop_items_discounts', to='products.product', verbose_name='товары')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=50, verbose_name="название скидки"),
+                ),
+                (
+                    "description",
+                    models.TextField(max_length=150, verbose_name="описание скидки"),
+                ),
+                (
+                    "discount_amount",
+                    models.PositiveIntegerField(verbose_name="размер скидки"),
+                ),
+                (
+                    "discount_amount_type",
+                    models.PositiveSmallIntegerField(choices=[(1, "проценты"), (2, "сумма")]),
+                ),
+                ("active", models.BooleanField(verbose_name="скидка активна")),
+                (
+                    "start_date",
+                    models.DateTimeField(verbose_name="дата начала действия скидки"),
+                ),
+                (
+                    "end_date",
+                    models.DateTimeField(verbose_name="дата окончания действия скидки"),
+                ),
+                (
+                    "categories",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="shop_items_discounts",
+                        to="catalog.catalog",
+                        verbose_name="категории товаров",
+                    ),
+                ),
+                (
+                    "products",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="shop_items_discounts",
+                        to="products.product",
+                        verbose_name="товары",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'скидка на товар в магазине',
-                'verbose_name_plural': 'скидки на товары в магазине',
+                "verbose_name": "скидка на товар в магазине",
+                "verbose_name_plural": "скидки на товары в магазине",
             },
         ),
         migrations.CreateModel(
-            name='CartItemDiscount',
+            name="CartItemDiscount",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, verbose_name='название скидки')),
-                ('description', models.TextField(max_length=150, verbose_name='описание скидки')),
-                ('discount_amount', models.PositiveIntegerField(verbose_name='размер скидки')),
-                ('discount_amount_type', models.PositiveSmallIntegerField(choices=[(1, 'проценты'), (2, 'сумма')])),
-                ('active', models.BooleanField(verbose_name='скидка активна')),
-                ('start_date', models.DateTimeField(verbose_name='дата начала действия скидки')),
-                ('end_date', models.DateTimeField(verbose_name='дата окончания действия скидки')),
-                ('min_total_price_of_cart', models.DecimalField(blank=True, decimal_places=2, help_text='скидка может быть установлена на стоимость товаров в корзине.', max_digits=10, null=True, verbose_name='минимальная цена товаров в корзине')),
-                ('max_total_price_of_cart', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='максимальная цена товаров в корзине')),
-                ('min_amount_product_in_cart', models.PositiveIntegerField(blank=True, help_text='скидка может быть установлена на количество товаров в корзине.', null=True, verbose_name='минимальное количество товаров в корзине')),
-                ('max_amount_product_in_cart', models.PositiveIntegerField(blank=True, null=True, verbose_name='максимальное количество товаров в корзине')),
-                ('products_group_1', models.ManyToManyField(blank=True, help_text='скидка может быть установлена на группу товаров, если они вместе находятся в корзине. Указывается группа товаров 1 и группа товаров 2.', related_name='cart_item_discounts_group_1', to='products.product', verbose_name='группа товаров 1')),
-                ('products_group_2', models.ManyToManyField(blank=True, related_name='cart_item_discounts_group_2', to='products.product', verbose_name='группа товаров 2')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=50, verbose_name="название скидки"),
+                ),
+                (
+                    "description",
+                    models.TextField(max_length=150, verbose_name="описание скидки"),
+                ),
+                (
+                    "discount_amount",
+                    models.PositiveIntegerField(verbose_name="размер скидки"),
+                ),
+                (
+                    "discount_amount_type",
+                    models.PositiveSmallIntegerField(choices=[(1, "проценты"), (2, "сумма")]),
+                ),
+                ("active", models.BooleanField(verbose_name="скидка активна")),
+                (
+                    "start_date",
+                    models.DateTimeField(verbose_name="дата начала действия скидки"),
+                ),
+                (
+                    "end_date",
+                    models.DateTimeField(verbose_name="дата окончания действия скидки"),
+                ),
+                (
+                    "min_total_price_of_cart",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        help_text="скидка может быть установлена на стоимость товаров в корзине.",
+                        max_digits=10,
+                        null=True,
+                        verbose_name="минимальная цена товаров в корзине",
+                    ),
+                ),
+                (
+                    "max_total_price_of_cart",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=10,
+                        null=True,
+                        verbose_name="максимальная цена товаров в корзине",
+                    ),
+                ),
+                (
+                    "min_amount_product_in_cart",
+                    models.PositiveIntegerField(
+                        blank=True,
+                        help_text="скидка может быть установлена на количество товаров в корзине.",
+                        null=True,
+                        verbose_name="минимальное количество товаров в корзине",
+                    ),
+                ),
+                (
+                    "max_amount_product_in_cart",
+                    models.PositiveIntegerField(
+                        blank=True,
+                        null=True,
+                        verbose_name="максимальное количество товаров в корзине",
+                    ),
+                ),
+                (
+                    "products_group_1",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="скидка может быть установлена на группу товаров, если они вместе находятся в корзине. Указывается группа товаров 1 и группа товаров 2.",
+                        related_name="cart_item_discounts_group_1",
+                        to="products.product",
+                        verbose_name="группа товаров 1",
+                    ),
+                ),
+                (
+                    "products_group_2",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="cart_item_discounts_group_2",
+                        to="products.product",
+                        verbose_name="группа товаров 2",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'скидка на товар в корзине',
-                'verbose_name_plural': 'скидки на товары в корзине',
+                "verbose_name": "скидка на товар в корзине",
+                "verbose_name_plural": "скидки на товары в корзине",
             },
         ),
     ]

@@ -92,7 +92,15 @@
 
                             <div class="ProductCard-cart">
 
-                                <div class="ProductCard-cartElement"><a class="btn btn_primary" href="cart.html"><img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" /><span class="btn-content">{% trans %}Добавить в корзину{% endtrans %}</span></a>
+                                <div class="ProductCard-cartElement">
+                                    <form action="{{ url('cart:cart_add', offer.id, 1) }}" method="post">{% csrf_token %}
+                                        <a class="btn btn_primary" href="#" onclick="$(this).closest('form').submit()">
+                                            <img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" />
+                                        <span class="btn-content">{% trans %}Добавить в корзину{% endtrans %}</span>
+                                        </a>
+                                    </form>
+
+                                    </a>
                                 </div>
                             </div>
                         </div>

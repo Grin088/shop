@@ -12,7 +12,7 @@ class CartModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = CustomUser.objects.create(username='user_test', password="123")
+        cls.user = CustomUser.objects.create(username="user_test", password="123")
         cls.cart = Cart.objects.create(user=cls.user)
 
     @classmethod
@@ -29,9 +29,7 @@ class CartModelTest(TestCase):
         }
         for field, expected_value in verbose_name.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    cart._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(cart._meta.get_field(field).verbose_name, expected_value)
 
 
 class CartItemModelTest(TestCase):
@@ -40,10 +38,10 @@ class CartItemModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = CustomUser.objects.create(username='user_test', password="123")
+        cls.user = CustomUser.objects.create(username="user_test", password="123")
         cls.cart = Cart.objects.create(user=cls.user)
-        cls.shop = Shop.objects.create(name='test_shop', user=cls.user)
-        cls.product = Product.objects.create(name='test_product')
+        cls.shop = Shop.objects.create(name="test_shop", user=cls.user)
+        cls.product = Product.objects.create(name="test_product")
         cls.offer = Offer.objects.create(shop=cls.shop, product=cls.product, price=100)
         cls.cart_item = CartItem.objects.create(cart=cls.cart, offer=cls.offer, quantity=100)
 
@@ -62,10 +60,8 @@ class CartItemModelTest(TestCase):
         verbose_name = {
             "cart": "корзина клиента",
             "offer": "товар магазина",
-            "quantity": "количество товара в корзине"
+            "quantity": "количество товара в корзине",
         }
         for field, expected_value in verbose_name.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    cart_item._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(cart_item._meta.get_field(field).verbose_name, expected_value)

@@ -1,38 +1,47 @@
 {% extends 'market/base.jinja2' %}
 {% block middle %}
-    <div class="Section-content">
-        <div class="Cards">
-            {% for offer in history %}
-                {% set score = [] %}
-                {% for p in offer.product.offers.all() %}
-                    {% if score.append(p.price) %}
-                    {% endif %}
-                {% endfor %}
-
-                <div class="Card"><a class="Card-picture" href="{{ url('products:product_detail' ,product_id=offer.product.pk)}}">
-                    <img src="{{ offer.product.preview.url }}" alt="{{ offer.product.preview }}" /></a>
-                    <div class="Card-content">
-                        <strong class="Card-title">
-                            <a href="{{ url('products:product_detail' ,product_id=offer.product.pk)}}">Corsair Carbide Series Arctic White Steel</a>
-                        </strong>
-                        <div class="Card-description">
-                            <div class="Card-cost"><span class="Card-price">От {{ (score | min ) | round }} руб.</span>
-                            </div>
-                            <div class="Card-category">{{ offer.product.category.name }}
-                            </div>
-                            <div class="Card-hover">
-                                <a class="Card-btn" href="{{ url('products:product_detail' ,product_id=offer.product.pk)}}">
-                                <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" /></a>
-                            </div>
-                        </div>
-                    </div>
-                    <form method="post">
-                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                        <button type="submit" name="delete" value="{{ offer.product.pk }}">
-                            {% trans %}Удалить из просмотренных{% endtrans %}</button>
-                    </form>
-                </div>
-            {% endfor %}
+  <div class="Section-content">
+    <div class="Cards">
+      {% for offer in history %}
+        {% set score = [] %}
+        {% for p in offer.product.offers.all() %}
+          {% if score.append(p.price) %}
+          {% endif %}
+        {% endfor %}
+        <div class="Card">
+          <a class="Card-picture" href="{{ url('products:product_detail' ,product_id=offer.product.pk)}}">
+            <img src="{{ offer.product.preview.url }}" alt="{{ offer.product.preview }}" />
+          </a>
+          <div class="Card-content">
+            <strong class="Card-title">
+              <a href="{{ url('products:product_detail' ,product_id=offer.product.pk)}}">
+                {{ offer.product.description }}
+              </a>
+            </strong>
+            <div class="Card-description">
+              <div class="Card-cost">
+                <span class="Card-price">${{ (score | min ) | round }}</span>
+              </div>
+              <div class="Card-category">
+                {{ offer.product.category.name }}
+              </div>
+              <form class="Card-hover" method="post" action="{{ url('cart:cart_add', offer.id, 1) }}">
+                {% csrf_token %}
+                <input type="hidden" name="value_amount" value="+">
+                <a class="Card-btn" href="#" onclick="$(this).closest('form').submit()">
+                  <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+                </a>
+              </form>
+            </div>
+          </div>
+          <form method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <button type="submit" name="delete" value="{{ offer.product.pk }}">
+              {% trans %}Удалить из просмотренных{% endtrans %}
+            </button>
+          </form>
         </div>
+      {% endfor %}
     </div>
+  </div>
 {% endblock %}

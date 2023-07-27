@@ -1,11 +1,14 @@
 from django.test import TestCase
+from unittest.mock import MagicMock
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from discounts.models import ShopItemDiscount, CartItemDiscount
 from discounts.forms import ShopDiscountCreationForm, CartDiscountCreationForm
+from discounts.services.discountservice import DiscountService
 from products.models import Product
 from catalog.models import Catalog
+from cart.cart import Cart
 
 
 class DiscountCreateModel(TestCase):
@@ -23,6 +26,8 @@ class DiscountCreateModel(TestCase):
         "fixtures/035_productproperty.json",
         "fixtures/040_shops.json",
         "fixtures/045_offers.json",
+        "fixtures/075_discounts_shop_item_discount.json",
+        "fixtures/080_discounts_cart_item_discount.json",
     ]
 
     @classmethod
@@ -79,27 +84,25 @@ class DiscountCreateModel(TestCase):
             "start_date": self.date_now,
             "end_date": self.nex_date,
             "active": True,
-            "min_total_price_of_cart": 500,
-            "max_total_price_of_cart": 1000,
-            "min_amount_product_in_cart": 2,
-            "max_amount_product_in_cart": 5,
+            "total_price_of_cart": 500,
+            "amount_product_in_cart": 2,
         }
-        products_group_1 = [self.products.first()]
-        products_group_2 = [self.products.last()]
+        products = [self.products.first()]
+        categorise = [self.categories.last()]
 
         form = self.cart_discount_form(form_data)
         if form.is_valid():
             discount = form.save(commit=False)
             discount.save()
-            discount.products_group_1.set(products_group_1)
-            discount.products_group_2.set(products_group_2)
+            discount.products.set(products)
+            discount.categories.set(categorise)
             self.assertTrue(discount in CartItemDiscount.objects.all())
             self.assertEqual(discount.discount_amount, form_data["discount_amount"])
 
         else:
             raise ValidationError(form.errors)
 
-    def test_create_shop_discount_failure(self):
+    def test_create_shop_discount_error(self):
         """Проверка вывода ошибок при создании записи скидки для товаров в магазине"""
         incorrect_form_data = {
             "name": "test_shop_discount",
@@ -111,21 +114,15 @@ class DiscountCreateModel(TestCase):
         }
 
         form = ShopDiscountCreationForm(incorrect_form_data)
-        self.assertFormError(
-            form, None, _("Заполните хотя бы одно поле для категории или товаров")
-        )
+        self.assertFormError(form, None, _("Заполните хотя бы одно поле для категории или товаров"))
         self.assertFormError(
             form,
             "end_date",
-            _(
-                "Дата окончания действия скидки должна быть больше даты начала действия скидки"
-            ),
+            _("Дата окончания действия скидки должна быть больше даты начала действия скидки"),
         )
-        self.assertFormError(
-            form, "discount_amount", _("Скидка в % не должна превышать 99 %")
-        )
+        self.assertFormError(form, "discount_amount", _("Скидка в % не должна превышать 99 %"))
 
-    def test_create_cart_discount_with_failure(self):
+    def test_create_cart_discount_with_error(self):
         """Проверка вывода ошибок при создании записи скидки для товаров в корзине"""
 
         incorrect_form_data = {
@@ -138,19 +135,13 @@ class DiscountCreateModel(TestCase):
         }
 
         form = self.cart_discount_form(incorrect_form_data)
-        self.assertFormError(
-            form, None, _("Заполните хотя бы одно условие для получения скидки")
-        )
+        self.assertFormError(form, None, _("Заполните хотя бы одно условие для получения скидки"))
         self.assertFormError(
             form,
             "end_date",
-            _(
-                "Дата окончания действия скидки должна быть больше даты начала действия скидки"
-            ),
+            _("Дата окончания действия скидки должна быть больше даты начала действия скидки"),
         )
-        self.assertFormError(
-            form, "discount_amount", _("Скидка в % не должна превышать 99 %")
-        )
+        self.assertFormError(form, "discount_amount", _("Скидка в % не должна превышать 99 %"))
 
         incorrect_form_data = {
             "name": "test_shop_discount",
@@ -159,26 +150,50 @@ class DiscountCreateModel(TestCase):
             "start_date": self.date_now,
             "end_date": self.nex_date,
             "active": True,
-            "products_group_1": [self.products.first()],
-            "min_total_price_of_cart": 100,
-            "max_total_price_of_cart": 50,
-            "min_amount_product_in_cart": 5,
-            "max_amount_product_in_cart": 2,
+            "categories": [self.categories.first()],
+            "total_price_of_cart": 100,
+            "amount_product_in_cart": 5,
         }
 
         form = CartDiscountCreationForm(incorrect_form_data)
         self.assertFormError(
             form,
-            "max_total_price_of_cart",
-            _("Максимальная сумма должна быть больше минимальной"),
+            "products",
+            _("При выборе категории поле товары должно быть заполнено"),
         )
-        self.assertFormError(
-            form,
-            "max_amount_product_in_cart",
-            _(
-                "Максимальное количество товаров в корзине должно быть больше минимального"
-            ),
-        )
-        self.assertFormError(
-            form, "products_group_2", _("Выберете товары для второй группы")
-        )
+
+    def test_discount_service(self):
+        """Проверка работы сервиса обработки скидок"""
+
+        request_mock = MagicMock()
+        cart_mock = MagicMock(spec=Cart, request=request_mock)
+
+        product1 = Product.objects.get(id=1)
+        product2 = Product.objects.get(id=2)
+
+        cart_mock.get_products.return_value = {
+            product1: {"pcs": 1, "unit_price": 200},
+            product2: {"pcs": 1, "unit_price": 200},
+        }
+
+        cart_mock.get_total_price.return_value = 400
+        cart_mock.get_products_quantity.return_value = 2
+
+        discounts = DiscountService(cart_mock)
+        products_with_discount = discounts.get_product_with_new_price
+        total_cart_price = discounts.get_total_price_with_discount
+        self.assertEqual(products_with_discount, {product1: 50, product2: 50})
+        self.assertEqual(total_cart_price, 100)
+
+        cart_mock.get_products.return_value = {
+            product1: {"pcs": 1, "unit_price": 100},
+            product2: {"pcs": 1, "unit_price": 100},
+        }
+
+        cart_mock.get_total_price.return_value = 200
+        cart_mock.get_products_quantity.return_value = 2
+        discounts = DiscountService(cart_mock)
+        products_with_discount = discounts.get_product_with_new_price
+        total_cart_price = discounts.get_total_price_with_discount
+        self.assertEqual(products_with_discount, {product1: 1, product2: 1})
+        self.assertEqual(total_cart_price, 2)

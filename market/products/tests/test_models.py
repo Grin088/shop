@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse_lazy
+
 from products.models import Product, Property, ProductProperty, Review
 from users.models import CustomUser as User
 
@@ -30,9 +31,7 @@ class ProductModelTest(TestCase):
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    product._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(product._meta.get_field(field).verbose_name, expected_value)
 
     def test_name_max_length(self):
         product = ProductModelTest.product
@@ -60,9 +59,7 @@ class PropertyModelTest(TestCase):
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    property._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(property._meta.get_field(field).verbose_name, expected_value)
 
     def test_name_max_length(self):
         property = ProductModelTest.property
@@ -100,9 +97,7 @@ class ProductPropertyModelTest(TestCase):
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    product_property._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(product_property._meta.get_field(field).verbose_name, expected_value)
 
     def test_value_max_length(self):
         product_property = ProductPropertyModelTest.product_property
