@@ -70,6 +70,7 @@ class OrderAdmin(admin.ModelAdmin):
         return obj.address[:15] + "..."
 
     address_short.short_description = _("адрес")
+
     def get_queryset(self, request):
         """Обединение запросов"""
         return Order.objects.select_related("custom_user")
