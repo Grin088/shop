@@ -17,13 +17,11 @@ from shops.services.compare import (compare_list_check,
                                     splitting_into_groups_by_category,
                                     comparison_lists_and_properties,
                                     )
-from shops.services.order import  save_order_model
+from shops.services.order import save_order_model
 from shops.services.order import pryce_delivery
 from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from shops.models import Shop, Order, OrderOffer, Offer
-
 from shops.models import Shop, Order, OrderOffer
 from shops.services.is_member_of_group import is_member_of_group
 
