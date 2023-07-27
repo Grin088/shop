@@ -6,11 +6,11 @@ from .limited_products import invalidate_offer_of_the_day_cache
 
 @receiver(post_save, sender=Product)
 def product_saved(sender, instance, **kwargs):
-    """ Сбрасывает кеш предложения дня при сохранении товара"""
+    """Сбрасывает кеш предложения дня при сохранении товара"""
     invalidate_offer_of_the_day_cache()
 
 
 @receiver(post_delete, sender=Product)
 def product_deleted(sender, instance, **kwargs):
-    """ Сбрасывает кеш предложения дня при удалении товара"""
+    """Сбрасывает кеш предложения дня при удалении товара"""
     invalidate_offer_of_the_day_cache()

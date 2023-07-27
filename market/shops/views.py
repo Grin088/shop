@@ -1,3 +1,4 @@
+from django.shortcuts import render  # noqa F401
 from django.db.models import F
 from django.shortcuts import render, redirect  # noqa F401
 from django.conf import settings
@@ -27,14 +28,18 @@ from shops.services.limited_products import (
     get_top_products,
     get_limited_edition,
 )
+from shops.services.compare import CompareMixin
+from shops.services.order import pryce_delivery
+from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
+from shops.models import Shop, Order, OrderOffer, Offer
 
 from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
 
 
-@cache_page(settings.CACHE_CONSTANT)
+# @cache_page(settings.CACHE_CONSTANT)
 def home(request):
     """Главная страница"""
     if request.method == "GET":
@@ -182,23 +187,6 @@ class OrderDetailsView(LoginRequiredMixin, View):
             return HttpResponse("<h1>HTTP 403 Forbidden</h1>")
         context = {
             "order": query,
-            "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related(
-                "offer__product"
-            ),
+            "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related("offer__product"),
         }
         return render(request, "market/order/oneorder.jinja2", context=context)
-
-
-@api_view(["POST"])
-def process_payment(request):
-    """метод API для обработки запросов оплаты"""
-    order_number = request.data["order_number"]
-    card_number = request.data["card_number"]
-
-    order = Order.objects.get(id=order_number)
-
-    # Добавление заказа в очередь оплаты
-    queue_job = PaymentQueue(order=order, card_number=card_number)
-    queue_job.save()
-
-    return Response({"message": "Payment request added to the queue"})
