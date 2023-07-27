@@ -188,7 +188,7 @@ class UserProfileChangeTests(TestCase):
 
     def test_change_password_form_success(self):
         """Проверка формы изменения пароля"""
-        self.client.post(reverse('login'), self.credentials_user1, follow=True)
+        self.client.post('/users/login/', self.credentials_user1, follow=True)
         new_password = 'newpass123'
         form_data = {'new_password1': new_password,
                      'new_password2': new_password}
