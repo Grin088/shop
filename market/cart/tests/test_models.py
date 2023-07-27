@@ -29,9 +29,7 @@ class CartModelTest(TestCase):
         }
         for field, expected_value in verbose_name.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    cart._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(cart._meta.get_field(field).verbose_name, expected_value)
 
 
 class CartItemModelTest(TestCase):
@@ -68,6 +66,4 @@ class CartItemModelTest(TestCase):
         }
         for field, expected_value in verbose_name.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    cart_item._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(cart_item._meta.get_field(field).verbose_name, expected_value)

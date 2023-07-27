@@ -22,17 +22,13 @@ class MyProfileService:
     @staticmethod
     def form_validation(form, request, second_form=None):
         """Метод для проверки формы и сохранения данных профиля"""
-        if form.cleaned_data.get("new_password1") and form.cleaned_data.get(
-            "new_password2"
-        ):
+        if form.cleaned_data.get("new_password1") and form.cleaned_data.get("new_password2"):
             form.save()
             update_session_auth_hash(request, form.user)
             login(request, form.user)
         second_form.save()
         success_message = _("Профиль успешно сохранен")
-        return redirect(
-            reverse("users:users_profile") + "?success_message=" + success_message
-        )
+        return redirect(reverse("users:users_profile") + "?success_message=" + success_message)
 
     @staticmethod
     def post_form_validation(form, second_form, request):
