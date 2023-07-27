@@ -1,5 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import (
+    BaseUserCreationForm,
+    AuthenticationForm,
+    UserChangeForm,
+)
 from django.core.exceptions import ValidationError
 from .models import CustomUser, PhoneNumberValidator, ValidateImageSize
 from django.utils.translation import gettext_lazy as _

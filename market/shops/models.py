@@ -9,7 +9,10 @@ class Shop(models.Model):
 
     name = models.CharField(max_length=512, verbose_name=_("название"))
     products = models.ManyToManyField(
-        "products.Product", through="Offer", related_name="shops", verbose_name=_("товары в магазине")
+        "products.Product",
+        through="Offer",
+        related_name="shops",
+        verbose_name=_("товары в магазине"),
     )
     user = models.OneToOneField("users.CustomUser", on_delete=models.CASCADE, verbose_name=_("пользователь"))
     phone_number = models.CharField(max_length=13, verbose_name=_("номер телефона"))
@@ -93,11 +96,23 @@ class Order(models.Model):
     # ]
 
     custom_user = models.ForeignKey(
-        CustomUser, on_delete=models.PROTECT, related_name="orders", verbose_name=_("пользователь")
+        CustomUser,
+        on_delete=models.PROTECT,
+        related_name="orders",
+        verbose_name=_("пользователь"),
     )
-    offer = models.ManyToManyField(Offer, through="OrderOffer", related_name="orders", verbose_name=_("предложение"))
+    offer = models.ManyToManyField(
+        Offer,
+        through="OrderOffer",
+        related_name="orders",
+        verbose_name=_("предложение"),
+    )
     status = models.ForeignKey(
-        OrderStatus, on_delete=models.PROTECT, related_name="orders", default=1, verbose_name=_("статус")
+        OrderStatus,
+        on_delete=models.PROTECT,
+        related_name="orders",
+        default=1,
+        verbose_name=_("статус"),
     )
     data = models.DateTimeField(auto_now_add=True, verbose_name=_("дата создания"))
     delivery = models.CharField(
@@ -109,7 +124,10 @@ class Order(models.Model):
     citi = models.CharField(max_length=100, verbose_name=_("город"))
     address = models.CharField(max_length=200, verbose_name=_("адрес"))
     pay = models.CharField(
-        max_length=8, choices=StatusPayOrder.choices, verbose_name=_("доставка"), default=StatusPayOrder.online
+        max_length=8,
+        choices=StatusPayOrder.choices,
+        verbose_name=_("доставка"),
+        default=StatusPayOrder.online,
     )
     total_cost = models.DecimalField(decimal_places=2, max_digits=10)
 

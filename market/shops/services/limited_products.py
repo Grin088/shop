@@ -20,7 +20,8 @@ def get_top_products():
     """Представление топ-продуктов (первые 8)"""
     products_history = Browsing_history.objects.all()
     products = sorted(
-        list(Counter(Product.objects.filter(products__in=products_history)).items()), key=lambda key: key[1]
+        list(Counter(Product.objects.filter(products__in=products_history)).items()),
+        key=lambda key: key[1],
     )[:-9:-1]
     products = [value for value, key in products]
     if products:

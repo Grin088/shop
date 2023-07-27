@@ -17,11 +17,31 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Banner",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("title", models.CharField(max_length=280, verbose_name="название баннера")),
-                ("description", models.TextField(max_length=280, null=True, verbose_name="описание баннера")),
-                ("image", models.ImageField(upload_to="media/banners/", verbose_name="изображение баннера")),
-                ("active", models.BooleanField(default=True, verbose_name="статус активности баннера")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=280, verbose_name="название баннера"),
+                ),
+                (
+                    "description",
+                    models.TextField(max_length=280, null=True, verbose_name="описание баннера"),
+                ),
+                (
+                    "image",
+                    models.ImageField(upload_to="media/banners/", verbose_name="изображение баннера"),
+                ),
+                (
+                    "active",
+                    models.BooleanField(default=True, verbose_name="статус активности баннера"),
+                ),
             ],
             options={
                 "verbose_name": "баннер",
@@ -31,15 +51,34 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Offer",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("price", models.DecimalField(decimal_places=2, max_digits=10, verbose_name="цена")),
-                ("product_in_stock", models.BooleanField(default=True, verbose_name="товар в наличии")),
-                ("free_shipping", models.BooleanField(default=False, verbose_name="бесплатная доставка")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "price",
+                    models.DecimalField(decimal_places=2, max_digits=10, verbose_name="цена"),
+                ),
+                (
+                    "product_in_stock",
+                    models.BooleanField(default=True, verbose_name="товар в наличии"),
+                ),
+                (
+                    "free_shipping",
+                    models.BooleanField(default=False, verbose_name="бесплатная доставка"),
+                ),
                 ("date_of_creation", models.DateTimeField(auto_now_add=True)),
                 (
                     "product",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, related_name="offers", to="products.product"
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="offers",
+                        to="products.product",
                     ),
                 ),
             ],
@@ -47,8 +86,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Order",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("data", models.DateTimeField(auto_now_add=True, verbose_name="дата создания")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "data",
+                    models.DateTimeField(auto_now_add=True, verbose_name="дата создания"),
+                ),
                 (
                     "delivery",
                     models.CharField(
@@ -63,7 +113,10 @@ class Migration(migrations.Migration):
                 (
                     "pay",
                     models.CharField(
-                        choices=[("ONLINE", "Онлайн"), ("SOMEONE", "Онлайн со случайного чужого счета")],
+                        choices=[
+                            ("ONLINE", "Онлайн"),
+                            ("SOMEONE", "Онлайн со случайного чужого счета"),
+                        ],
                         default="ONLINE",
                         max_length=8,
                         verbose_name="доставка",
@@ -88,9 +141,23 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="OrderStatus",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("sort_index", models.SmallIntegerField(unique=True, verbose_name="порядковый индекс")),
-                ("name", models.CharField(max_length=100, verbose_name="статус заказа")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_index",
+                    models.SmallIntegerField(unique=True, verbose_name="порядковый индекс"),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=100, verbose_name="статус заказа"),
+                ),
             ],
             options={
                 "verbose_name": "статус заказа",
@@ -100,9 +167,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Shop",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(max_length=512, verbose_name="название")),
-                ("phone_number", models.CharField(max_length=13, verbose_name="номер телефона")),
+                (
+                    "phone_number",
+                    models.CharField(max_length=13, verbose_name="номер телефона"),
+                ),
                 ("email", models.EmailField(max_length=100, verbose_name="почта")),
                 (
                     "products",
@@ -126,8 +204,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="OrderStatusChange",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("time", models.DateTimeField(auto_now_add=True, verbose_name="время изменения")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "time",
+                    models.DateTimeField(auto_now_add=True, verbose_name="время изменения"),
+                ),
                 (
                     "dst_status_id",
                     models.ForeignKey(
@@ -136,7 +225,10 @@ class Migration(migrations.Migration):
                         to="shops.orderstatus",
                     ),
                 ),
-                ("order", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.order")),
+                (
+                    "order",
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.order"),
+                ),
                 (
                     "src_status_id",
                     models.ForeignKey(
@@ -154,18 +246,35 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="OrderOffer",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("count", models.SmallIntegerField(verbose_name="количество")),
                 ("price", models.DecimalField(decimal_places=2, max_digits=10)),
-                ("offer", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.offer")),
-                ("order", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.order")),
+                (
+                    "offer",
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.offer"),
+                ),
+                (
+                    "order",
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.order"),
+                ),
             ],
         ),
         migrations.AddField(
             model_name="order",
             name="offer",
             field=models.ManyToManyField(
-                related_name="orders", through="shops.OrderOffer", to="shops.offer", verbose_name="предложение"
+                related_name="orders",
+                through="shops.OrderOffer",
+                to="shops.offer",
+                verbose_name="предложение",
             ),
         ),
         migrations.AddField(

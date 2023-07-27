@@ -95,7 +95,8 @@ class RegistrationFormTest(TestCase):
         login_data = {"username": "TeSt_uSEr@example.com", "password": "Pass12345"}
         response = self.client.post(reverse_lazy("users:users_login"), login_data)
         self.assertContains(
-            response, "Please enter a correct email and password." " Note that both fields may be case-sensitive."
+            response,
+            "Please enter a correct email and password." " Note that both fields may be case-sensitive.",
         )
 
     def test_logout(self):

@@ -3,12 +3,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from users.models import UserAvatar
-from shops.models import Order
+from shops.models import OrderOffer
 
 
 def last_order_request(user):
     """Возвращает последний заказ если он есть"""
-    order = Order.objects.filter(custom_user=user).order_by("-data")
+    order = OrderOffer.objects.filter(offer__orders__custom_user=user).order_by("-order__data")
     if order:
         return order[0]
     return None

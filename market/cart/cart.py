@@ -100,7 +100,10 @@ class Cart(object):
         if offer_id in self.cart:
             self.cart_quantity_change(offer)
         else:
-            self.cart[offer.id] = {"quantity": 1, "created_at": json.dumps(datetime.datetime.now(), default=str)}
+            self.cart[offer.id] = {
+                "quantity": 1,
+                "created_at": json.dumps(datetime.datetime.now(), default=str),
+            }
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
         self.save_to_db()
@@ -134,7 +137,11 @@ class Cart(object):
         """
         cart = self.cart_to_json(self.cart)
         products = {
-            item["offer"].product: {"pcs": item["quantity"], "unit_price": item["offer"].price} for item in cart
+            item["offer"].product: {
+                "pcs": item["quantity"],
+                "unit_price": item["offer"].price,
+            }
+            for item in cart
         }
         return products
 

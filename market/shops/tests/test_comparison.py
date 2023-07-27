@@ -93,9 +93,27 @@ class CompareTestCase(TestCase):
         ]
         test_list_property = ["Вес", "Высота", "Ширина"]
         expected_result = [
-            {"property": {"Вес": ["5кг", False], "Высота": ["-", False], "Ширина": ["-", False]}},
-            {"property": {"Высота": ["5кг", False], "Вес": ["-", False], "Ширина": ["-", False]}},
-            {"property": {"Ширина": ["5кг", False], "Вес": ["-", False], "Высота": ["-", False]}},
+            {
+                "property": {
+                    "Вес": ["5кг", False],
+                    "Высота": ["-", False],
+                    "Ширина": ["-", False],
+                }
+            },
+            {
+                "property": {
+                    "Высота": ["5кг", False],
+                    "Вес": ["-", False],
+                    "Ширина": ["-", False],
+                }
+            },
+            {
+                "property": {
+                    "Ширина": ["5кг", False],
+                    "Вес": ["-", False],
+                    "Высота": ["-", False],
+                }
+            },
         ]
         result = _adding_missing_properties(test_list_property, test_list)
         self.assertEqual(result, expected_result)
@@ -103,16 +121,52 @@ class CompareTestCase(TestCase):
     def test_comparison_of_product_properties_success(self):
         """Проверка поиска одинаковых свойств"""
         test_list = [
-            {"property": {"Вес": ["5кг", False], "Высота": ["7 м", False], "Ширина": ["-", False]}},
-            {"property": {"Высота": ["7 м", False], "Вес": ["-", False], "Ширина": ["-", False]}},
-            {"property": {"Ширина": ["5кг", False], "Вес": ["-", False], "Высота": ["7 м", False]}},
+            {
+                "property": {
+                    "Вес": ["5кг", False],
+                    "Высота": ["7 м", False],
+                    "Ширина": ["-", False],
+                }
+            },
+            {
+                "property": {
+                    "Высота": ["7 м", False],
+                    "Вес": ["-", False],
+                    "Ширина": ["-", False],
+                }
+            },
+            {
+                "property": {
+                    "Ширина": ["5кг", False],
+                    "Вес": ["-", False],
+                    "Высота": ["7 м", False],
+                }
+            },
         ]
         test_list_property = ["Вес", "Высота", "Ширина"]
         result = _comparison_of_product_properties(test_list, test_list_property)
         expected_result = [
-            {"property": {"Вес": ["5кг", False], "Высота": ["7 м", True], "Ширина": ["-", False]}},
-            {"property": {"Высота": ["7 м", True], "Вес": ["-", False], "Ширина": ["-", False]}},
-            {"property": {"Ширина": ["5кг", False], "Вес": ["-", False], "Высота": ["7 м", True]}},
+            {
+                "property": {
+                    "Вес": ["5кг", False],
+                    "Высота": ["7 м", True],
+                    "Ширина": ["-", False],
+                }
+            },
+            {
+                "property": {
+                    "Высота": ["7 м", True],
+                    "Вес": ["-", False],
+                    "Ширина": ["-", False],
+                }
+            },
+            {
+                "property": {
+                    "Ширина": ["5кг", False],
+                    "Вес": ["-", False],
+                    "Высота": ["7 м", True],
+                }
+            },
         ]
         self.assertEqual(result, expected_result)
 

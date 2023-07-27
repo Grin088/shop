@@ -18,7 +18,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Cart",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
             ],
             options={
                 "verbose_name": "корзина",
@@ -28,7 +36,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="CartItem",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "quantity",
                     models.PositiveIntegerField(
@@ -50,7 +66,9 @@ class Migration(migrations.Migration):
                 (
                     "offer",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="shops.offer", verbose_name="товар магазина"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="shops.offer",
+                        verbose_name="товар магазина",
                     ),
                 ),
             ],
