@@ -18,7 +18,7 @@ class ReviewsAPI(APIView):
         product_id = request.GET.get("product_id")
         offset = int(request.GET.get("offset", 0))
         limit = int(request.GET.get("limit", 3))
-        reviews = Review.get_review(product_id=product_id)[offset: offset + limit]
+        reviews = Review.get_review(product_id=product_id)[offset : offset + limit]
         data = [
             {
                 "number": n + 1,
@@ -69,23 +69,23 @@ class ProductView(TemplateView):
 
 
 class BaseView(TemplateView):
-    template_name = 'market/base.jinja2'
+    template_name = "market/base.jinja2"
 
 
 class ImportCreateView(CreateView):
-    """ представление для запуска импорта"""
+    """представление для запуска импорта"""
+
     model = Import
     form_class = ImportForm
-    template_name = 'market/products/import_form.jinja2'
+    template_name = "market/products/import_form.jinja2"
 
     def form_valid(self, form):
-
         # вызываем родительский метод для создания объекта модели Import с данными из формы
         response = super().form_valid(form)
 
         # получаем имя файла или URL и email из формы
-        source = form.cleaned_data['source']
-        email = form.cleaned_data['email']
+        source = form.cleaned_data["source"]
+        email = form.cleaned_data["email"]
 
         # запускаем задачу импорта с помощью celery
         task = import_products.delay(source, email)
@@ -102,13 +102,14 @@ class ImportCreateView(CreateView):
 
     def get_success_url(self):
         # метод для получения URL для перенаправления после создания объекта модели Import
-        return reverse('products:import-detail', kwargs={'pk': self.object.pk})
+        return reverse("products:import-detail", kwargs={"pk": self.object.pk})
 
 
 class ImportDetailView(DetailView):
     """представление для отображения деталей импорта"""
+
     model = Import
-    template_name = 'market/products/import_detail.jinja2'
+    template_name = "market/products/import_detail.jinja2"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -117,16 +118,20 @@ class ImportDetailView(DetailView):
         # получаем статус и результат задачи с помощью celery
         task = AsyncResult(task_id)
         task_status = task.status
-        if task_status == 'SUCCESS':
+        if task_status == "SUCCESS":
             # task_result = task.result
-            context['task_result'] = f'Импорт из {import_obj.source} успешно завершен.' \
-                                     f' Импортировано {import_obj.imported_count} товаров.'
-        elif task_status == 'FAILURE':
-            context['task_result'] = f'Импорт из {import_obj.source} завершен с ошибкой. Ошибка: {task.result}'
+            context["task_result"] = (
+                f"Импорт из {import_obj.source} успешно завершен."
+                f" Импортировано {import_obj.imported_count} товаров."
+            )
+        elif task_status == "FAILURE":
+            context[
+                "task_result"
+            ] = f"Импорт из {import_obj.source} завершен с ошибкой. Ошибка: {task.result}"
         else:
-            context['task_result'] = 'Импорт еще не завершен'
-        context['task_status'] = task_status
-        context['start_time'] = import_obj.start_time
-        context['end_time'] = import_obj.end_time
-        context['status'] = import_obj.status
+            context["task_result"] = "Импорт еще не завершен"
+        context["task_status"] = task_status
+        context["start_time"] = import_obj.start_time
+        context["end_time"] = import_obj.end_time
+        context["status"] = import_obj.status
         return context
