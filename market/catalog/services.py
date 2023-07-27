@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 from catalog.forms import ProductFilterForm
 from products.models import Product
+from shops.services.compare import compare_list_check
 
 
 def get_paginator(request, products, forms):
@@ -17,6 +18,9 @@ def get_paginator(request, products, forms):
         if "sorted" in request.session:
             sort_session = request.session["sorted"]
             products = sorted_products(sort_session, products)
+    if request.POST.get("add_compare"):
+        get = request.POST.get("add_compare")
+        compare_list_check(request.session, get)
     # TODO Пагинацию изменить при необходимости (default=4 записи)
     paginator = Paginator(products, 4)
     page = request.GET.get("page")

@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib import admin
 from .views import (
     BaseView,
     seller_detail,
@@ -11,10 +10,8 @@ from .views import (
     OrderDetailsView,
 )
 
-
 urlpatterns = [
     path("", BaseView.as_view(), name="index"),
-    path("admin/", admin.site.urls, name="admin"),
     path("comparison/", ComparePageView.as_view(), name="comparison"),
     path("home/", home, name="home"),
     path("seller/", seller_detail, name="seller_detail"),

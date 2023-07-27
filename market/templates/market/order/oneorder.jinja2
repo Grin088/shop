@@ -117,7 +117,8 @@
                                         </strong>
                                     </div>
                                     {%  if order.status |string() == "Оплата не выполнена" %}
-                                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="#">{% trans %}Оплатить{% endtrans %}</a>
+                                    <div class="Cart-block">
+                                        <a class="btn btn_primary btn_lg" href="#">{% trans %}Оплатить{% endtrans %}</a>
                                     </div>
                                     {% endif %}
                                 </div>
