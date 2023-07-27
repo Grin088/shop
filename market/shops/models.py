@@ -111,11 +111,14 @@ class Order(models.Model):
 
 class OrderOffer(models.Model):
     """Промежуточная модель. Дополнительное поле количество товара"""
+    class Meta:
+        verbose_name = _("Товар")
+        verbose_name_plural = _("Товары")
 
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
-    offer = models.ForeignKey(Offer, on_delete=models.PROTECT)
+    offer = models.ForeignKey(Offer, on_delete=models.PROTECT, verbose_name=_("Товары"))
     count = models.PositiveSmallIntegerField(verbose_name=_("количество"))
-    price = models.DecimalField(decimal_places=2, max_digits=10)
+    price = models.DecimalField(decimal_places=2, max_digits=10, verbose_name=_("цена"))
 
 
 class OrderStatusChange(models.Model):

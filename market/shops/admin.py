@@ -1,6 +1,7 @@
 from django.contrib import admin  # noqa F401
+from django.utils.translation import gettext_lazy as _
 
-from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
+from shops.models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
 
 
 class ShopProductInline(admin.TabularInline):
@@ -58,8 +59,20 @@ class OrderAdmin(admin.ModelAdmin):
         "data",
         "delivery",
         "city",
-        "address",
+        "address_short",
     )
+
+    def address_short(self, obj: Order) -> str:
+        """Обрезка текста адреса"""
+
+        if len(obj.address) < 15:
+            return obj.address
+        return obj.address[:15] + "..."
+
+    address_short.short_description = _("адрес")
+    def get_queryset(self, request):
+        """Обединение запросов"""
+        return Order.objects.select_related("custom_user")
 
 
 @admin.register(OrderStatus)
