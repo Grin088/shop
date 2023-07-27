@@ -19,9 +19,7 @@ class UserProfileTest(TestCase):
     def setUpClass(cls):
         """Создание пользователя"""
         super().setUpClass()
-        cls.user = CustomUser.objects.create_user(
-            username="test_user", email="test1@admin.com", password="123"
-        )
+        cls.user = CustomUser.objects.create_user(username="test_user", email="test1@admin.com", password="123")
 
     @classmethod
     def tearDownClass(cls):
@@ -98,8 +96,7 @@ class RegistrationFormTest(TestCase):
         response = self.client.post(reverse_lazy("users:users_login"), login_data)
         self.assertContains(
             response,
-            "Please enter a correct email and password."
-            " Note that both fields may be case-sensitive.",
+            "Please enter a correct email and password." " Note that both fields may be case-sensitive.",
         )
 
     def test_logout(self):

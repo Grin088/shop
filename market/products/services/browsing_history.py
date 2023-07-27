@@ -5,9 +5,7 @@ import datetime
 def is_valid_history(user_id, product_id):
     """Проверка на просмотр продукта"""
     try:
-        update_date = Browsing_history.objects.get(
-            users_id=user_id, product_id=product_id
-        )
+        update_date = Browsing_history.objects.get(users_id=user_id, product_id=product_id)
         update_date.data_at = datetime.datetime.now()
         update_date.save()
         return True

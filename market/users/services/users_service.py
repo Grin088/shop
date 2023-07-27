@@ -8,9 +8,7 @@ from shops.models import OrderOffer
 
 def last_order_request(user):
     """Возвращает последний заказ если он есть"""
-    order = OrderOffer.objects.filter(offer__orders__custom_user=user).order_by(
-        "-order__data"
-    )
+    order = OrderOffer.objects.filter(offer__orders__custom_user=user).order_by("-order__data")
     if order:
         return order[0]
     return None

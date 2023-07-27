@@ -43,9 +43,7 @@ class CartItemModelTest(TestCase):
         cls.shop = Shop.objects.create(name="test_shop", user=cls.user)
         cls.product = Product.objects.create(name="test_product")
         cls.offer = Offer.objects.create(shop=cls.shop, product=cls.product, price=100)
-        cls.cart_item = CartItem.objects.create(
-            cart=cls.cart, offer=cls.offer, quantity=100
-        )
+        cls.cart_item = CartItem.objects.create(cart=cls.cart, offer=cls.offer, quantity=100)
 
     @classmethod
     def tearDownClass(cls):

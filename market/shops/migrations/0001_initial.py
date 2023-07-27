@@ -32,21 +32,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "description",
-                    models.TextField(
-                        max_length=280, null=True, verbose_name="описание баннера"
-                    ),
+                    models.TextField(max_length=280, null=True, verbose_name="описание баннера"),
                 ),
                 (
                     "image",
-                    models.ImageField(
-                        upload_to="media/banners/", verbose_name="изображение баннера"
-                    ),
+                    models.ImageField(upload_to="media/banners/", verbose_name="изображение баннера"),
                 ),
                 (
                     "active",
-                    models.BooleanField(
-                        default=True, verbose_name="статус активности баннера"
-                    ),
+                    models.BooleanField(default=True, verbose_name="статус активности баннера"),
                 ),
             ],
             options={
@@ -68,9 +62,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "price",
-                    models.DecimalField(
-                        decimal_places=2, max_digits=10, verbose_name="цена"
-                    ),
+                    models.DecimalField(decimal_places=2, max_digits=10, verbose_name="цена"),
                 ),
                 (
                     "product_in_stock",
@@ -78,9 +70,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "free_shipping",
-                    models.BooleanField(
-                        default=False, verbose_name="бесплатная доставка"
-                    ),
+                    models.BooleanField(default=False, verbose_name="бесплатная доставка"),
                 ),
                 ("date_of_creation", models.DateTimeField(auto_now_add=True)),
                 (
@@ -107,9 +97,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "data",
-                    models.DateTimeField(
-                        auto_now_add=True, verbose_name="дата создания"
-                    ),
+                    models.DateTimeField(auto_now_add=True, verbose_name="дата создания"),
                 ),
                 (
                     "delivery",
@@ -164,9 +152,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "sort_index",
-                    models.SmallIntegerField(
-                        unique=True, verbose_name="порядковый индекс"
-                    ),
+                    models.SmallIntegerField(unique=True, verbose_name="порядковый индекс"),
                 ),
                 (
                     "name",
@@ -229,9 +215,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "time",
-                    models.DateTimeField(
-                        auto_now_add=True, verbose_name="время изменения"
-                    ),
+                    models.DateTimeField(auto_now_add=True, verbose_name="время изменения"),
                 ),
                 (
                     "dst_status_id",
@@ -243,9 +227,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "order",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, to="shops.order"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.order"),
                 ),
                 (
                     "src_status_id",
@@ -277,15 +259,11 @@ class Migration(migrations.Migration):
                 ("price", models.DecimalField(decimal_places=2, max_digits=10)),
                 (
                     "offer",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, to="shops.offer"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.offer"),
                 ),
                 (
                     "order",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, to="shops.order"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.order"),
                 ),
             ],
         ),
@@ -312,8 +290,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="offer",
             name="shop",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to="shops.shop"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="shops.shop"),
         ),
     ]

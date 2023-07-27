@@ -62,19 +62,11 @@ class Cart(object):
                 cart_in_db = CartModel.objects.create(user=self.user)
             cart_in_session = self.cart_to_json(self.cart)
             for item_in_db in CartItem.objects.filter(cart=cart_in_db):
-                if not any(
-                    item_in_db == item_session for item_session in cart_in_session
-                ):
+                if not any(item_in_db == item_session for item_session in cart_in_session):
                     item_in_db.delete()
             for session_item in cart_in_session:
-                if (
-                    CartItem.objects.filter(cart=cart_in_db)
-                    .filter(offer=session_item["offer"].id)
-                    .exists()
-                ):
-                    cart_item = CartItem.objects.filter(cart=cart_in_db).get(
-                        offer=session_item["offer"]
-                    )
+                if CartItem.objects.filter(cart=cart_in_db).filter(offer=session_item["offer"].id).exists():
+                    cart_item = CartItem.objects.filter(cart=cart_in_db).get(offer=session_item["offer"])
                     cart_item.quantity = session_item["quantity"]
                     cart_item.save()
                 else:
@@ -160,9 +152,7 @@ class Cart(object):
         """
 
         json_cart = self.cart_to_json(self.cart)
-        total_price = sum(
-            [item["offer"].price * item["quantity"] for item in json_cart]
-        )
+        total_price = sum([item["offer"].price * item["quantity"] for item in json_cart])
         return total_price
 
     def get_products_quantity(self):

@@ -12,16 +12,12 @@ class CartViewTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = CustomUser.objects.create(
-            username="user_test", password="123", email="testuser@gmail.com"
-        )
+        cls.user = CustomUser.objects.create(username="user_test", password="123", email="testuser@gmail.com")
         cls.cart = Cart.objects.create(user=cls.user)
         cls.shop = Shop.objects.create(name="test_shop", user=cls.user)
         cls.product = Product.objects.create(name="test_product")
         cls.offer = Offer.objects.create(shop=cls.shop, product=cls.product, price=100)
-        cls.cart_item = CartItem.objects.create(
-            cart=cls.cart, offer=cls.offer, quantity=100
-        )
+        cls.cart_item = CartItem.objects.create(cart=cls.cart, offer=cls.offer, quantity=100)
 
     @classmethod
     def tearDownClass(cls):

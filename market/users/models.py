@@ -80,15 +80,9 @@ class CustomUser(AbstractUser):
     def clean(self):
         """Валидация данных и проверка отсутствия номера телефона в базе данных"""
         super().clean()
-        user = (
-            CustomUser.objects.filter(phone_number=self.phone_number)
-            .exclude(id=self.id)
-            .first()
-        )
+        user = CustomUser.objects.filter(phone_number=self.phone_number).exclude(id=self.id).first()
         if user and user.phone_number != "+0000000000":
-            raise ValidationError(
-                f"Пользователь с номером {user.phone_number} уже существует."
-            )
+            raise ValidationError(f"Пользователь с номером {user.phone_number} уже существует.")
 
     class Meta:
         verbose_name = _("пользователь")
@@ -105,6 +99,4 @@ class UserAvatar(models.Model):
         validators=[validators.validate_image_file_extension, validate_image_size],
         verbose_name=_("фото профиля"),
     )
-    user = models.OneToOneField(
-        CustomUser, on_delete=models.CASCADE, related_name="avatar"
-    )
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="avatar")

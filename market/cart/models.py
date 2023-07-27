@@ -22,9 +22,7 @@ class Cart(models.Model):
         related_name="carts",
         verbose_name=_("пользователь"),
     )
-    offer = models.ManyToManyField(
-        "shops.Offer", through="CartItem", verbose_name=_("предложение")
-    )
+    offer = models.ManyToManyField("shops.Offer", through="CartItem", verbose_name=_("предложение"))
 
 
 class CartItem(models.Model):
@@ -42,9 +40,7 @@ class CartItem(models.Model):
         related_name="offers",
         verbose_name=_("корзина клиента"),
     )
-    offer = models.ForeignKey(
-        "shops.Offer", on_delete=models.CASCADE, verbose_name=_("товар магазина")
-    )
+    offer = models.ForeignKey("shops.Offer", on_delete=models.CASCADE, verbose_name=_("товар магазина"))
     quantity = models.PositiveIntegerField(
         validators=[MinValueValidator(1)],
         verbose_name=_("количество товара в корзине"),

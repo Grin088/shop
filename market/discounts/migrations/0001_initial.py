@@ -38,9 +38,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "discount_amount_type",
-                    models.PositiveSmallIntegerField(
-                        choices=[(1, "проценты"), (2, "сумма")]
-                    ),
+                    models.PositiveSmallIntegerField(choices=[(1, "проценты"), (2, "сумма")]),
                 ),
                 ("active", models.BooleanField(verbose_name="скидка активна")),
                 (
@@ -101,9 +99,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "discount_amount_type",
-                    models.PositiveSmallIntegerField(
-                        choices=[(1, "проценты"), (2, "сумма")]
-                    ),
+                    models.PositiveSmallIntegerField(choices=[(1, "проценты"), (2, "сумма")]),
                 ),
                 ("active", models.BooleanField(verbose_name="скидка активна")),
                 (

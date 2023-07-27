@@ -50,18 +50,14 @@ class DiscountService:
             product_price = values.get("unit_price")
             total_units_price = products_quantity * product_price
             product_discount = self.discounts_handler(product.shopitemdiscount, values)
-            category_discount = self.discounts_handler(
-                product.category.shopitemdiscount, values
-            )
+            category_discount = self.discounts_handler(product.category.shopitemdiscount, values)
 
             if product_discount or category_discount:
                 products_discount = max(product_discount, category_discount)
 
                 shop_products[product] = products_discount
                 self._products_wit_shop_discount[product] = (
-                    total_units_price - products_discount
-                    if total_units_price > products_discount
-                    else 1
+                    total_units_price - products_discount if total_units_price > products_discount else 1
                 )
 
         total_discount = sum(shop_products.values())
@@ -76,9 +72,7 @@ class DiscountService:
         categories = {product.category for product in self.products.keys()}
 
         for product, values in self.products.items():
-            var1 = self.discounts_handler(
-                product.cartitemdiscount, values, categories__in=categories
-            )
+            var1 = self.discounts_handler(product.cartitemdiscount, values, categories__in=categories)
             var2 = self.discounts_handler(
                 product.cartitemdiscount,
                 values,

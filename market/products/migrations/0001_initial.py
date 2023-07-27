@@ -31,21 +31,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "source",
-                    models.CharField(
-                        max_length=255, verbose_name="имя файла или URL для импорта"
-                    ),
+                    models.CharField(max_length=255, verbose_name="имя файла или URL для импорта"),
                 ),
                 (
                     "start_time",
-                    models.DateTimeField(
-                        null=True, verbose_name="дата и время начала импорта"
-                    ),
+                    models.DateTimeField(null=True, verbose_name="дата и время начала импорта"),
                 ),
                 (
                     "end_time",
-                    models.DateTimeField(
-                        null=True, verbose_name="дата и время окончания импорта"
-                    ),
+                    models.DateTimeField(null=True, verbose_name="дата и время окончания импорта"),
                 ),
                 (
                     "status",
@@ -63,15 +57,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "imported_count",
-                    models.IntegerField(
-                        default=0, verbose_name="количество импортированных товаров"
-                    ),
+                    models.IntegerField(default=0, verbose_name="количество импортированных товаров"),
                 ),
                 (
                     "errors",
-                    models.JSONField(
-                        default=list, verbose_name="список ошибок при импорте"
-                    ),
+                    models.JSONField(default=list, verbose_name="список ошибок при импорте"),
                 ),
                 (
                     "email",
@@ -107,15 +97,11 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=512, verbose_name="наименование")),
                 (
                     "limited_edition",
-                    models.BooleanField(
-                        default=False, verbose_name="ограниченный тираж"
-                    ),
+                    models.BooleanField(default=False, verbose_name="ограниченный тираж"),
                 ),
                 (
                     "index",
-                    models.PositiveIntegerField(
-                        default=0, verbose_name="индекс сортировки"
-                    ),
+                    models.PositiveIntegerField(default=0, verbose_name="индекс сортировки"),
                 ),
                 (
                     "preview",
@@ -218,9 +204,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "description",
-                    models.CharField(
-                        blank=True, max_length=200, verbose_name="описание"
-                    ),
+                    models.CharField(blank=True, max_length=200, verbose_name="описание"),
                 ),
                 (
                     "product",
@@ -311,9 +295,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "review_text",
-                    models.TextField(
-                        max_length=500, null=True, verbose_name="текст отзыва"
-                    ),
+                    models.TextField(max_length=500, null=True, verbose_name="текст отзыва"),
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),

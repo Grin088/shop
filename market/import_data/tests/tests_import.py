@@ -41,11 +41,7 @@ class ImportTestCase(TestCase):
         self.assertEqual(product2.category.name, "Смартфоны")
 
         # Проверяем, что записи о товарах были созданы в базе данных
-        self.assertTrue(
-            Product.objects.filter(name="Ноутбук ASUS VivoBook 15").exists()
-        )
-        self.assertTrue(
-            Product.objects.filter(name="Смартфон Samsung Galaxy S21").exists()
-        )
+        self.assertTrue(Product.objects.filter(name="Ноутбук ASUS VivoBook 15").exists())
+        self.assertTrue(Product.objects.filter(name="Смартфон Samsung Galaxy S21").exists())
         self.assertTrue(Catalog.objects.filter(name="Ноутбуки").exists())
         self.assertTrue(Catalog.objects.filter(name="Смартфоны").exists())

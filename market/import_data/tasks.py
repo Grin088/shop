@@ -17,18 +17,12 @@ def import_products(file_path, email):  # noqa F401
         return "Завершён с ошибкой", [str(error)]
 
     if app.control.inspect().active():
-        return "Завершён с ошибкой", [
-            "Предыдущий импорт ещё не выполнен. Пожалуйста, дождитесь его окончания"
-        ]
+        return "Завершён с ошибкой", ["Предыдущий импорт ещё не выполнен. Пожалуйста, дождитесь его окончания"]
 
     if errors:
-        os.rename(
-            file_path, os.path.join(settings.IMPORT_FAIL, os.path.basename(file_path))
-        )
+        os.rename(file_path, os.path.join(settings.IMPORT_FAIL, os.path.basename(file_path)))
     else:
-        os.rename(
-            file_path, os.path.join(settings.IMPORT_DONE, os.path.basename(file_path))
-        )
+        os.rename(file_path, os.path.join(settings.IMPORT_DONE, os.path.basename(file_path)))
 
     subject = "Результат импорта товаров"
     message = f'Импорт товаров из файла {file_path} был {"успешно" if not errors else "неуспешно"} выполнен.\n'
