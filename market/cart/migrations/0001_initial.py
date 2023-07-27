@@ -80,9 +80,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="cart",
             name="offer",
-            field=models.ManyToManyField(
-                through="cart.CartItem", to="shops.offer", verbose_name="предложение"
-            ),
+            field=models.ManyToManyField(through="cart.CartItem", to="shops.offer", verbose_name="предложение"),
         ),
         migrations.AddField(
             model_name="cart",

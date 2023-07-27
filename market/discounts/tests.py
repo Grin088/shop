@@ -114,19 +114,13 @@ class DiscountCreateModel(TestCase):
         }
 
         form = ShopDiscountCreationForm(incorrect_form_data)
-        self.assertFormError(
-            form, None, _("Заполните хотя бы одно поле для категории или товаров")
-        )
+        self.assertFormError(form, None, _("Заполните хотя бы одно поле для категории или товаров"))
         self.assertFormError(
             form,
             "end_date",
-            _(
-                "Дата окончания действия скидки должна быть больше даты начала действия скидки"
-            ),
+            _("Дата окончания действия скидки должна быть больше даты начала действия скидки"),
         )
-        self.assertFormError(
-            form, "discount_amount", _("Скидка в % не должна превышать 99 %")
-        )
+        self.assertFormError(form, "discount_amount", _("Скидка в % не должна превышать 99 %"))
 
     def test_create_cart_discount_with_error(self):
         """Проверка вывода ошибок при создании записи скидки для товаров в корзине"""
@@ -141,19 +135,13 @@ class DiscountCreateModel(TestCase):
         }
 
         form = self.cart_discount_form(incorrect_form_data)
-        self.assertFormError(
-            form, None, _("Заполните хотя бы одно условие для получения скидки")
-        )
+        self.assertFormError(form, None, _("Заполните хотя бы одно условие для получения скидки"))
         self.assertFormError(
             form,
             "end_date",
-            _(
-                "Дата окончания действия скидки должна быть больше даты начала действия скидки"
-            ),
+            _("Дата окончания действия скидки должна быть больше даты начала действия скидки"),
         )
-        self.assertFormError(
-            form, "discount_amount", _("Скидка в % не должна превышать 99 %")
-        )
+        self.assertFormError(form, "discount_amount", _("Скидка в % не должна превышать 99 %"))
 
         incorrect_form_data = {
             "name": "test_shop_discount",

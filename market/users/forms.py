@@ -47,9 +47,7 @@ class CustomAuthenticationForm(AuthenticationForm):
         password = self.cleaned_data.get("password")
 
         if username is not None and password:
-            self.user_cache = authenticate(
-                self.request, username=username, password=password
-            )
+            self.user_cache = authenticate(self.request, username=username, password=password)
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
 
@@ -101,12 +99,8 @@ class UserProfileForm(UserChangeForm):
     phone_validator = PhoneNumberValidator()
     validate_image_size = ValidateImageSize()
 
-    first_name = forms.CharField(
-        required=False, widget=forms.TextInput(attrs={"class": "form-label"})
-    )
-    last_name = forms.CharField(
-        required=False, widget=forms.TextInput(attrs={"class": "form-label"})
-    )
+    first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-label"}))
+    last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-label"}))
     phone_number = forms.CharField(
         required=False,
         validators=[phone_validator],
@@ -118,9 +112,7 @@ class UserProfileForm(UserChangeForm):
         validators=[validate_image_size, validators.validate_image_file_extension],
         widget=forms.FileInput(attrs={"class": "Profile-file form-input"}),
     )
-    email = LowerEmailField(
-        required=False, widget=forms.TextInput(attrs={"class": "form-label"})
-    )
+    email = LowerEmailField(required=False, widget=forms.TextInput(attrs={"class": "form-label"}))
 
     class Meta:
         model = CustomUser
@@ -128,9 +120,7 @@ class UserProfileForm(UserChangeForm):
 
     def clean_email(self):
         email = self.cleaned_data["email"]
-        user = (
-            CustomUser.objects.filter(email=email).exclude(pk=self.instance.pk).first()
-        )
+        user = CustomUser.objects.filter(email=email).exclude(pk=self.instance.pk).first()
         if user:
             raise ValidationError(_("Этот электронный адрес уже используется."))
         return email

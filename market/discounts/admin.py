@@ -26,6 +26,10 @@ class ShopDiscountAdmin(admin.ModelAdmin):
                 )
             },
         ),
+        (
+            _("Скидка на группу товаров"),
+            {"fields": ("products", "categories")},
+        ),
         (_("Активировать скидку"), {"fields": ("active",)}),
     )
 

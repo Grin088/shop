@@ -157,9 +157,7 @@ class OrderDetailsView(LoginRequiredMixin, View):
             return HttpResponse("<h1>HTTP 403 Forbidden</h1>")
         context = {
             "order": query,
-            "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related(
-                "offer__product"
-            ),
+            "order_offers": OrderOffer.objects.filter(order_id=pk).prefetch_related("offer__product"),
         }
         return render(request, "market/order/oneorder.jinja2", context=context)
 

@@ -25,15 +25,11 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(help_text="наименование", max_length=100)),
                 (
                     "image",
-                    models.FileField(
-                        upload_to="catalog/icon/", verbose_name="картинка"
-                    ),
+                    models.FileField(upload_to="catalog/icon/", verbose_name="картинка"),
                 ),
                 (
                     "is_featured",
-                    models.BooleanField(
-                        default=False, verbose_name="избранная категория"
-                    ),
+                    models.BooleanField(default=False, verbose_name="избранная категория"),
                 ),
                 (
                     "parent",

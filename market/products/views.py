@@ -18,7 +18,9 @@ class ReviewsAPI(APIView):
         product_id = request.GET.get("product_id")
         offset = int(request.GET.get("offset", 0))
         limit = int(request.GET.get("limit", 3))
-        reviews = Review.get_review(product_id=product_id)[offset : offset + limit]
+        # fmt: off
+        reviews = Review.get_review(product_id=product_id)[offset: offset + limit]
+        # fmt: on
         data = [
             {
                 "number": n + 1,
@@ -47,9 +49,7 @@ class ProductView(TemplateView):
 
     def get_context_data(self, **kwargs):
         """Получение необходимого контекста"""
-        services = ProductsServices(
-            request=self.request, product_id=self.kwargs.get("product_id")
-        )
+        services = ProductsServices(request=self.request, product_id=self.kwargs.get("product_id"))
         context = super().get_context_data(**kwargs)
         context.update(services.get_context(form=self.form_class()))
         return context
@@ -125,9 +125,7 @@ class ImportDetailView(DetailView):
                 f" Импортировано {import_obj.imported_count} товаров."
             )
         elif task_status == "FAILURE":
-            context[
-                "task_result"
-            ] = f"Импорт из {import_obj.source} завершен с ошибкой. Ошибка: {task.result}"
+            context["task_result"] = f"Импорт из {import_obj.source} завершен с ошибкой. Ошибка: {task.result}"
         else:
             context["task_result"] = "Импорт еще не завершен"
         context["task_status"] = task_status

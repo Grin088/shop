@@ -14,9 +14,7 @@ class Shop(models.Model):
         related_name="shops",
         verbose_name=_("товары в магазине"),
     )
-    user = models.OneToOneField(
-        "users.CustomUser", on_delete=models.CASCADE, verbose_name=_("пользователь")
-    )
+    user = models.OneToOneField("users.CustomUser", on_delete=models.CASCADE, verbose_name=_("пользователь"))
     phone_number = models.CharField(max_length=13, verbose_name=_("номер телефона"))
     email = models.EmailField(max_length=100, verbose_name=_("почта"))
 
@@ -28,16 +26,10 @@ class Offer(models.Model):
     """Предложение магазина"""
 
     shop = models.ForeignKey(Shop, on_delete=models.PROTECT)
-    product = models.ForeignKey(
-        "products.Product", on_delete=models.PROTECT, related_name="offers"
-    )
+    product = models.ForeignKey("products.Product", on_delete=models.PROTECT, related_name="offers")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("цена"))
-    product_in_stock = models.BooleanField(
-        default=True, verbose_name=_("товар в наличии")
-    )
-    free_shipping = models.BooleanField(
-        default=False, verbose_name=_("бесплатная доставка")
-    )
+    product_in_stock = models.BooleanField(default=True, verbose_name=_("товар в наличии"))
+    free_shipping = models.BooleanField(default=False, verbose_name=_("бесплатная доставка"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -52,16 +44,10 @@ class Banner(models.Model):
         verbose_name_plural = _("баннеры")
 
     title = models.CharField(max_length=280, verbose_name=_("название баннера"))
-    description = models.TextField(
-        max_length=280, null=True, verbose_name=_("описание баннера")
-    )
-    image = models.ImageField(
-        upload_to="media/banners/", verbose_name=_("изображение баннера")
-    )
+    description = models.TextField(max_length=280, null=True, verbose_name=_("описание баннера"))
+    image = models.ImageField(upload_to="media/banners/", verbose_name=_("изображение баннера"))
 
-    active = models.BooleanField(
-        default=True, verbose_name=_("статус активности баннера")
-    )
+    active = models.BooleanField(default=True, verbose_name=_("статус активности баннера"))
 
     def __str__(self):
         return self.title
@@ -75,9 +61,7 @@ class OrderStatus(models.Model):
         verbose_name_plural = _("статусы заказа")
         ordering = ["sort_index"]
 
-    sort_index = models.SmallIntegerField(
-        unique=True, verbose_name=_("порядковый индекс")
-    )
+    sort_index = models.SmallIntegerField(unique=True, verbose_name=_("порядковый индекс"))
     name = models.CharField(max_length=100, verbose_name=_("статус заказа"))
 
     def __str__(self):
@@ -167,12 +151,8 @@ class OrderStatusChange(models.Model):
 
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     time = models.DateTimeField(auto_now_add=True, verbose_name=_("время изменения"))
-    src_status = models.ForeignKey(
-        OrderStatus, related_name="orders_order_change_src", on_delete=models.PROTECT
-    )
-    dst_status = models.ForeignKey(
-        OrderStatus, related_name="orders_order_change_dst", on_delete=models.PROTECT
-    )
+    src_status = models.ForeignKey(OrderStatus, related_name="orders_order_change_src", on_delete=models.PROTECT)
+    dst_status = models.ForeignKey(OrderStatus, related_name="orders_order_change_dst", on_delete=models.PROTECT)
 
 
 class PaymentQueue(models.Model):
