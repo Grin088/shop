@@ -1,17 +1,12 @@
 from django.shortcuts import render  # noqa F401
 from django.db.models import F
 from django.shortcuts import render, redirect  # noqa F401
-from django.conf import settings
-from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 from cart.models import CartItem
 from users.views import MyLoginView
@@ -22,20 +17,14 @@ from shops.services.compare import (compare_list_check,
                                     splitting_into_groups_by_category,
                                     comparison_lists_and_properties,
                                     )
-from shops.services.order import pryce_delivery, save_order_model
-from shops.services.limited_products import (
-    get_random_limited_edition_product,
-    get_top_products,
-    get_limited_edition,
-)
-from shops.services.compare import CompareMixin
+from shops.services.order import  save_order_model
 from shops.services.order import pryce_delivery
 from shops.services.limited_products import get_random_limited_edition_product, get_top_products, get_limited_edition
 
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from shops.models import Shop, Order, OrderOffer, Offer
 
-from shops.models import Shop, Order, OrderOffer, PaymentQueue
+from shops.models import Shop, Order, OrderOffer
 from shops.services.is_member_of_group import is_member_of_group
 
 
