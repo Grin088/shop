@@ -1,7 +1,7 @@
 import os
 import shutil
 from django.test import TestCase
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from users.models import CustomUser, PhoneNumberValidator, UserAvatar
 from django.contrib.auth.hashers import check_password
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -18,6 +18,10 @@ class UserProfileTest(TestCase):
     def setUpClass(cls):
         """Создание пользователя"""
         super().setUpClass()
+        cls.credentials = {
+            'username': 'test_user',
+            'email': 'test1@admin.com',
+            'password': '123'}
         cls.user = CustomUser.objects.create_user(username='test_user', email='test1@admin.com', password="123")
 
     @classmethod
@@ -29,7 +33,7 @@ class UserProfileTest(TestCase):
     def test_custom_user_data(self):
         """Проверка данных профиля созданного пользователя"""
 
-        self.client.login(username='Test_user', password="123")
+        self.client.post('/login/', self.credentials, follow=True)
         avatar_user = UserAvatar.objects.create(image='users/avatars/default/default_avatar1.png',
                                                 user_id=self.user.pk)
         avatar = self.user.avatar.image
@@ -115,9 +119,17 @@ class UserProfileChangeTests(TestCase):
         super().setUpClass()
         cls.user = CustomUser.objects.create_user(username='testuser', email='testuser@gmail.com',
                                                   password="testpass123")
+        cls.credentials_user1 = {
+            'username': 'testuser',
+            'email': 'testuser@gmail.com',
+            'password': 'testpass123'}
         cls.user2 = CustomUser.objects.create_user(email='test_user@example.com',
                                                    username='Admin12',
                                                    password='Pass123456')
+        cls.credentials_user2 = {
+            'username': 'Admin12',
+            'email': 'test_user@example.com',
+            'password': 'Pass123456'}
         cls.url = reverse_lazy('users:users_profile')
 
     @classmethod
@@ -129,7 +141,7 @@ class UserProfileChangeTests(TestCase):
 
     def test_edit_profile_view_success(self):
         """Проверка формы редактирования профиля"""
-        self.client.login(email='testuser@gmail.com', password='testpass123')
+        self.client.post('/users/login/', self.credentials_user1, follow=True)
         avatar_user = UserAvatar.objects.create(image='users/avatars/default/default_avatar1.png',
                                                 user_id=self.user.pk)
 
@@ -179,7 +191,7 @@ class UserProfileChangeTests(TestCase):
 
     def test_change_password_form_success(self):
         """Проверка формы изменения пароля"""
-        self.client.login(email='testuser@gmail.com', password='testpass123')
+        self.client.post(reverse('login'), self.credentials_user1, follow=True)
         new_password = 'newpass123'
         form_data = {'new_password1': new_password,
                      'new_password2': new_password}
