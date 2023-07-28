@@ -14,12 +14,6 @@ def last_order_request(user):
     return None
 
 
-def orders_count(user):
-    """Возвращает количество заказов данного пользователя"""
-    order_count = Order.objects.filter(custom_user=user).count()
-    return order_count
-
-
 class MyProfileService:
     """Класс сервисов для работы с user views"""
 

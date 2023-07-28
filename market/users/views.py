@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from users.models import CustomUser, UserAvatar
 from users import forms
 from users.services.profile import ProfileMixin
-from users.services.users_service import last_order_request, orders_count
+from users.services.users_service import last_order_request
 
 
 class UserRegistrationView(CreateView):
@@ -86,7 +86,6 @@ class AccountView(View):
             "username": name,
             "user": user,
             "order": last_order_request(request.user),
-            "order_count": orders_count(request.user),
         }
         return render(request, "market/users/account.jinja2", context)
 
