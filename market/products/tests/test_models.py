@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from products.models import Product, Property, ProductProperty, Review
 from users.models import CustomUser as User
@@ -197,11 +197,11 @@ class ProductReviewTest(TestCase):
         #  проверка соответствия рейтинга и количества отзывов
         self.assertContains(response, "Отзывы 5")
         self.assertContains(response, "Средний рейтинг товара: 3.0")
-        self.client.post('/users/login/', self.credentials_user1, follow=True)
+        self.client.post(reverse('users:users_login'), self.credentials_user1, follow=True)
         #  Пользователь, который оставил отзыв больше не может оставить отзыв о товаре.
         self.assertNotContains(response, "Отправить отзыв")
         self.client.logout()
-        self.client.post('/users/login/', self.credentials_user6, follow=True)
+        self.client.post(reverse('users:users_login'), self.credentials_user6, follow=True)
         response = self.client.get(
             reverse_lazy(
                 "products:product_detail", kwargs={"product_id": self.product1.id}
@@ -214,8 +214,7 @@ class ProductReviewTest(TestCase):
     def test_send_review(self):
         """Проверка добавления отзыва о товаре"""
         data = {"rating": 4, "review_text": "very good product !"}
-
-        self.client.post('/users/login/', self.credentials_user6, follow=True)
+        self.client.post(reverse('users:users_login'), self.credentials_user6, follow=True)
         #  Проверка, что пользователь может отправить отзыв
         response = self.client.get(
             reverse_lazy(

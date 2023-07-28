@@ -32,7 +32,7 @@ class OrderTestCase(TestCase):
 
     def test_history_order_view_success(self):
         """Тестирование истории заказа"""
-        self.client.post('/users/login/', self.credentials, follow=True)
+        self.client.post(reverse('users:users_login'), self.credentials, follow=True)
         order = Order.objects.filter(custom_user=self.user)
         response = self.client.get(reverse("order_history"))
         self.assertEqual(response.status_code, 200)

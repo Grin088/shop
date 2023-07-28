@@ -138,7 +138,7 @@ class UserProfileChangeTests(TestCase):
 
     def test_edit_profile_view_success(self):
         """Проверка формы редактирования профиля"""
-        self.client.post('/users/login/', self.credentials_user1, follow=True)
+        self.client.post(reverse('users:users_login'), self.credentials_user1, follow=True)
         avatar_user = UserAvatar.objects.create(image='users/avatars/default/default_avatar1.png',
                                                 user_id=self.user.pk)
 
@@ -158,7 +158,7 @@ class UserProfileChangeTests(TestCase):
                      'first_name': new_first_name,
                      'last_name': new_last_name,
                      }
-        response = self.client.post(self.url, test_data)
+        response = self.client.post(reverse('users:users_profile'), test_data)
 
         self.assertEqual(response.status_code, 302)
 
