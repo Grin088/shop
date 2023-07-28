@@ -29,8 +29,6 @@ class SiteSettings(OneObjectModel):
     # Главная страница
     banners_count = models.PositiveIntegerField(validators=[MaxValueValidator(3)], default=3,
                                                 verbose_name=_('количество баннеров'))
-    deal_of_the_day = models.PositiveIntegerField(validators=[MaxValueValidator(1)], default=1,
-                                                  verbose_name=_('количество предложений дня'))
     hot_deals_slider = models.PositiveIntegerField(validators=[MaxValueValidator(9)], default=9,
                                                    verbose_name=_('количество горячих предложений'))
     top_elements_count = models.PositiveIntegerField(validators=[MaxValueValidator(8)], default=8,
@@ -42,12 +40,12 @@ class SiteSettings(OneObjectModel):
                                                                     verbose_name=_(
                                                                     'максимальное количество просмотренных товаров'))
     # Способ доставки
-    free_shipping_min_order_amount = models.DecimalField(max_digits=6, decimal_places=2, default=100.00,
+    free_shipping_min_order_amount = models.DecimalField(max_digits=6, decimal_places=2, default=2000.00,
                                                          verbose_name=_(
                                                              'минимальная сумма заказа для бесплатной доставки, $'))
-    standard_shipping_price = models.DecimalField(max_digits=6, decimal_places=2, default=10.00,
+    standard_shipping_price = models.DecimalField(max_digits=6, decimal_places=2, default=200.00,
                                                   verbose_name=_('стандартная цена доставки, $'))
-    express_shipping_price = models.DecimalField(max_digits=6, decimal_places=2, default=25.00,
+    express_shipping_price = models.DecimalField(max_digits=6, decimal_places=2, default=500.00,
                                                  verbose_name=_('стоимость экспресс-доставки, $'))
     # Кэш
     cache_time = models.PositiveIntegerField(validators=[MaxValueValidator(3)], default=1,

@@ -22,7 +22,7 @@ def get_top_products():
     site_settings = SiteSettings.load()
     products_history = Browsing_history.objects.all()
     products = sorted(list(Counter(Product.objects.filter(products__in=products_history)).
-                           items()), key=lambda key: key[1])[:-settings.top_elements_count-1:-1]
+                           items()), key=lambda key: key[1])[:-site_settings.top_elements_count-1:-1]
     products = [value for value, key in products]
     if products:
         return products
