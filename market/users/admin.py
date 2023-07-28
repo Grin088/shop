@@ -11,12 +11,13 @@ class UserAvatarInline(admin.TabularInline):
 
 @admin.register(CustomUser)
 class AccountAdmin(UserAdmin):
-    inlines = [
-        UserAvatarInline
-    ]
+    inlines = [UserAvatarInline]
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("личная информация"), {"fields": ("username", "first_name", "last_name", "phone_number")}),
+        (
+            _("личная информация"),
+            {"fields": ("username", "first_name", "last_name", "phone_number")},
+        ),
         (
             _("разрешения"),
             {

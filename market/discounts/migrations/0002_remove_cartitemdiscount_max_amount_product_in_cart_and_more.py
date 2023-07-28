@@ -85,9 +85,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="cartitemdiscount",
             name="discount_amount",
-            field=models.DecimalField(
-                decimal_places=2, max_digits=10, verbose_name="размер скидки"
-            ),
+            field=models.DecimalField(decimal_places=2, max_digits=10, verbose_name="размер скидки"),
         ),
         migrations.AlterField(
             model_name="shopitemdiscount",
@@ -107,9 +105,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="shopitemdiscount",
             name="discount_amount",
-            field=models.DecimalField(
-                decimal_places=2, max_digits=10, verbose_name="размер скидки"
-            ),
+            field=models.DecimalField(decimal_places=2, max_digits=10, verbose_name="размер скидки"),
         ),
         migrations.AlterField(
             model_name="shopitemdiscount",

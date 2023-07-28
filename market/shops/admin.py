@@ -1,6 +1,7 @@
-from django.contrib import admin# noqa F401
+from django.contrib import admin  # noqa F401
+from django.utils.translation import gettext_lazy as _
 
-from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
+from shops.models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
 
 
 class ShopProductInline(admin.TabularInline):
@@ -12,43 +13,86 @@ class ShopAdmin(admin.ModelAdmin):
     inlines = [
         ShopProductInline,
     ]
-    list_display = 'name', 'user', 'phone_number', 'email',
+    list_display = (
+        "name",
+        "user",
+        "phone_number",
+        "email",
+    )
 
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
-    list_display = 'shop', 'product', 'price',
+    list_display = (
+        "shop",
+        "product",
+        "price",
+    )
 
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
     """вывод и фильтрация полей баннера в административной панели"""
-    list_display = ('title', 'description', 'image', 'active')
-    list_filter = ('active',)
-    search_fields = ('title',)
+
+    list_display = ("title", "description", "image", "active")
+    list_filter = ("active",)
+    search_fields = ("title",)
 
 
 class OrderOfferAdminInline(admin.TabularInline):
     """Вставка модели Order"""
+
     model = Order.offer.through
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     """Отображение заказов в интерфейсе администратора"""
+
     inlines = [
         OrderOfferAdminInline,
     ]
-    list_display = 'id', 'custom_user', 'status', 'data', 'delivery', 'citi', 'address',
+    list_display = (
+        "id",
+        "custom_user",
+        "status",
+        "data",
+        "delivery",
+        "city",
+        "address_short",
+    )
+
+    def address_short(self, obj: Order) -> str:
+        """Обрезка текста адреса"""
+
+        if len(obj.address) < 15:
+            return obj.address
+        return obj.address[:15] + "..."
+
+    address_short.short_description = _("адрес")
+
+    def get_queryset(self, request):
+        """Обединение запросов"""
+        return Order.objects.select_related("custom_user")
 
 
 @admin.register(OrderStatus)
 class OrderStatusAdmin(admin.ModelAdmin):
     """Отображение статусов заказав в интерфейсе администратора"""
-    list_display = 'sort_index', 'name',
+
+    list_display = (
+        "sort_index",
+        "name",
+    )
 
 
 @admin.register(OrderStatusChange)
 class OrderStatusChangeAdmin(admin.ModelAdmin):
     """Отображение истории изменения статусов заказав в интерфейсе администратора"""
-    list_display = 'id', 'time', 'src_status_id', 'dst_status_id',
+
+    list_display = (
+        "id",
+        "time",
+        "src_status_id",
+        "dst_status_id",
+    )

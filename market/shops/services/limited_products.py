@@ -42,12 +42,12 @@ def time_left():
     """возвращает список товаров, который получается из кэша или из базы данных, если кэш пуст
     и объект timedelta, который показывает, сколько времени осталось до истечения срока действия товаров
      с ограниченным тиражом."""
-    limited_products = cache.get('limited_products')
+    limited_products = cache.get("limited_products")
     if not limited_products:
         update_product_of_the_day.delay()
         limited_products = Product.objects.none()
     now = timezone.now()
-    expires_at = cache.get('limited_products.cache_timeout')
+    expires_at = cache.get("limited_products.cache_timeout")
     if not expires_at:
         expires_at = now + timedelta(hours=23)  # Начальное значение
     time_l = (expires_at - now).total_seconds()
@@ -55,18 +55,18 @@ def time_left():
     time_l = timedelta(seconds=time_l)
 
     return {
-        'limited_products': limited_products,
-        'time_left': time_l,
+        "limited_products": limited_products,
+        "time_left": time_l,
     }
 
 
 def get_offer_of_the_day_cache_key():
-    """ Получает уникальный ключ для кеширования предложения дня"""
-    key = make_template_fragment_key('offer_of_the_day')
+    """Получает уникальный ключ для кеширования предложения дня"""
+    key = make_template_fragment_key("offer_of_the_day")
     return key
 
 
 def invalidate_offer_of_the_day_cache():
-    """ Сбрасывает кеш предложения дня"""
+    """Сбрасывает кеш предложения дня"""
     key = get_offer_of_the_day_cache_key()
     cache.delete(key)

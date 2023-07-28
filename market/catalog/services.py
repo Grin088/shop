@@ -60,11 +60,7 @@ def sorted_products(sort, product):
 def filter_search(session, products):
     """Фильтрация продуктов"""
     prices = session["price"].split(";")
-    sessions = {
-        value: key
-        for value, key in session.items()
-        if (session[value] and value != "price")
-    }
+    sessions = {value: key for value, key in session.items() if (session[value] and value != "price")}
     product_search = products.filter(
         (
             Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
@@ -75,56 +71,28 @@ def filter_search(session, products):
     if sessions.get("in_stock"):
         product_search = products.filter(
             (
-                Q(
-                    name__icontains=""
-                    if sessions.get("name") is None
-                    else sessions["name"]
-                )
+                Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
                 & Q(offers__price__range=(prices[0], prices[1]))
             )
-            & Q(
-                offers__product_in_stock=None
-                if sessions.get("in_stock") is None
-                else sessions["in_stock"]
-            )
+            & Q(offers__product_in_stock=None if sessions.get("in_stock") is None else sessions["in_stock"])
         )
 
     if sessions.get("free_delivery"):
         product_search = products.filter(
             (
-                Q(
-                    name__icontains=""
-                    if sessions.get("name") is None
-                    else sessions["name"]
-                )
+                Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
                 & Q(offers__price__range=(prices[0], prices[1]))
             )
-            & Q(
-                offers__free_shipping=None
-                if sessions.get("free_delivery") is None
-                else sessions["free_delivery"]
-            )
+            & Q(offers__free_shipping=None if sessions.get("free_delivery") is None else sessions["free_delivery"])
         )
     if sessions.get("in_stock") and sessions.get("free_delivery"):
         product_search = products.filter(
             (
-                Q(
-                    name__icontains=""
-                    if sessions.get("name") is None
-                    else sessions["name"]
-                )
+                Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
                 & Q(offers__price__range=(prices[0], prices[1]))
             )
-            & Q(
-                offers__free_shipping=None
-                if sessions.get("free_delivery") is None
-                else sessions["free_delivery"]
-            )
-            & Q(
-                offers__product_in_stock=None
-                if sessions.get("in_stock") is None
-                else sessions["in_stock"]
-            )
+            & Q(offers__free_shipping=None if sessions.get("free_delivery") is None else sessions["free_delivery"])
+            & Q(offers__product_in_stock=None if sessions.get("in_stock") is None else sessions["in_stock"])
         )
     return product_search.distinct()
 
@@ -139,9 +107,7 @@ class MixinGetPost:
             products = Product.objects.all()
             form = ProductFilterForm(request.session["filter"])
             if form.is_valid():
-                form.fields["price"].widget.attrs.update(
-                    {"data-from": prices[0], "data-to": prices[1]}
-                )
+                form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1]})
                 products = filter_search(sessions, products)
         else:
             form = ProductFilterForm()
@@ -154,9 +120,7 @@ class MixinGetPost:
         form = ProductFilterForm(request.POST)
         if form.is_valid():
             prices = form.cleaned_data["price"].split(";")
-            form.fields["price"].widget.attrs.update(
-                {"data-from": prices[0], "data-to": prices[1]}
-            )
+            form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1]})
             # TODO Время жизни сессии можно изменить при необходимости (default=3 мин.)
             request.session.set_expiry(180)
             request.session["filter"] = form.cleaned_data

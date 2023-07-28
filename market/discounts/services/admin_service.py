@@ -9,6 +9,4 @@ def formatted_last_time_service(obj):
     if last_time.total_seconds() > 0:
         return last_time
 
-    return mark_safe(
-        f'<span style="color: red;">{_("Время действия скидки истекло !")}</span>'
-    )
+    return mark_safe(f'<span style="color: red;">{_("Время действия скидки истекло !")}</span>')
