@@ -3,12 +3,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from users.models import UserAvatar
-from shops.models import Order
+from shops.models import OrderOffer
 
 
 def last_order_request(user):
     """Возвращает последний заказ если он есть"""
-    order = Order.objects.filter(custom_user=user).order_by("-data")
+    order = OrderOffer.objects.filter(offer__orders__custom_user=user).order_by("-order__data")
     if order:
         return order[0]
     return None
@@ -26,17 +26,13 @@ class MyProfileService:
     @staticmethod
     def form_validation(form, request, second_form=None):
         """Метод для проверки формы и сохранения данных профиля"""
-        if form.cleaned_data.get("new_password1") and form.cleaned_data.get(
-            "new_password2"
-        ):
+        if form.cleaned_data.get("new_password1") and form.cleaned_data.get("new_password2"):
             form.save()
             update_session_auth_hash(request, form.user)
             login(request, form.user)
         second_form.save()
         success_message = _("Профиль успешно сохранен")
-        return redirect(
-            reverse("users:users_profile") + "?success_message=" + success_message
-        )
+        return redirect(reverse("users:users_profile") + "?success_message=" + success_message)
 
     @staticmethod
     def post_form_validation(form, second_form, request):

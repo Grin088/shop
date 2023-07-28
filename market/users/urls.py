@@ -13,6 +13,5 @@ urlpatterns = [
     path('profile/', views.MyProfileView.as_view(), name='users_profile'),
     # path('<id>/orders-history/'),
     # path('<id>/product-browsing-history/'),
-    path('browsing-history/', BrowsingHistory.as_view(), name='browsing-history'),
-
+    path("browsing-history/", BrowsingHistory.as_view(), name="browsing-history"),
 ]

@@ -67,11 +67,7 @@ class RestorePasswordView(FormView):
             recipient_list=[form.cleaned_data["email"]],
         )
         success_message = _(f"Новый пароль успешно отправлен на {user_email}")
-        return redirect(
-            reverse_lazy("users:users_restore_password")
-            + "?success_message="
-            + success_message
-        )
+        return redirect(reverse_lazy("users:users_restore_password") + "?success_message=" + success_message)
 
 
 class AccountView(View):
@@ -103,9 +99,7 @@ class BrowsingHistory(View):
     """Контроллер истории просмотров товаров"""
 
     def get(self, request):
-        history = Browsing_history.objects.filter(users_id=request.user.id).order_by(
-            "-data_at"
-        )[:20]
+        history = Browsing_history.objects.filter(users_id=request.user.id).order_by("-data_at")[:20]
         history_count = Browsing_history.objects.count()
         contex = {"count": history_count, "history": history}
         return render(request, "market/users/browsing_history.jinja2", context=contex)

@@ -36,27 +36,27 @@
                                 </h2>
                             </header>
                             <div class="row">
-                                {% if user.is_authenticated %}
+                                {% if request.user.is_authenticated %}
                                 <div class="row-block">
                                     <div class="form-group">
                                         <label class="form-label" for="name">{% trans %}ФИО{% endtrans %}
                                         </label>
                                             <div class="form-input" >
-                                                <p> {{ user.username }} </p>
+                                                <p> {{ request.user.username }} </p>
                                             </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="phone">{% trans %}Телефон{% endtrans %}
                                         </label>
                                             <div class="form-input">
-                                                <p> {{ user.phone_number }} </p>
+                                                <p> {{ request.user.phone_number }} </p>
                                             </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="mail">E-mail
                                         </label>
                                            <div class="form-input">
-                                               <p> {{ user.email }} </p>
+                                               <p> {{ request.user.email }} </p>
                                            </div>
                                     </div>
                                 </div>
@@ -69,14 +69,14 @@
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="row-block">
                                  <div class="form-group">
-                                    <label class="form-label" for="mail">E-mail
+                                    <label class="form-label" for="{{ form_log.email.id_for_label }}">E-mail
                                     </label>
-                                    <input class="form-input" id="mail" name="email" type="text" value="" data-validate="require" />
+                                     {{ form_log.email }}
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label" for="password">{% trans %}Пароль{% endtrans %}
+                                    <label class="form-label" for="{{ form_log.password.id_for_label }}">{% trans %}Пароль{% endtrans %}
                                     </label>
-                                    <input class="form-input" id="password" name="password" type="password" data-validate="require"/>
+                                    {{ form_log.password }}
                                 </div>
 
                                 <div class="form-group">
@@ -111,19 +111,19 @@
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <input type="radio"  name="delivery" value="EXPRESS" /><span class="toggle-box"></span><span class="toggle-text">{% trans %}Экспресс доставка{% endtrans %}</span>
+                                        <input type="radio"  name="delivery" value="EXPRESS" /><span class="toggle-box"></span><span class="toggle-text" id="exp">{% trans %}Экспресс доставка{% endtrans %}</span>
                                     </label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="city">{% trans %}Город{% endtrans %}
                                 </label>
-                                <input class="form-input" id="city" name="city" type="text"  data-validate="require"/>
+                                <input class="form-input" id="city" name="city" type="text" maxlength="100" data-validate="require" required/>
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="address" >{% trans %}Адрес{% endtrans %}
                                 </label>
-                                <textarea class="form-textarea" name="address" id="address"  data-validate="require"></textarea>
+                                <textarea class="form-textarea" name="address" id="address" maxlength="200" data-validate="require" required></textarea>
                             </div>
                             <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3" onclick=illumination("step-3",)>{% trans %}Дальше{% endtrans %}</a>
                             </div>
@@ -141,7 +141,7 @@
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <input type="radio" name="pay" value="SOMEONE" /><span class="toggle-box"></span><span class="toggle-text">{% trans %}Онлайн со случайного чужого счета{% endtrans %}</span>
+                                        <input type="radio" name="pay" value="SOMEONE" /><span class="toggle-box"></span><span class="toggle-text" id="some_one">{% trans %}Онлайн со случайного чужого счета{% endtrans %}</span>
                                     </label>
                                 </div>
                             </div>
@@ -155,7 +155,7 @@
                             </header>
                             <!--+div.Order.-confirmation-->
 
-                            {% if user.is_authenticated %}
+                            {% if request.user.is_authenticated %}
                             <div class="Order-infoBlock">
                                 <div class="Order-personal">
                                     <div class="row">
@@ -163,19 +163,19 @@
                                             <div class="Order-info">
                                                 <div class="Order-infoType">{% trans %}ФИО{% endtrans %}:
                                                 </div>
-                                                <div class="Order-infoContent">{{ user.username }}
+                                                <div class="Order-infoContent">{{ request.user.username }}
                                                 </div>
                                             </div>
                                             <div class="Order-info">
                                                 <div class="Order-infoType">{% trans %}Телефон{% endtrans %}:
                                                 </div>
-                                                <div class="Order-infoContent">{{ user.phone_number }}
+                                                <div class="Order-infoContent">{{ request.user.phone_number }}
                                                 </div>
                                             </div>
                                             <div class="Order-info">
                                                 <div class="Order-infoType">E-mail:
                                                 </div>
-                                                <div class="Order-infoContent">{{ user.email }}
+                                                <div class="Order-infoContent">{{ request.user.email }}
                                                 </div>
                                             </div>
                                         </div>
@@ -208,7 +208,7 @@
                                     </div>
                                 </div>
                                 <div class="Cart Cart_order">
-                                    {% for item_i in cart %}
+                                    {% for item_i in cart_list %}
                                     <div class="Cart-product">
                                         <div class="Cart-block Cart-block_row">
                                             <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/media/{{item_i.offer.product.preview}}" alt="card.jpg" /></a>
@@ -218,7 +218,7 @@
                                                 </div>
                                             </div>
                                             <div class="Cart-block Cart-block_price">
-                                                <div class="Cart-price">80.00$
+                                                <div class="Cart-price">{{ item_i.summ_offer }}$
                                                 </div>
                                             </div>
                                         </div>
@@ -230,15 +230,15 @@
                                     {% endfor %}
                                     <div class="Cart-total">
                                         <div class="Cart-block Cart-block_total">
-                                            <strong class="Cart-title">{% trans %}Итого{% endtrans %}:
-                                            </strong><span class="Cart-price">200.99$</span>
-                                        </div>
-                                         <div class="Cart-block Cart-block_total">
                                             <strong class="Cart-title">{% trans %}Доставка{% endtrans %}:
-                                            </strong><span class="Cart-price">200.99$</span>
+                                            </strong><span class="Cart-price" id="delivery-cost">{{ delivery.delivery_ordinary }}Руб</span>
+                                        </div>
+                                        <div class="Cart-block Cart-block_total">
+                                            <strong class="Cart-title">{% trans %}Итого{% endtrans %}:
+                                            </strong><span class="Cart-price" id="total-express">{{ delivery.total_cost_ordinary }}Руб</span>
                                         </div>
                                         <div class="Cart-block">
-                                            <button class="btn btn_primary btn_lg" type="submit">{% trans %}Оплатить{% endtrans %}
+                                            <button  class="btn btn_primary btn_lg" type="submit">{% trans %}Создать заказ и оплатить{% endtrans %}
                                             </button>
                                         </div>
                                     </div>
@@ -246,22 +246,29 @@
                             </div>
                             {% endif %}
                         </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <script>
+<script>
+    var delivery = [ {{ delivery.delivery_express }}, {{ delivery.total_cost_express }}];
+
     function copyaddress(step1, step2) {
         document.getElementById(step1).classList.remove("menu-item_ACTIVE");
         document.getElementById(step2).classList.add("menu-item_ACTIVE");
         document.getElementById("city2").innerHTML = document.getElementById("city").value;
         document.getElementById("address2").innerHTML = document.getElementById("address").value;
-
         const formData = new FormData(document.getElementById("form-section-content"));
             if (formData.get("delivery") === "EXPRESS"){
-                document.getElementById("delivery_infoBlock").innerHTML = "Экспресс доставка";
-            }
+                document.getElementById("delivery_infoBlock").innerHTML = document.getElementById("exp").innerHTML;
+                document.getElementById("delivery-cost").innerHTML = delivery[0] + " Руб";
+                document.getElementById("total-express").innerHTML = delivery[1] + " Руб";
+                 }
+                console.log(formData.get("pay-order"))
             if (formData.get("pay") === "SOMEONE"){
-                document.getElementById("pay_infoBlock").innerHTML = "Онлайн со случайного чужого счета";
-            }
+                document.getElementById("pay_infoBlock").innerHTML = document.getElementById("some_one").innerHTML}
+
     }
 
     function illumination(step) {

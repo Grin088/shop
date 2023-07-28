@@ -60,6 +60,7 @@
                             <div class="Account-column Account-column_full">
                                 <div class="Order Order_anons">
                                     <div class="Order-personal">
+<<<<<<< HEAD
                                         {% if order %}
                                             <div class="row">
                                                 <div class="row-block">
@@ -73,6 +74,23 @@
                                                     <div class="Account-editLink">
                                                         <a href="{{ url('order_history') }}">{% trans %}История
                                                             заказов{% endtrans %}</a>
+=======
+                                        <div class="row">
+                                            <div class="row-block">
+{#                                            Не готово!!!!!!!!#}
+                                                <a class="Order-title" href="{{ url('order_details', pk=order.order.id) }}">{% trans %}Заказ{% endtrans %}&#32;<span
+                                                    class="Order-numberOrder">№{{ order.order.id }}</span>&#32;{% trans %}от{% endtrans %}&#32;<span
+                                                    class="Order-dateOrder">{{ order.order.data.strftime('%d.%m.%Y') }}</span></a>
+                                                <div class="Account-editLink">
+                                                    <a href="{{ url('order_history') }}">{% trans %}История заказов{% endtrans %}</a>
+                                                </div>
+                                            </div>
+                                            <div class="row-block">
+                                                <div class="Order-info Order-info_delivery">
+                                                    <div class="Order-infoType">{% trans %}Тип доставки:{% endtrans %}
+                                                    </div>
+                                                    <div class="Order-infoContent">{{ order.order.delivery }}
+>>>>>>> develop
                                                     </div>
                                                 </div>
                                                 <div class="row-block">
@@ -84,12 +102,16 @@
                                                             {% trans %}{% endtrans %}
                                                         </div>
                                                     </div>
+<<<<<<< HEAD
                                                     <div class="Order-info Order-info_pay">
                                                         <div class="Order-infoType">{% trans %}Оплата:{% endtrans %}
                                                         </div>
                                                         <div class="Order-infoContent">{{ order.get_pay_display() }}
                                                             {% trans %}{% endtrans %}
                                                         </div>
+=======
+                                                    <div class="Order-infoContent">{{order.order.pay}}
+>>>>>>> develop
                                                     </div>
                                                     <div class="Order-info">
                                                         <div class="Order-infoType">{% trans %}Общая
@@ -98,12 +120,22 @@
                                                         <div class="Order-infoContent">{{ order.total_cost }}$
                                                         </div>
                                                     </div>
+<<<<<<< HEAD
                                                     <div class="Order-info Order-info_status">
                                                         <div class="Order-infoType">{% trans %}Статус:{% endtrans %}
                                                         </div>
                                                         <div class="Order-infoContent">{{ order.status }}
                                                             {% trans %}{% endtrans %}
                                                         </div>
+=======
+                                                    <div class="Order-infoContent">{{ order.order.total_cost }}
+                                                    </div>
+                                                </div>
+                                                <div class="Order-info Order-info_status">
+                                                    <div class="Order-infoType">{% trans %}Статус{% endtrans %}:
+                                                    </div>
+                                                    <div class="Order-infoContent">{{order.order.status}}
+>>>>>>> develop
                                                     </div>
                                                 </div>
                                             </div>
