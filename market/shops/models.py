@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from users.models import CustomUser
+from shops.services.offer_discount import OfferDiscount
 
 
 class Shop(models.Model):
@@ -34,6 +35,20 @@ class Offer(models.Model):
 
     def __str__(self):
         return f"shop{self.shop.name}, product: {self.product.name}"
+
+    @property
+    def product_discount(self):
+        """Вывод скидки на продукт"""
+        discount = OfferDiscount(self)
+        return discount()
+
+    @property
+    def price_with_discount(self):
+        """Вывод цены продукта со скидкой """
+        price = self.price - self.product_discount
+        if price <= 0:
+            price = 1
+        return price
 
 
 class Banner(models.Model):
@@ -69,13 +84,15 @@ class OrderStatus(models.Model):
 
 
 class StatusDeliveryOrder(models.TextChoices):
-    ordinary = "ORDINARY", _("Обычная")
-    express = "EXPRESS", _("Экспрес")
+    """Варианты выбор доставки"""
+    ORDINARY = 'ORDINARY', _('Обычная')
+    EXPRESS = 'EXPRESS', _('Экспрес')
 
 
 class StatusPayOrder(models.TextChoices):
-    online = "ONLINE", _("Онлайн")
-    someone = "SOMEONE", _("Онлайн со случайного чужого счета")
+    """Варианты выбора способа оплаты"""
+    ONLINE = 'ONLINE', _('Онлайн')
+    SOMEONE = 'SOMEONE', _('Онлайн со случайного чужого счета')
 
 
 class Order(models.Model):
@@ -85,60 +102,38 @@ class Order(models.Model):
         verbose_name = _("заказ")
         verbose_name_plural = _("заказы")
 
-    # DELIVERY_CHOICES = [
-    #     ('ORDINARY', _('Обычная')),
-    #     ('EXPRESS', _('Экспрес')),
-    # ]
-    #
-    # PAY_CHOICES = [
-    #     ('ONLINE', _('Онлайн')),
-    #     ('SOMEONE', _('Онлайн со случайного чужого счета')),
-    # ]
-
-    custom_user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.PROTECT,
-        related_name="orders",
-        verbose_name=_("пользователь"),
-    )
-    offer = models.ManyToManyField(
-        Offer,
-        through="OrderOffer",
-        related_name="orders",
-        verbose_name=_("предложение"),
-    )
-    status = models.ForeignKey(
-        OrderStatus,
-        on_delete=models.PROTECT,
-        related_name="orders",
-        default=1,
-        verbose_name=_("статус"),
-    )
+    custom_user = models.ForeignKey(CustomUser,
+                                    on_delete=models.PROTECT,
+                                    related_name="orders",
+                                    verbose_name=_("пользователь"))
+    offer = models.ManyToManyField(Offer, through="OrderOffer",
+                                   related_name="orders",
+                                   verbose_name=_("предложение"))
+    status = models.ForeignKey(OrderStatus,
+                               on_delete=models.PROTECT,
+                               related_name="orders",
+                               default=1,
+                               verbose_name=_("статус"))
     data = models.DateTimeField(auto_now_add=True, verbose_name=_("дата создания"))
-    delivery = models.CharField(
-        max_length=8,
-        choices=StatusDeliveryOrder.choices,
-        verbose_name=_("доставка"),
-        default=StatusDeliveryOrder.ordinary,
-    )
-    citi = models.CharField(max_length=100, verbose_name=_("город"))
+    delivery = models.CharField(max_length=8, choices=StatusDeliveryOrder.choices, verbose_name=_("доставка"),
+                                default=StatusDeliveryOrder.ORDINARY)
+    city = models.CharField(max_length=100, verbose_name=_("город"))
     address = models.CharField(max_length=200, verbose_name=_("адрес"))
-    pay = models.CharField(
-        max_length=8,
-        choices=StatusPayOrder.choices,
-        verbose_name=_("доставка"),
-        default=StatusPayOrder.online,
-    )
+    pay = models.CharField(max_length=8, choices=StatusPayOrder.choices, verbose_name=_("вид оплаты"),
+                           default=StatusPayOrder.ONLINE)
     total_cost = models.DecimalField(decimal_places=2, max_digits=10)
 
 
 class OrderOffer(models.Model):
     """Промежуточная модель. Дополнительное поле количество товара"""
+    class Meta:
+        verbose_name = _("Товар")
+        verbose_name_plural = _("Товары")
 
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
-    offer = models.ForeignKey(Offer, on_delete=models.PROTECT)
+    offer = models.ForeignKey(Offer, on_delete=models.PROTECT, verbose_name=_("Товары"))
     count = models.PositiveSmallIntegerField(verbose_name=_("количество"))
-    price = models.DecimalField(decimal_places=2, max_digits=10)
+    price = models.DecimalField(decimal_places=2, max_digits=10, verbose_name=_("цена"))
 
 
 class OrderStatusChange(models.Model):
@@ -153,3 +148,10 @@ class OrderStatusChange(models.Model):
     time = models.DateTimeField(auto_now_add=True, verbose_name=_("время изменения"))
     src_status = models.ForeignKey(OrderStatus, related_name="orders_order_change_src", on_delete=models.PROTECT)
     dst_status = models.ForeignKey(OrderStatus, related_name="orders_order_change_dst", on_delete=models.PROTECT)
+
+
+class PaymentQueue(models.Model):
+    """Модель для представления задания оплаты в очереди"""
+
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("заказ"))
+    card_number = models.IntegerField(verbose_name=_("номер карты"))

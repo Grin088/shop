@@ -1,11 +1,7 @@
-from django.contrib.auth.forms import BaseUserCreationForm
-
-from users.models import CustomUser
+from django import forms
 
 
-class OderLoginUserForm(BaseUserCreationForm):
+class OderLoginUserForm(forms.Form):
     """Форма для логирования пользователя"""
-
-    class Meta:
-        model = CustomUser
-        fields = ["email", "password"]
+    email = forms.EmailField(widget=forms.EmailInput)
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100,)
