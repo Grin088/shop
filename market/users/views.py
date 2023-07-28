@@ -3,7 +3,6 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, LogoutView, FormView
-from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django.views.generic.base import View
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from users.models import CustomUser, UserAvatar
 from users import forms
 from users.services.profile import ProfileMixin
-from users.services.users_service import last_order_request
+from users.services.users_service import last_order_request, orders_count
 
 
 class UserRegistrationView(CreateView):
@@ -71,20 +70,24 @@ class RestorePasswordView(FormView):
         return redirect(reverse_lazy("users:users_restore_password") + "?success_message=" + success_message)
 
 
-@login_required(login_url=reverse_lazy("users:users_login"))
-def account(request):
+class AccountView(View):
     """Личный кабинет"""
-    user_account = get_object_or_404(CustomUser, email=request.user.email)
-    if user_account.email != request.user.email:
-        return render(request, "market/base.jinja2")
-    if request.method == "GET":
-        # Получение имени пользователя
+
+    def get(self, request, *args, **kwargs):
+        user_account = get_object_or_404(CustomUser, email=request.user.email)
+        if user_account.email != request.user.email:
+            return render(request, "market/base.jinja2")
         user = CustomUser.objects.get(pk=request.user.pk)
         if user.first_name and user.last_name:
             name = f"{user.first_name} {user.last_name}"
         else:
             name = user.username
-        context = {"username": name, "user": user, "order": last_order_request(request.user)}
+        context = {
+            "username": name,
+            "user": user,
+            "order": last_order_request(request.user),
+            "order_count": orders_count(request.user),
+        }
         return render(request, "market/users/account.jinja2", context)
 
 
