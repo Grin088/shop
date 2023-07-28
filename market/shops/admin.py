@@ -27,7 +27,19 @@ class OfferAdmin(admin.ModelAdmin):
         "shop",
         "product",
         "price",
+        "product_discount",
+        "price_with_discount"
     )
+
+    def get_product_discount(self, obj):
+        return obj.product_discount
+
+    def get_price_with_discount(self, obj):
+        return obj.price_with_discount
+
+    get_product_discount.short_description = _("product_discount")
+
+    get_price_with_discount.short_description = _("price_with_discount")
 
 
 @admin.register(Banner)
