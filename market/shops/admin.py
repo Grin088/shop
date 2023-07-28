@@ -1,4 +1,8 @@
+from collections import Counter
+from django.contrib import messages
 from django.contrib import admin  # noqa F401
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 
 from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
 
@@ -18,6 +22,21 @@ class ShopAdmin(admin.ModelAdmin):
         "phone_number",
         "email",
     )
+
+    def save_formset(self, request, form, formset, change):
+        products = list()
+        instances = formset.save(commit=False)
+        for list_products in instances:
+            products.append(list_products.product.name)
+            list_products.save()
+        b = Counter(products)
+        print(products)
+        for name, count in b.items():
+            if count > 1:
+                # raise ValidationError(f'Вы выбрали одинаковый продукт: {name}')
+                return messages.error(request, f'Ошибка. Вы выбрали 2 одинаковых продукта: {name}')
+            else:
+                formset.save_m2m()
 
 
 @admin.register(Offer)
