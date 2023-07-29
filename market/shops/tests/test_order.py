@@ -21,8 +21,7 @@ class OrderTestCase(TestCase):
     def setUp(self) -> None:
         self.user = CustomUser.objects.get(pk=11)
         self.credentials = {
-            'username': self.user.username,
-            'email': self.user.email,
+            'username': self.user.email,
             'password': self.user.password}
         login_data = {
             "username": self.user.email,

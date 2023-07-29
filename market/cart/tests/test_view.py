@@ -65,8 +65,7 @@ class CartTestLogin(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.credentials = {
-            'username': 'testuser',
-            'email': 'testuser@gmail.com',
+            'username': 'testuser@gmail.com',
             'password': 'testpass123'}
         cls.user = CustomUser.objects.create_user(username='testuser', email='testuser@gmail.com',
                                                   password="testpass123")

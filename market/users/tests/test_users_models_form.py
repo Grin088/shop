@@ -20,8 +20,7 @@ class UserProfileTest(TestCase):
         """Создание пользователя"""
         super().setUpClass()
         cls.credentials = {
-            'username': 'test_user',
-            'email': 'test1@admin.com',
+            'username': 'test1@admin.com',
             'password': '123'}
         cls.user = CustomUser.objects.create_user(username="test_user", email="test1@admin.com", password="123")
 
@@ -117,15 +116,13 @@ class UserProfileChangeTests(TestCase):
         cls.user = CustomUser.objects.create_user(username='testuser', email='testuser@gmail.com',
                                                   password="testpass123")
         cls.credentials_user1 = {
-            'username': 'testuser',
-            'email': 'testuser@gmail.com',
+            'username': 'testuser@gmail.com',
             'password': 'testpass123'}
         cls.user2 = CustomUser.objects.create_user(email='test_user@example.com',
                                                    username='Admin12',
                                                    password='Pass123456')
         cls.credentials_user2 = {
-            'username': 'Admin12',
-            'email': 'test_user@example.com',
+            'username': 'test_user@example.com',
             'password': 'Pass123456'}
         cls.url = reverse_lazy('users:users_profile')
 

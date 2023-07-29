@@ -115,43 +115,37 @@ class ProductReviewTest(TestCase):
             email="test_user1@mail.ru", username="test_user1", password="123"
         )
         cls.credentials_user1 = {
-            'username': 'test_user1',
-            'email': 'test_user1@mail.ru',
+            'username': 'test_user1@mail.ru',
             'password': '123'}
         cls.user2 = User.objects.create_user(
             email="test_user2@mail.ru", username="test_user2", password="123"
         )
         cls.credentials_user2 = {
-            'username': 'test_user2',
-            'email': 'test_user2@mail.ru',
+            'username': 'test_user2@mail.ru',
             'password': '123'}
         cls.user3 = User.objects.create_user(
             email="test_user3@mail.ru", username="test_user3", password="123"
         )
         cls.credentials_user3 = {
-            'username': 'test_user3',
-            'email': 'test_user3@mail.ru',
+            'username': 'test_user3@mail.ru',
             'password': '123'}
         cls.user4 = User.objects.create_user(
             email="test_user4@mail.ru", username="test_user4", password="123"
         )
         cls.credentials_user4 = {
-            'username': 'test_user4',
-            'email': 'test_user4@mail.ru',
+            'username': 'test_user4@mail.ru',
             'password': '123'}
         cls.user5 = User.objects.create_user(
             email="test_user5@mail.ru", username="test_user5", password="123"
         )
         cls.credentials_user5 = {
-            'username': 'test_user5',
-            'email': 'test_user5@mail.ru',
+            'username': 'test_user5@mail.ru',
             'password': '123'}
         cls.user6 = User.objects.create_user(
             email="test_user6@mail.ru", username="test_user6", password="123"
         )
         cls.credentials_user6 = {
-            'username': 'test_user6',
-            'email': 'test_user6@mail.ru',
+            'username': 'test_user6@mail.ru',
             'password': '123'}
         cls.product1 = Product.objects.create(name="product1")
         cls.review1 = Review.objects.create(
