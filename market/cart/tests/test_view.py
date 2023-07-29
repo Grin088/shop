@@ -1,16 +1,9 @@
-from unittest import mock
-from django.contrib.auth import user_logged_in
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
 from django.test import TestCase
 
-from cart import cart
 from cart.models import Cart, CartItem
 from products.models import Product
 from shops.models import Shop, Offer
-from users.models import CustomUser, UserAvatar
-from unittest.mock import patch
-from cart.cart import Cart as CartServices
+from users.models import CustomUser
 
 
 class CartViewTest(TestCase):
@@ -77,4 +70,3 @@ class CartTestLogin(TestCase):
 
     def test_call_external_api(self):
         self.client.post('/login/', self.credentials, follow=True)
-
