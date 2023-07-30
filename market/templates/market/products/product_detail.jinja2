@@ -41,7 +41,7 @@
                       {% if score.append(offer.price) %}
                       {% endif %}
                     {% endfor %}
-                    <div class="ProductCard-price">${{ (score | min ) | round }}
+                    <div class="ProductCard-price">${{ score | min }}
                     </div>
                   </div>
                 </div>
