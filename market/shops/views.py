@@ -36,7 +36,7 @@ from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
 
 
-# @cache_page(settings.CACHE_CONSTANT)
+@cache_page(settings.CACHE_CONSTANT)
 def home(request):
     """Главная страница"""
     if request.method == "GET":
