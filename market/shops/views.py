@@ -14,6 +14,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from cart.models import CartItem
+from products.models import Product
 from users.views import MyLoginView
 from shops.forms import OderLoginUserForm
 from shops.services import banner
@@ -35,7 +36,7 @@ from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
 
 
-@cache_page(settings.CACHE_CONSTANT)
+# @cache_page(settings.CACHE_CONSTANT)
 def home(request):
     """Главная страница"""
     if request.method == "GET":
@@ -48,6 +49,7 @@ def home(request):
         limited_product = get_random_limited_edition_product()
         limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
         context = {
+            "products": Product.objects.all()[:8],
             "featured_categories": featured_categories,
             "random_banners": random_banners,
             # 'update_time': update_time,  # пока не может использоваться из-за celery
