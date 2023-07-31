@@ -19,9 +19,7 @@ class UserProfileTest(TestCase):
     def setUpClass(cls):
         """Создание пользователя"""
         super().setUpClass()
-        cls.credentials = {
-            'username': 'test1@admin.com',
-            'password': '123'}
+        cls.credentials = {"username": "test1@admin.com", "password": "123"}
         cls.user = CustomUser.objects.create_user(username="test_user", email="test1@admin.com", password="123")
 
     @classmethod
@@ -33,9 +31,10 @@ class UserProfileTest(TestCase):
     def test_custom_user_data(self):
         """Проверка данных профиля созданного пользователя"""
 
-        self.client.post('/login/', self.credentials, follow=True)
-        avatar_user = UserAvatar.objects.create(image='users/avatars/default/default_avatar1.png',
-                                                user_id=self.user.pk)
+        self.client.post("/login/", self.credentials, follow=True)
+        avatar_user = UserAvatar.objects.create(
+            image="users/avatars/default/default_avatar1.png", user_id=self.user.pk
+        )
         avatar = self.user.avatar.image
         phone = self.user.phone_number
         self.assertEqual(avatar, "users/avatars/default/default_avatar1.png")
@@ -109,53 +108,53 @@ class RegistrationFormTest(TestCase):
 
 class UserProfileChangeTests(TestCase):
     """Проверка страницы профиля"""
+
     @classmethod
     def setUpClass(cls):
         """Создание пользователя"""
         super().setUpClass()
-        cls.user = CustomUser.objects.create_user(username='testuser', email='testuser@gmail.com',
-                                                  password="testpass123")
-        cls.credentials_user1 = {
-            'username': 'testuser@gmail.com',
-            'password': 'testpass123'}
-        cls.user2 = CustomUser.objects.create_user(email='test_user@example.com',
-                                                   username='Admin12',
-                                                   password='Pass123456')
-        cls.credentials_user2 = {
-            'username': 'test_user@example.com',
-            'password': 'Pass123456'}
-        cls.url = reverse_lazy('users:users_profile')
+        cls.user = CustomUser.objects.create_user(
+            username="testuser", email="testuser@gmail.com", password="testpass123"
+        )
+        cls.credentials_user1 = {"username": "testuser@gmail.com", "password": "testpass123"}
+        cls.user2 = CustomUser.objects.create_user(
+            email="test_user@example.com", username="Admin12", password="Pass123456"
+        )
+        cls.credentials_user2 = {"username": "test_user@example.com", "password": "Pass123456"}
+        cls.url = reverse_lazy("users:users_profile")
 
     @classmethod
     def tearDownClass(cls):
-        """ Удаление пользователя"""
+        """Удаление пользователя"""
         super().tearDownClass()
         cls.user.delete()
         cls.user2.delete()
 
     def test_edit_profile_view_success(self):
         """Проверка формы редактирования профиля"""
-        self.client.post(reverse('users:users_login'), self.credentials_user1, follow=True)
-        avatar_user = UserAvatar.objects.create(image='users/avatars/default/default_avatar1.png',
-                                                user_id=self.user.pk)
+        self.client.post(reverse("users:users_login"), self.credentials_user1, follow=True)
+        avatar_user = UserAvatar.objects.create(
+            image="users/avatars/default/default_avatar1.png", user_id=self.user.pk
+        )
 
-        new_email = 'newemail@gmail.com'
-        new_phone_number = '+0987654321'
-        new_first_name = 'Test'
-        new_last_name = 'UserTest'
+        new_email = "newemail@gmail.com"
+        new_phone_number = "+0987654321"
+        new_first_name = "Test"
+        new_last_name = "UserTest"
         file = BytesIO()
-        image = Image.new('RGBA', size=(1024, 1024), color=(155, 0, 0))
-        image.save(file, 'png')
+        image = Image.new("RGBA", size=(1024, 1024), color=(155, 0, 0))
+        image.save(file, "png")
         file.seek(0)
-        avatar = SimpleUploadedFile('test_avatar.png', file.getvalue(), content_type='image/png')
+        avatar = SimpleUploadedFile("test_avatar.png", file.getvalue(), content_type="image/png")
 
-        test_data = {'email': new_email,
-                     'phone_number': new_phone_number,
-                     'avatar': avatar,
-                     'first_name': new_first_name,
-                     'last_name': new_last_name,
-                     }
-        response = self.client.post(reverse('users:users_profile'), test_data)
+        test_data = {
+            "email": new_email,
+            "phone_number": new_phone_number,
+            "avatar": avatar,
+            "first_name": new_first_name,
+            "last_name": new_last_name,
+        }
+        response = self.client.post(reverse("users:users_profile"), test_data)
 
         self.assertEqual(response.status_code, 302)
 
@@ -165,7 +164,7 @@ class UserProfileChangeTests(TestCase):
         self.assertEqual(self.user.phone_number, new_phone_number)
         self.assertEqual(self.user.first_name, new_first_name)
         self.assertEqual(self.user.last_name, new_last_name)
-        self.assertTrue(check_password('testpass123', self.user.password))
+        self.assertTrue(check_password("testpass123", self.user.password))
         self.assertIsNotNone(self.user.avatar.image)
         self.assertEqual(self.user.avatar.image.width, 1024)
         self.assertEqual(self.user.avatar.image.height, 1024)
@@ -175,24 +174,24 @@ class UserProfileChangeTests(TestCase):
 
     def test_edit_profile_form_failure(self):
         """Проверка валидации с некорректными данными"""
-        form_data = {'phone_number': '1234567890',
-                     'email': 'test_user@example.com',
-                     }
+        form_data = {
+            "phone_number": "1234567890",
+            "email": "test_user@example.com",
+        }
         form = UserProfileForm(data=form_data)
         self.assertFalse(form.is_valid())
-        self.assertFormError(form, 'phone_number', PhoneNumberValidator.message)
-        self.assertEqual(form.errors['email'], ['Этот электронный адрес уже используется.'])
+        self.assertFormError(form, "phone_number", PhoneNumberValidator.message)
+        self.assertEqual(form.errors["email"], ["Этот электронный адрес уже используется."])
 
     def test_change_password_form_success(self):
         """Проверка формы изменения пароля"""
-        self.client.post('/users/login/', self.credentials_user1, follow=True)
-        new_password = 'newpass123'
-        form_data = {'new_password1': new_password,
-                     'new_password2': new_password}
+        self.client.post("/users/login/", self.credentials_user1, follow=True)
+        new_password = "newpass123"
+        form_data = {"new_password1": new_password, "new_password2": new_password}
         form = ChangePasswordForm(user=self.user, data=form_data)
         self.assertTrue(form.is_valid())
-        self.assertIsNotNone(form.cleaned_data['new_password2'])
-        self.assertTrue(self.user.check_password('testpass123'))
+        self.assertIsNotNone(form.cleaned_data["new_password2"])
+        self.assertTrue(self.user.check_password("testpass123"))
         if form.is_valid():
             form.save()
         self.user.refresh_from_db()
@@ -200,10 +199,9 @@ class UserProfileChangeTests(TestCase):
 
     def test_change_password_form_failure(self):
         """Проверка валидации с некорректными данными"""
-        invalid_password1 = 'testpass123'
-        form = ChangePasswordForm(user=self.user, data={
-            'new_password1': 'newpass123',
-            'new_password2': invalid_password1
-        })
+        invalid_password1 = "testpass123"
+        form = ChangePasswordForm(
+            user=self.user, data={"new_password1": "newpass123", "new_password2": invalid_password1}
+        )
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['new_password2'], ['Пароли не совпадают'])
+        self.assertEqual(form.errors["new_password2"], ["Пароли не совпадают"])

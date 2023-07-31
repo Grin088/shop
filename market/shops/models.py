@@ -44,7 +44,7 @@ class Offer(models.Model):
 
     @property
     def price_with_discount(self):
-        """Вывод цены продукта со скидкой """
+        """Вывод цены продукта со скидкой"""
         price = self.price - self.product_discount
         if price <= 0:
             price = 1

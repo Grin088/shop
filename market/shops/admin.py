@@ -11,13 +11,13 @@ class ShopProductForm(BaseInlineFormSet):
         super(ShopProductForm, self).clean()
         product = list()
         for form in self.forms:
-            if form.cleaned_data and not form.cleaned_data.get('DELETE'):
-                product.append(form.cleaned_data.get('product'))
+            if form.cleaned_data and not form.cleaned_data.get("DELETE"):
+                product.append(form.cleaned_data.get("product"))
         data = Counter(product)
         print(product)
         for ii in data.values():
             if ii > 1:
-                raise ValidationError(f'Ошибка. Продукт{product[-1:]} не может повторяться')
+                raise ValidationError(f"Ошибка. Продукт{product[-1:]} не может повторяться")
 
 
 class ShopProductInline(admin.TabularInline):
