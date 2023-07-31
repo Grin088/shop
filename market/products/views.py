@@ -29,7 +29,7 @@ class ReviewsAPI(APIView):
                     "username": r.user.username,
                     "firstname": r.user.first_name,
                     "lastname": r.user.last_name,
-                    "avatar": r.user.avatar.url,
+                    "avatar": r.user.avatar.image.url,
                 },
                 "product": r.product.name,
                 "rating": r.rating,
