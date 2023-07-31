@@ -1,7 +1,7 @@
 from shops.models import OrderStatusChange, OrderStatus, Order
 
 
-def update_order_status(order_pk:int, src_pk: int, dst_pk: int) -> None:
+def update_order_status(order_pk: int, src_pk: int, dst_pk: int) -> None:
     """
     Изменяет статус заказа с сохранением хронологии в модели OrderStatusChange
     :param order_pk: Pk заказа

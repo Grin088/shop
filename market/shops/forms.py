@@ -12,6 +12,7 @@ class OderLoginUserForm(forms.Form):
 class PaymentForm(forms.ModelForm):
     """Форма для номера карты оплаты"""
     card_number = forms.IntegerField(validators=[validate_card_number])
+
     class Meta:
         model = PaymentQueue
         fields = ["card_number",]

@@ -156,8 +156,6 @@ class CreateOrderView(TemplateView):
         return redirect("payment", pk=new_order_pk)
 
 
-
-
 class OrderLoginView(MyLoginView):
     """Вход пользователя"""
 
@@ -215,7 +213,8 @@ def process_payment(request):
 class PaymentView(LoginRequiredMixin, View):
     """Страница оплаты"""
     login_url = reverse_lazy("users:users_login")
-    def get(self, request: HttpRequest, pk: int ) -> HttpResponse:
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         """Выводит два варианта стр. с генератором номера карты и с полем ввода самостоятельно"""
         query_order = Order.objects.get(pk=pk)
         if query_order.pay == "SOMEONE":
@@ -227,10 +226,10 @@ class PaymentView(LoginRequiredMixin, View):
                            }
                 return render(request, "market/payment/payment.jinja2", context=context)
 
-            context={"form": PaymentForm(),
-                     "pay": query_order.pay,
-                     "order": query_order
-            }
+            context = {"form": PaymentForm(),
+                       "pay": query_order.pay,
+                       "order": query_order
+                       }
             return render(request, "market/payment/payment.jinja2", context=context)
 
         context = {"form": PaymentForm(),
