@@ -10,12 +10,13 @@ from users.models import CustomUser
 class OrderTestCase(TestCase):
     """Тест проверки работы заказов"""
 
-    fixtures = CompareTestCase.fixtures | {"fixtures/050_order_status.json",
-                                           "fixtures/055_order.json",
-                                           "fixtures/065_order_offer.json",
-                                           "fixtures/070_order_status_change.json",
-                                           "shops/tests/cart_damp.json"
-                                           }
+    fixtures = CompareTestCase.fixtures | {
+        "fixtures/050_order_status.json",
+        "fixtures/055_order.json",
+        "fixtures/065_order_offer.json",
+        "fixtures/070_order_status_change.json",
+        "shops/tests/cart_damp.json",
+    }
     login_url = "/users/login/"
 
     def setUp(self) -> None:
@@ -24,7 +25,7 @@ class OrderTestCase(TestCase):
             "username": self.user.email,
             "password": "123",
         }
-        self.client.post(self.login_url,  login_data)
+        self.client.post(self.login_url, login_data)
 
     def test_history_order_view_success(self):
         """Тестирование истории заказа"""
@@ -48,15 +49,12 @@ class OrderTestCase(TestCase):
 
     def test_save_order_model_saccess(self):
         """Проверка создания  нового заказа"""
-        forma_order = {'delivery': 'ORDINARY',
-                       'city': 'Москва',
-                       'address': 'Пупкина 4',
-                       'pay': 'ONLINE'}
+        forma_order = {"delivery": "ORDINARY", "city": "Москва", "address": "Пупкина 4", "pay": "ONLINE"}
         expected_result1 = Order.objects.all().count() + 1
-        save_order_model(self.user,  forma_order)
+        save_order_model(self.user, forma_order)
         self.assertEqual(expected_result1, Order.objects.all().count())
 
     def test_create_order_view_success(self):
-        """ Проверка отображения страницы"""
+        """Проверка отображения страницы"""
         response = self.client.get(reverse("order"))
         self.assertEqual(response.status_code, 200)

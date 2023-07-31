@@ -70,14 +70,16 @@ class OrderStatus(models.Model):
 
 class StatusDeliveryOrder(models.TextChoices):
     """Варианты выбор доставки"""
-    ORDINARY = 'ORDINARY', _('Обычная')
-    EXPRESS = 'EXPRESS', _('Экспрес')
+
+    ORDINARY = "ORDINARY", _("Обычная")
+    EXPRESS = "EXPRESS", _("Экспрес")
 
 
 class StatusPayOrder(models.TextChoices):
     """Варианты выбора способа оплаты"""
-    ONLINE = 'ONLINE', _('Онлайн')
-    SOMEONE = 'SOMEONE', _('Онлайн со случайного чужого счета')
+
+    ONLINE = "ONLINE", _("Онлайн")
+    SOMEONE = "SOMEONE", _("Онлайн со случайного чужого счета")
 
 
 class Order(models.Model):
@@ -87,30 +89,31 @@ class Order(models.Model):
         verbose_name = _("заказ")
         verbose_name_plural = _("заказы")
 
-    custom_user = models.ForeignKey(CustomUser,
-                                    on_delete=models.PROTECT,
-                                    related_name="orders",
-                                    verbose_name=_("пользователь"))
-    offer = models.ManyToManyField(Offer, through="OrderOffer",
-                                   related_name="orders",
-                                   verbose_name=_("предложение"))
-    status = models.ForeignKey(OrderStatus,
-                               on_delete=models.PROTECT,
-                               related_name="orders",
-                               default=1,
-                               verbose_name=_("статус"))
+    custom_user = models.ForeignKey(
+        CustomUser, on_delete=models.PROTECT, related_name="orders", verbose_name=_("пользователь")
+    )
+    offer = models.ManyToManyField(Offer, through="OrderOffer", related_name="orders", verbose_name=_("предложение"))
+    status = models.ForeignKey(
+        OrderStatus, on_delete=models.PROTECT, related_name="orders", default=1, verbose_name=_("статус")
+    )
     data = models.DateTimeField(auto_now_add=True, verbose_name=_("дата создания"))
-    delivery = models.CharField(max_length=8, choices=StatusDeliveryOrder.choices, verbose_name=_("доставка"),
-                                default=StatusDeliveryOrder.ORDINARY)
+    delivery = models.CharField(
+        max_length=8,
+        choices=StatusDeliveryOrder.choices,
+        verbose_name=_("доставка"),
+        default=StatusDeliveryOrder.ORDINARY,
+    )
     city = models.CharField(max_length=100, verbose_name=_("город"))
     address = models.CharField(max_length=200, verbose_name=_("адрес"))
-    pay = models.CharField(max_length=8, choices=StatusPayOrder.choices, verbose_name=_("вид оплаты"),
-                           default=StatusPayOrder.ONLINE)
+    pay = models.CharField(
+        max_length=8, choices=StatusPayOrder.choices, verbose_name=_("вид оплаты"), default=StatusPayOrder.ONLINE
+    )
     total_cost = models.DecimalField(decimal_places=2, max_digits=10)
 
 
 class OrderOffer(models.Model):
     """Промежуточная модель. Дополнительное поле количество товара"""
+
     class Meta:
         verbose_name = _("Товар")
         verbose_name_plural = _("Товары")
