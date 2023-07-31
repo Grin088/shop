@@ -265,3 +265,5 @@ SESSION_REDIS = {
 
 # maximum comparison list length
 MAX_COMP_LIST_LEN = 3
+
+PAY_URL = config["PAY_URL"]
