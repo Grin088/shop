@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from users.models import CustomUser
+from shops.services.offer_discount import OfferDiscount
 
 
 class Shop(models.Model):
@@ -35,6 +36,20 @@ class Offer(models.Model):
 
     def __str__(self):
         return f"shop{self.shop.name}, product: {self.product.name}"
+
+    @property
+    def product_discount(self):
+        """Вывод скидки на продукт"""
+        discount = OfferDiscount(self)
+        return discount()
+
+    @property
+    def price_with_discount(self):
+        """Вывод цены продукта со скидкой """
+        price = self.price - self.product_discount
+        if price <= 0:
+            price = 1
+        return price
 
 
 class Banner(models.Model):
@@ -144,7 +159,7 @@ def validate_card_number(value):
 
 
 class PaymentQueue(models.Model):
-    """модель для представления задания оплаты в очереди"""
+    """Модель для представления задания оплаты в очереди"""
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("заказ"))
     card_number = models.IntegerField(validators=[validate_card_number], verbose_name=_("номер карты"))

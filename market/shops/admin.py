@@ -1,11 +1,28 @@
+from collections import Counter
 from django.contrib import admin  # noqa F401
-from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
 
-from shops.models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
+from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
+
+
+class ShopProductForm(BaseInlineFormSet):
+    def clean(self):
+        super(ShopProductForm, self).clean()
+        product = list()
+        for form in self.forms:
+            if form.cleaned_data and not form.cleaned_data.get('DELETE'):
+                product.append(form.cleaned_data.get('product'))
+        data = Counter(product)
+        print(product)
+        for ii in data.values():
+            if ii > 1:
+                raise ValidationError(f'Ошибка. Продукт{product[-1:]} не может повторяться')
 
 
 class ShopProductInline(admin.TabularInline):
     model = Shop.products.through
+    formset = ShopProductForm
 
 
 @admin.register(Shop)
@@ -59,21 +76,8 @@ class OrderAdmin(admin.ModelAdmin):
         "data",
         "delivery",
         "city",
-        "address_short",
+        "address",
     )
-
-    def address_short(self, obj: Order) -> str:
-        """Обрезка текста адреса"""
-
-        if len(obj.address) < 15:
-            return obj.address
-        return obj.address[:15] + "..."
-
-    address_short.short_description = _("адрес")
-
-    def get_queryset(self, request):
-        """Обединение запросов"""
-        return Order.objects.select_related("custom_user")
 
 
 @admin.register(OrderStatus)

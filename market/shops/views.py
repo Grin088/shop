@@ -13,16 +13,13 @@ from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from cart.models import CartItem
-from django.conf import settings
-
-from shops.services.payment import update_order_status
 from users.views import MyLoginView
 from shops.forms import OderLoginUserForm, PaymentForm
+from shops.services.payment import update_order_status
 from shops.services import banner
 from shops.services.catalog import get_featured_categories
 from shops.services.compare import (compare_list_check,
@@ -40,7 +37,7 @@ from shops.services.limited_products import (
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
-
+from products.models import Product
 
 
 @cache_page(settings.CACHE_CONSTANT)
@@ -56,6 +53,7 @@ def home(request):
         limited_product = get_random_limited_edition_product()
         limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
         context = {
+            "products": Product.objects.all()[:8],
             "featured_categories": featured_categories,
             "random_banners": random_banners,
             # 'update_time': update_time,  # пока не может использоваться из-за celery
@@ -202,7 +200,7 @@ class OrderDetailsView(LoginRequiredMixin, View):
 @api_view(["POST"])
 def process_payment(request):
     """метод API для обработки запросов оплаты"""
-    order_number = request.data["order_pk"]
+    order_number = request.data["order_number"]
     card_number = request.data["card_number"]
 
     order = Order.objects.get(id=order_number)
@@ -245,7 +243,7 @@ class PaymentView(LoginRequiredMixin, View):
         """Проверка валидности номера карты. Изменение статуса заказа. Отправка в очередь на оплату"""
         form = PaymentForm(request.POST)
         if form.is_valid():
-            requests.post(settings.PAY_URL, data={"card_number": form.cleaned_data["card_number"], "order_pk": pk})
+            requests.post(settings.PAY_URL, data={"card_number": form.cleaned_data["card_number"], "order_number": pk})
             update_order_status(pk, SRC_ORDER_STATUS_PK, DST_ORDER_STATUS_PK)
             return redirect("catalog:show_product")
 
