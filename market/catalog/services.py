@@ -21,6 +21,7 @@ def get_paginator(request, products, forms):
         compare_list_check(request.session, get)
     # TODO Пагинацию изменить при необходимости (default=4 записи)
     paginator = Paginator(products, 4)
+    check_discount_price(products=products)
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
     context = {"page_obj": page_obj, "form": forms}
@@ -118,13 +119,11 @@ class MixinGetPost:
         else:
             form = ProductFilterForm()
             products = Product.objects.all()
-            check_discount_price(products=products)
         context = get_paginator(request, products, form)
         return render(request, "market/catalog/catalog.jinja2", context=context)
 
     def post(self, request):
         product = Product.objects.all()
-        check_discount_price(products=product)
         form = ProductFilterForm(request.POST)
         if form.is_valid():
             prices = form.cleaned_data["price"].split(";")
