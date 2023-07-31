@@ -1,8 +1,6 @@
-SRC_ORDER_STATUS_PK = 5
-DST_ORDER_STATUS_PK = 4
+
 from random import randrange
 import requests
-from django.shortcuts import render  # noqa F401
 from django.db.models import F
 from django.shortcuts import render, redirect, reverse  # noqa F401
 from django.conf import settings
@@ -16,8 +14,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from products.models import Product
 from cart.models import CartItem
 from users.views import MyLoginView
+from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.forms import OderLoginUserForm, PaymentForm
 from shops.services.payment import update_order_status
 from shops.services import banner
@@ -33,11 +33,11 @@ from shops.services.limited_products import (
     get_top_products,
     get_limited_edition,
 )
-
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.services.is_member_of_group import is_member_of_group
-from products.models import Product
+
+SRC_ORDER_STATUS_PK = 5
+DST_ORDER_STATUS_PK = 4
 
 
 @cache_page(settings.CACHE_CONSTANT)

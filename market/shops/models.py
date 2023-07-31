@@ -152,6 +152,7 @@ class OrderStatusChange(models.Model):
 
 
 def validate_card_number(value):
+    """Проверка валидности карты оплаты"""
     if 10000000 > value or value > 99999999 or value % 2 != 0:
         raise ValidationError(
             _(f'{value} номер должен быть четным от 1000 0000 до 9999 9999 включительно')
@@ -160,7 +161,5 @@ def validate_card_number(value):
 
 class PaymentQueue(models.Model):
     """Модель для представления задания оплаты в очереди"""
-
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("заказ"))
     card_number = models.IntegerField(validators=[validate_card_number], verbose_name=_("номер карты"))
-
