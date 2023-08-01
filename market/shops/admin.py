@@ -3,10 +3,13 @@ from django.contrib import admin  # noqa F401
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
 
+from catalog.cache_for_catalog import clear_cache_catalog
 from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
 
 
 class ShopProductForm(BaseInlineFormSet):
+    """Валидация на добавление более 2-х продуктов с одиноковым id.
+        После валидности, кэш Catalog очищается"""
     def clean(self):
         super(ShopProductForm, self).clean()
         product = list()
@@ -14,10 +17,11 @@ class ShopProductForm(BaseInlineFormSet):
             if form.cleaned_data and not form.cleaned_data.get('DELETE'):
                 product.append(form.cleaned_data.get('product'))
         data = Counter(product)
-        print(product)
         for ii in data.values():
             if ii > 1:
                 raise ValidationError(f'Ошибка. Продукт{product[-1:]} не может повторяться')
+            else:
+                clear_cache_catalog()
 
 
 class ShopProductInline(admin.TabularInline):
