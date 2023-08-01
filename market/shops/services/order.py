@@ -7,16 +7,18 @@ from cart.models import CartItem
 from shops.models import OrderOffer, OrderStatusChange, OrderStatus, Order
 
 
-def pryce_delivery(r_user: Any) -> (dict):
+def pryce_delivery(r_user: Any) -> dict:
     """ Расчет стоимости доставки """
-    cart_list = CartItem.objects.filter(cart__user=r_user). \
-        annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product", "offer__shop")
-
+    cart_list = CartItem.objects.filter(cart__user=r_user).select_related("offer__product", "offer__shop").annotate(summ_offer=F('offer__price') * F('quantity'))
+    cart_list = CartItem.objects.filter(cart__user_id=11).select_related("offer__product", "offer__shop").annotate(summ_offer=F('offer__price') * F('quantity'))
+    if not cart_list:
+        return {}
     min_price_offer = Decimal(2000.00)
     delivery_express = Decimal(500.00)
     delivery_ordinary = Decimal(200.00)
     cart_count_shop = cart_list.all().values_list("offer__shop").distinct().count()
     total_cost = cart_list.all().aggregate(summ=Sum("summ_offer"))["summ"]
+
 
     if total_cost > min_price_offer and cart_count_shop == 1:
         delivery_ordinary = Decimal(0.00)
@@ -26,6 +28,7 @@ def pryce_delivery(r_user: Any) -> (dict):
             "total_cost_express": total_cost_delivery_express,
             "delivery_express": delivery_express,
             "delivery_ordinary": delivery_ordinary,
+            "query_set_cart": cart_list,
             }
 
 
@@ -34,13 +37,15 @@ def save_order_model(r_user: Any, r_post: Any) -> None:
     """
     Сохранение заказа и истории изменения статуса
     """
-    cart_list = CartItem.objects.filter(cart__user=r_user). \
-        annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+    # cart_list = CartItem.objects.filter(cart__user=r_user). \
+    #     annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
+
+    cart_dict = pryce_delivery(r_user)
 
     if r_post.get('delivery') == "ORDINARY":
-        total_cost = pryce_delivery(r_user)["total_cost_ordinary"]
+        total_cost = cart_dict["total_cost_ordinary"]
     else:
-        total_cost = pryce_delivery(r_user)["total_cost_express"]
+        total_cost = cart_dict["total_cost_express"]
 
     new_order = Order()
     new_order.custom_user = r_user
@@ -52,7 +57,7 @@ def save_order_model(r_user: Any, r_post: Any) -> None:
     new_order.total_cost = total_cost
     new_order.save()
 
-    for item_cart_i in cart_list:
+    for item_cart_i in cart_dict["query_set_cart"]:
         cart2order = OrderOffer()
         cart2order.offer = item_cart_i.offer
         cart2order.order = new_order

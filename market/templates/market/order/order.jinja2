@@ -208,7 +208,7 @@
                                     </div>
                                 </div>
                                 <div class="Cart Cart_order">
-                                    {% for item_i in cart_list %}
+                                    {% for item_i in cart_list.query_set_cart %}
                                     <div class="Cart-product">
                                         <div class="Cart-block Cart-block_row">
                                             <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/media/{{item_i.offer.product.preview}}" alt="card.jpg" /></a>
@@ -231,11 +231,11 @@
                                     <div class="Cart-total">
                                         <div class="Cart-block Cart-block_total">
                                             <strong class="Cart-title">{% trans %}Доставка{% endtrans %}:
-                                            </strong><span class="Cart-price" id="delivery-cost">{{ delivery.delivery_ordinary }}Руб</span>
+                                            </strong><span class="Cart-price" id="delivery-cost">{{ cart_list.delivery_ordinary }}Руб</span>
                                         </div>
                                         <div class="Cart-block Cart-block_total">
                                             <strong class="Cart-title">{% trans %}Итого{% endtrans %}:
-                                            </strong><span class="Cart-price" id="total-express">{{ delivery.total_cost_ordinary }}Руб</span>
+                                            </strong><span class="Cart-price" id="total-express">{{ cart_list.total_cost_ordinary }}Руб</span>
                                         </div>
                                         <div class="Cart-block">
                                             <button  class="btn btn_primary btn_lg" type="submit">{% trans %}Создать заказ и оплатить{% endtrans %}
@@ -252,7 +252,7 @@
         </div>
     </div>
 <script>
-    var delivery = [ {{ delivery.delivery_express }}, {{ delivery.total_cost_express }}];
+    var delivery = [ {{ cart_list.delivery_express }}, {{ cart_list.total_cost_express }}];
 
     function copyaddress(step1, step2) {
         document.getElementById(step1).classList.remove("menu-item_ACTIVE");
