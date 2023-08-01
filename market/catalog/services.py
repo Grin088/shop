@@ -2,6 +2,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Avg
 from django.shortcuts import render
 from catalog.forms import ProductFilterForm
+from catalog.price_and_discounts import check_discount_price
+
 from products.models import Product
 from shops.services.compare import compare_list_check
 
@@ -49,14 +51,6 @@ def sorted_products(sort, product):
         return product
     else:
         return product
-
-
-def check_discount_price(products):
-    """Обновление цены со скидкой"""
-    for product in products:
-        for ii in product.offers.only('discount_price'):
-            ii.discount_price = ii.price_with_discount
-            ii.save()
 
 
 def filter_search(session, products):
