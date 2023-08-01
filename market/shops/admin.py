@@ -23,6 +23,7 @@ class ShopProductForm(BaseInlineFormSet):
 class ShopProductInline(admin.TabularInline):
     model = Shop.products.through
     formset = ShopProductForm
+    exclude = ("discount_price",)
 
 
 @admin.register(Shop)
@@ -45,6 +46,7 @@ class OfferAdmin(admin.ModelAdmin):
         "product",
         "price",
     )
+    exclude = ("discount_price",)
 
 
 @admin.register(Banner)

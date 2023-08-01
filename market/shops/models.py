@@ -1,3 +1,4 @@
+from django.core.validators import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -29,6 +30,7 @@ class Offer(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.PROTECT)
     product = models.ForeignKey("products.Product", on_delete=models.PROTECT, related_name="offers")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("цена"))
+    discount_price = models.DecimalField(max_digits=10, default=0, decimal_places=2, verbose_name=_("цена со скидкой"))
     product_in_stock = models.BooleanField(default=True, verbose_name=_("товар в наличии"))
     free_shipping = models.BooleanField(default=False, verbose_name=_("бесплатная доставка"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
@@ -153,8 +155,14 @@ class OrderStatusChange(models.Model):
     dst_status = models.ForeignKey(OrderStatus, related_name="orders_order_change_dst", on_delete=models.PROTECT)
 
 
+def validate_card_number(value):
+    """Проверка валидности карты оплаты"""
+    if 10000000 > value or value > 99999999 or value % 2 != 0:
+        raise ValidationError(_(f"{value} номер должен быть четным от 1000 0000 до 9999 9999 включительно"))
+
+
 class PaymentQueue(models.Model):
     """Модель для представления задания оплаты в очереди"""
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("заказ"))
-    card_number = models.IntegerField(verbose_name=_("номер карты"))
+    card_number = models.IntegerField(validators=[validate_card_number], verbose_name=_("номер карты"))

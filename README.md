@@ -10,6 +10,7 @@
 ```yaml
 DATABASE_URL = postgresql://skillbox:secret@127.0.0.1:5434/market
 REDIS_URL = redis://127.0.0.1:6379/0
+PAY_URL = http://127.0.0.1:8000/pay
 ```
 
 Запуск СУБД Postgresql

@@ -8,6 +8,8 @@ from .views import (
     OrderLoginView,
     HistoryOrderView,
     OrderDetailsView,
+    PaymentView,
+    process_payment,
 )
 
 urlpatterns = [
@@ -19,4 +21,6 @@ urlpatterns = [
     path("order/login/", OrderLoginView.as_view(), name="order_login"),
     path("order_history/", HistoryOrderView.as_view(), name="order_history"),
     path("order_history/<int:pk>/", OrderDetailsView.as_view(), name="order_details"),
+    path("payment/<int:pk>/", PaymentView.as_view(), name="payment"),
+    path("pay/", process_payment, name="pay"),
 ]
