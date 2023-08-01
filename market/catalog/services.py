@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.db.models import Q, Avg
+from django.db.models import Q, Avg, Min
 from django.shortcuts import render
 from catalog.forms import ProductFilterForm
 from catalog.price_and_discounts import check_discount_price
@@ -37,7 +37,7 @@ def sorted_products(sort, product):
             order_by('average_stars')
         return product
     elif sort in '-offers__date_of_creation':
-        product = product.prefetch_related('offers').order_by('-offers__date_of_creation')
+        product = product.prefetch_related('offers').annotate(date=Min('offers__date_of_creation')).order_by('-date')
         return product
     elif sort in ("sorting.get_count_history()", "sorting.get_count_reviews()"):
         product = {
