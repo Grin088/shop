@@ -63,5 +63,6 @@ def save_order_model(r_user: Any, r_post: Any) -> None:
     order_status = OrderStatusChange()
     order_status.order = new_order
     order_status.src_status = OrderStatus.objects.get(sort_index=1)
-    order_status.dst_status = OrderStatus.objects.get(sort_index=2)
+    order_status.dst_status = OrderStatus.objects.get(sort_index=5)
     order_status.save()
+    return new_order.pk
