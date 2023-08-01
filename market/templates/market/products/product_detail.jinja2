@@ -38,7 +38,7 @@
                   <div class="ProductCard-cost">
                     {% set score = [] %}
                     {% for offer in product.offers.all() %}
-                      {% if score.append(offer.price) %}
+                      {% if score.append(offer.price | round) %}
                       {% endif %}
                     {% endfor %}
                     <div class="ProductCard-price">${{ score | min }}

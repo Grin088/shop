@@ -30,6 +30,7 @@ class Offer(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.PROTECT)
     product = models.ForeignKey("products.Product", on_delete=models.PROTECT, related_name="offers")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("цена"))
+    discount_price = models.DecimalField(max_digits=10, default=0, decimal_places=2, verbose_name=_('цена со скидкой'))
     product_in_stock = models.BooleanField(default=True, verbose_name=_("товар в наличии"))
     free_shipping = models.BooleanField(default=False, verbose_name=_("бесплатная доставка"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
