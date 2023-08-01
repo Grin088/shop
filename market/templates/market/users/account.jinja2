@@ -73,13 +73,13 @@
                                                 <div class="Order-info Order-info_delivery">
                                                     <div class="Order-infoType">{% trans %}Тип доставки:{% endtrans %}
                                                     </div>
-                                                    <div class="Order-infoContent">{{ order.order.delivery }}
+                                                    <div class="Order-infoContent">{{ order.order.get_delivery_display() }}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info Order-info_pay">
                                                     <div class="Order-infoType">{% trans %}Оплата:{% endtrans %}
                                                     </div>
-                                                    <div class="Order-infoContent">{{order.order.pay}}
+                                                    <div class="Order-infoContent">{{order.order.get_pay_display()}}
                                                     </div>
                                                 </div>
                                                 <div class="Order-info">
