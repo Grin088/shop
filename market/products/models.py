@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from catalog.cache_for_catalog import clear_cache_catalog
 from users.models import CustomUser as User
 from django.db.models import Avg, ManyToManyField
 from taggit.managers import TaggableManager
@@ -49,6 +51,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        """Очистка кэша при добавлении или изменении продукта"""
+        clear_cache_catalog()
+        super().save(*args, **kwargs)
 
     def get_count_reviews(self) -> int:
         """Вывод количества отзывов о продукте"""
