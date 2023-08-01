@@ -23,7 +23,7 @@ class Product(models.Model):
         verbose_name_plural = _("продукты")
         verbose_name = _("продукт")
 
-    name = models.CharField(max_length=512, verbose_name=_("наименование"))
+    name = models.CharField(max_length=512, db_index=True, verbose_name=_("наименование"))
     limited_edition = models.BooleanField(default=False, verbose_name=_("ограниченный тираж"))
     index = models.PositiveIntegerField(default=0, verbose_name=_("индекс сортировки"))
     preview = models.ImageField(

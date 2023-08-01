@@ -31,7 +31,8 @@ def get_paginator(request, products, forms):
 def sorted_products(sort, product):
     """Сортировка по критериям"""
     if sort in "offers__price":
-        product = product.annotate(average_stars=Avg('offers__discount_price')).order_by('average_stars')
+        product = product.prefetch_related('offers').annotate(average_stars=Avg('offers__discount_price')).\
+            order_by('average_stars')
         return product
     elif sort in '-offers__date_of_creation':
         product = {
@@ -60,7 +61,7 @@ def sorted_products(sort, product):
 def check_discount_price(products):
     """Обновление цены со скидкой"""
     for product in products:
-        for ii in product.offers.all():
+        for ii in product.offers.only('discount_price'):
             ii.discount_price = ii.price_with_discount
             ii.save()
 
@@ -69,7 +70,7 @@ def filter_search(session, products):
     """Фильтрация продуктов"""
     prices = session["price"].split(";")
     sessions = {value: key for value, key in session.items() if (session[value] and value != "price")}
-    product_search = products.annotate(discount=Avg('offers__discount_price')).filter(
+    product_search = products.prefetch_related('offers').annotate(discount=Avg('offers__discount_price')).filter(
         (
             Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
             & Q(discount__range=(prices[0], prices[1]))
@@ -77,7 +78,7 @@ def filter_search(session, products):
     )
 
     if sessions.get("in_stock"):
-        product_search = products.annotate(discount=Avg('offers__discount_price')).filter(
+        product_search = products.prefetch_related('offers').annotate(discount=Avg('offers__discount_price')).filter(
             (
                 Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
                 & Q(discount__range=(prices[0], prices[1]))
@@ -86,7 +87,7 @@ def filter_search(session, products):
         )
 
     if sessions.get("free_delivery"):
-        product_search = products.annotate(discount=Avg('offers__discount_price')).filter(
+        product_search = products.prefetch_related('offers').annotate(discount=Avg('offers__discount_price')).filter(
             (
                 Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
                 & Q(discount__range=(prices[0], prices[1]))
@@ -94,7 +95,7 @@ def filter_search(session, products):
             & Q(offers__free_shipping=None if sessions.get("free_delivery") is None else sessions["free_delivery"])
         )
     if sessions.get("in_stock") and sessions.get("free_delivery"):
-        product_search = products.annotate(discount=Avg('offers__discount_price')).filter(
+        product_search = products.prefetch_related('offers').annotate(discount=Avg('offers__discount_price')).filter(
             (
                 Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
                 & Q(discount__range=(prices[0], prices[1]))
@@ -118,12 +119,12 @@ class MixinGetPost:
                 products = filter_search(sessions, products)
         else:
             form = ProductFilterForm()
-            products = Product.objects.all()
+            products = Product.objects.all().prefetch_related('offers')
         context = get_paginator(request, products, form)
         return render(request, "market/catalog/catalog.jinja2", context=context)
 
     def post(self, request):
-        product = Product.objects.all()
+        product = Product.objects.all().prefetch_related('offers')
         form = ProductFilterForm(request.POST)
         if form.is_valid():
             prices = form.cleaned_data["price"].split(";")
