@@ -3,7 +3,7 @@ from typing import Any
 from django.db.models import F, Sum
 from django.db import transaction
 
-from cart.models import CartItem
+from cart.models import CartItem, Cart
 from shops.models import OrderOffer, OrderStatusChange, OrderStatus, Order
 
 
@@ -33,13 +33,11 @@ def pryce_delivery(r_user: Any) -> dict:
 
 
 @transaction.atomic
-def save_order_model(r_user: Any, r_post: Any) -> None:
+def save_order_model(r_user: Any, r_post: Any, r_session: Any) -> int:
     """
     Сохранение заказа и истории изменения статуса
+    Стирание корзины
     """
-    # cart_list = CartItem.objects.filter(cart__user=r_user). \
-    #     annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product")
-
     cart_dict = pryce_delivery(r_user)
 
     if r_post.get('delivery') == "ORDINARY":
@@ -70,4 +68,6 @@ def save_order_model(r_user: Any, r_post: Any) -> None:
     order_status.src_status = OrderStatus.objects.get(sort_index=1)
     order_status.dst_status = OrderStatus.objects.get(sort_index=5)
     order_status.save()
+    Cart.objects.get(user=r_user).delete()
+    r_session["cart"]= {}
     return new_order.pk

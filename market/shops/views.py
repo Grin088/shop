@@ -145,7 +145,7 @@ class CreateOrderView(TemplateView):
                     return render(self.request, "market/order/order.jinja2",
                                   context={"text": "Неправильный ввод эмейла или пароля",
                                            "user": self.request.user, })
-        new_order_pk = save_order_model(self.request.user, self.request.POST)
+        new_order_pk = save_order_model(self.request.user, self.request.POST, request.session)
         return redirect("payment", pk=new_order_pk)
 
 
@@ -235,7 +235,7 @@ class PaymentView(LoginRequiredMixin, View):
         """Проверка валидности номера карты. Изменение статуса заказа. Отправка в очередь на оплату"""
         form = PaymentForm(request.POST)
         if form.is_valid():
-            requests.post(settings.PAY_URL, data={"card_number": form.cleaned_data["card_number"], "order_number": pk})
+            request_pay = requests.post(settings.PAY_URL, data={"card_number": form.cleaned_data["card_number"], "order_number": pk})
             update_order_status(pk, SRC_ORDER_STATUS_PK, DST_ORDER_STATUS_PK)
             return redirect("catalog:show_product")
 
