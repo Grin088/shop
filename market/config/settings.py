@@ -71,7 +71,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -149,8 +149,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {"default": dj_database_url.parse(config["DATABASE_URL"])}
 
+
 REDIS_URL = config["REDIS_URL"]
 CACHE_CONSTANT = 600
+CACHE_TIME_PER_DAY = 86400
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
