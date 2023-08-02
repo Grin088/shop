@@ -1,12 +1,11 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from catalog.price_and_discounts import max_price, min_price, check_discount_price
+from catalog.price_and_discounts import max_price, min_price
 
 
 class ProductFilterForm(forms.Form):
     """Форма заполнения фильтров"""
-    check_discount_price()
 
     price = forms.CharField(
         max_length=50,
