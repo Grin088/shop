@@ -213,7 +213,7 @@
                                         <div class="Cart-block Cart-block_row">
                                             <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/media/{{item_i.offer.product.preview}}" alt="card.jpg" /></a>
                                             </div>
-                                            <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">{{ item_i.offer.product.name }}</a>
+                                            <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url("products:product_detail", product_id=item_i.offer.product.id)}}">{{ item_i.offer.product.name }}</a>
                                                 <div class="Cart-desc">{{ item_i.offer.product.description }}
                                                 </div>
                                             </div>
