@@ -6,13 +6,13 @@ products = Product.objects.all()
 
 def min_price():
     # check_discount_price()
-    price = Product.objects.annotate(price_min_discount=Avg('offers__discount_price'))
+    price = Product.objects.annotate(price_min_discount=Avg('offers__price'))
     price_min = price.aggregate(Min('price_min_discount'))
     return round(price_min['price_min_discount__min' or None])
 
 
 def max_price():
-    price = products.annotate(price_max_discount=Avg('offers__discount_price'))
+    price = products.annotate(price_max_discount=Avg('offers__price'))
     price_max = price.aggregate(Max('price_max_discount'))
     return round(price_max['price_max_discount__max' or None])
 
