@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Avg, Min
 from django.shortcuts import render
 from catalog.forms import ProductFilterForm
-from catalog.price_and_discounts import check_discount_price, min_price, max_price
+# from catalog.price_and_discounts import min_price, max_price
 
 from products.models import Product
 from shops.services.compare import compare_list_check
@@ -23,7 +23,7 @@ def get_paginator(request, products, forms):
         compare_list_check(request.session, get)
     # TODO Пагинацию изменить при необходимости (default=4 записи)
     paginator = Paginator(products, 20)
-    check_discount_price(products=products)
+    # check_discount_price()
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
     context = {"page_obj": page_obj, "form": forms}
@@ -102,8 +102,8 @@ class MixinGetPost:
             products = Product.objects.all()
             form = ProductFilterForm(request.session["filter"])
             if form.is_valid():
-                form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
-                                                          "data-min": str(min_price()), "data-max": str(max_price())})
+                # form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
+                #                                           "data-min": str(min_price()), "data-max": str(max_price())})
                 products = filter_search(sessions, products)
         else:
             form = ProductFilterForm()
@@ -116,8 +116,8 @@ class MixinGetPost:
         form = ProductFilterForm(request.POST)
         if form.is_valid():
             prices = form.cleaned_data["price"].split(";")
-            form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
-                                                      "data-min": str(min_price()), "data-max": str(max_price())})
+            # form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
+            #                                           "data-min": str(min_price()), "data-max": str(max_price())})
             # TODO Время жизни сессии можно изменить при необходимости (default=3 мин.)
             request.session.set_expiry(180)
             request.session["filter"] = form.cleaned_data
