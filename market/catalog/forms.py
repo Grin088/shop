@@ -1,8 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from catalog.price_and_discounts import max_price, min_price, check_discount_price
-
 
 class ProductFilterForm(forms.Form):
     """Форма заполнения фильтров"""
@@ -28,4 +26,3 @@ class ProductFilterForm(forms.Form):
     )
     in_stock = forms.BooleanField(required=False)
     free_delivery = forms.BooleanField(required=False)
-
