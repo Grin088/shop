@@ -235,7 +235,7 @@ class PaymentView(LoginRequiredMixin, View):
         """Проверка валидности номера карты. Изменение статуса заказа. Отправка в очередь на оплату"""
         form = PaymentForm(request.POST)
         if form.is_valid():
-            request_pay = requests.post(settings.PAY_URL, data={"card_number": form.cleaned_data["card_number"], "order_number": pk})
+            requests.post(settings.PAY_URL, data={"card_number": form.cleaned_data["card_number"], "order_number": pk})
             update_order_status(pk, SRC_ORDER_STATUS_PK, DST_ORDER_STATUS_PK)
             return redirect("catalog:show_product")
 

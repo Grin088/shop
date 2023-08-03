@@ -28,7 +28,7 @@ class OrderTestCase(TestCase):
             "password": "123",
         }
         self.client.post(self.login_url,  login_data)
-        self.client.session["cart"]={}
+        self.client.session["cart"] = {}
 
     def test_history_order_view_success(self):
         """Тестирование истории заказа"""

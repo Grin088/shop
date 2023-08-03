@@ -24,9 +24,7 @@ class PaymentTestCase(TestCase):
         }
         self.client.post(self.login_url,  login_data)
 
-
     def test_payment_view_success(self):
         """ Проверка отображения страницы"""
-        response = self.client.get(reverse("payment", kwargs={"pk":1}))
+        response = self.client.get(reverse("payment", kwargs={"pk": 1}))
         self.assertEqual(response.status_code, 200)
-

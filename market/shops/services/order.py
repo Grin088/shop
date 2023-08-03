@@ -11,8 +11,9 @@ from shops.models import OrderOffer, OrderStatusChange, OrderStatus, Order
 
 def pryce_delivery(r_user: Any) -> dict:
     """ Расчет стоимости доставки """
-    cart_list = CartItem.objects.filter(cart__user=r_user).select_related("offer__product", "offer__shop").annotate(summ_offer=F('offer__price') * F('quantity'))
-    cart_list = CartItem.objects.filter(cart__user_id=11).select_related("offer__product", "offer__shop").annotate(summ_offer=F('offer__price') * F('quantity'))
+    cart_list = (CartItem.objects.filter(cart__user=r_user)
+                 .select_related("offer__product", "offer__shop")
+                 .annotate(summ_offer=F('offer__price') * F('quantity')))
     if not cart_list:
         return {}
     min_price_offer = Decimal(2000.00)
@@ -20,7 +21,6 @@ def pryce_delivery(r_user: Any) -> dict:
     delivery_ordinary = Decimal(200.00)
     cart_count_shop = cart_list.all().values_list("offer__shop").distinct().count()
     total_cost = cart_list.all().aggregate(summ=Sum("summ_offer"))["summ"]
-
 
     if total_cost > min_price_offer and cart_count_shop == 1:
         delivery_ordinary = Decimal(0.00)
