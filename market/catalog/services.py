@@ -23,7 +23,7 @@ def get_paginator(request, products, forms):
         compare_list_check(request.session, get)
     # TODO Пагинацию изменить при необходимости (default=4 записи)
     paginator = Paginator(products, 20)
-    check_discount_price(products=products)
+    check_discount_price()
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
     context = {"page_obj": page_obj, "form": forms}
@@ -107,6 +107,9 @@ class MixinGetPost:
                 products = filter_search(sessions, products)
         else:
             form = ProductFilterForm()
+            form.fields["price"].widget.attrs.update({"data-from": str(min_price() + (min_price() * 30 / 100)),
+                                                      "data-to": str(max_price() - (max_price() * 20 / 100)),
+                                                      "data-min": str(min_price()), "data-max": str(max_price())})
             products = Product.objects.all().prefetch_related('offers')
         context = get_paginator(request, products, form)
         return render(request, "market/catalog/catalog.jinja2", context=context)
@@ -116,6 +119,7 @@ class MixinGetPost:
         form = ProductFilterForm(request.POST)
         if form.is_valid():
             prices = form.cleaned_data["price"].split(";")
+            check_discount_price()
             form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
                                                       "data-min": str(min_price()), "data-max": str(max_price())})
             # TODO Время жизни сессии можно изменить при необходимости (default=3 мин.)
