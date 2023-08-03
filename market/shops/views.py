@@ -4,7 +4,7 @@ import requests
 from django.db.models import F
 from django.shortcuts import render, redirect, reverse  # noqa F401
 from django.conf import settings
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page # noqa F401
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -41,7 +41,7 @@ SRC_ORDER_STATUS_PK = 5
 DST_ORDER_STATUS_PK = 4
 
 
-# @cache_page(settings.CACHE_CONSTANT)
+# @cache_page(settings.CACHE_CONSTANT) # noqa F401
 def home(request):
     """Главная страница"""
     if request.method == "GET":
@@ -66,7 +66,6 @@ def home(request):
                         print('----', a)
             else:
                 print(i)
-
 
         context = {
             "products": Product.objects.all()[:8],
