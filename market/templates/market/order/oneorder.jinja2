@@ -95,7 +95,7 @@
                                     <div class="Cart-block Cart-block_row">
                                         <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/media/{{order_offer.offer.product.preview}}" alt="product.png" /></a>
                                         </div>
-                                        <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">{{ order_offer.offer.product.name }}</a>
+                                        <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url("products:product_detail", product_id=order_offer.offer.product.id)}}">{{ order_offer.offer.product.name }}</a>
                                             <div class="Cart-desc">{{ order_offer.offer.product.description }}
                                             </div>
                                         </div>
@@ -113,11 +113,11 @@
                                 {% endfor %}
                                 <div class="Cart-total">
                                     <div class="Cart-block Cart-block_total">
-                                        <strong class="Cart-title">{% trans %}Итого{% endtrans %}:<span class="Cart-price">{{ order.total_cost }}$</span>
+                                        <strong class="Cart-title">{% trans %}Итого{% endtrans %}:<span class="Cart-price">{{ order.total_cost }} Руб</span>
                                         </strong>
                                     </div>
                                     {%  if order.status |string() == "Оплата не выполнена" or "Новый" %}
-                                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="#">{% trans %}Оплатить{% endtrans %}</a>
+                                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{{ url("payment", pk=order.pk) }}">{% trans %}Оплатить{% endtrans %}</a>
                                     </div>
                                     {% endif %}
                                 </div>

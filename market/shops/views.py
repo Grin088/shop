@@ -1,7 +1,5 @@
-
 from random import randrange
 import requests
-from django.db.models import F
 from django.shortcuts import render, redirect, reverse  # noqa F401
 from django.conf import settings
 from django.views.decorators.cache import cache_page # noqa F401
@@ -16,7 +14,6 @@ from rest_framework.response import Response
 
 from catalog.models import Catalog
 from products.models import Product
-from cart.models import CartItem
 from users.views import MyLoginView
 from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.forms import OderLoginUserForm, PaymentForm
@@ -117,9 +114,9 @@ class ComparePageView(View):
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Переключение категории сравнения и удаление из списка сравнений"""
-        delete_id = self.request.POST.get('delete_id')
+        delete_id = self.request.POST.get("delete_id")
         if delete_id:
-            compare_list_check(request.session, int(delete_id))
+            compare_list_check(request.session, delete_id)
         comp_list = request.session.get("comp_list", [])
         if len(comp_list) > 1:
             category_name = self.request.POST.get("category")
@@ -137,18 +134,15 @@ class ComparePageView(View):
 
 class CreateOrderView(TemplateView):
     """Оформление заказа"""
-
     def get(self, request, *args, **kwargs) -> HttpResponse:
         """Оформления заказа если корзина не пуста и пользователь залогинен"""
         cart_list = None
         if self.request.user.is_authenticated:
-            cart_list = (CartItem.objects.filter(cart__user=self.request.user)
-                         .annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product"))
+            cart_list = pryce_delivery(self.request.user)
             if not cart_list:
                 return redirect("catalog:show_product")
         context = {"form_log": OderLoginUserForm(),
                    "cart_list": cart_list,
-                   "delivery": pryce_delivery(self.request.user),
                    }
         return render(request, "market/order/order.jinja2", context=context)
 
@@ -167,8 +161,7 @@ class CreateOrderView(TemplateView):
                     return render(self.request, "market/order/order.jinja2",
                                   context={"text": "Неправильный ввод эмейла или пароля",
                                            "user": self.request.user, })
-        new_order_pk = save_order_model(self.request.user, self.request.POST)
-
+        new_order_pk = save_order_model(self.request.user, self.request.POST, request.session)
         return redirect("payment", pk=new_order_pk)
 
 
