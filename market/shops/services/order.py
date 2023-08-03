@@ -1,5 +1,7 @@
 from decimal import Decimal
 from typing import Any
+
+from django.conf import settings
 from django.db.models import F, Sum
 from django.db import transaction
 
@@ -69,5 +71,5 @@ def save_order_model(r_user: Any, r_post: Any, r_session: Any) -> int:
     order_status.dst_status = OrderStatus.objects.get(sort_index=5)
     order_status.save()
     Cart.objects.get(user=r_user).delete()
-    r_session["cart"]= {}
+    r_session[settings.CART_SESSION_ID] = {}
     return new_order.pk

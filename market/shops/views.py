@@ -98,9 +98,9 @@ class ComparePageView(View):
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Переключение категории сравнения и удаление из списка сравнений"""
-        delete_id = self.request.POST.get('delete_id')
+        delete_id = self.request.POST.get("delete_id")
         if delete_id:
-            compare_list_check(request.session, int(delete_id))
+            compare_list_check(request.session, delete_id)
         comp_list = request.session.get("comp_list", [])
         if len(comp_list) > 1:
             category_name = self.request.POST.get("category")
