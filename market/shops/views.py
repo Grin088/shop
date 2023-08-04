@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from products.models import Product
 from cart.models import CartItem
 from users.views import MyLoginView
+from shops.tasks import process_payment_queue
 from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.forms import OderLoginUserForm, PaymentForm
 from shops.services.payment import update_order_status
@@ -213,13 +214,12 @@ def process_payment(request):
     """метод API для обработки запросов оплаты"""
     order_number = request.data["order_number"]
     card_number = request.data["card_number"]
-
     order = Order.objects.get(id=order_number)
-
-    # Добавление заказа в очередь оплаты
+    # Добавление заказа в можель очередь оплаты
     queue_job = PaymentQueue(order=order, card_number=card_number)
     queue_job.save()
-
+    # Запуск таска для обработки очереди оплаты
+    process_payment_queue.delay()
     return Response({"message": "Payment request added to the queue"})
 
 
