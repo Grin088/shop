@@ -193,7 +193,7 @@
                 </button>
                 <script src="{{ static('/market/assets/js/reviews.js') }}"></script>
                 <div class="Tabs-addComment">
-                  {% if user.is_authenticated and not review_exist %}
+                  {% if user.is_authenticated and not review_exist and can_add_review %}
                     <form class="form" method="post">
                     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                     <div class="rating-area">

@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from catalog.cache_for_catalog import clear_cache_catalog
 from users.models import CustomUser as User
 from django.db.models import Avg, ManyToManyField
 from taggit.managers import TaggableManager
@@ -23,7 +25,7 @@ class Product(models.Model):
         verbose_name_plural = _("продукты")
         verbose_name = _("продукт")
 
-    name = models.CharField(max_length=512, verbose_name=_("наименование"))
+    name = models.CharField(max_length=512, db_index=True, verbose_name=_("наименование"))
     limited_edition = models.BooleanField(default=False, verbose_name=_("ограниченный тираж"))
     index = models.PositiveIntegerField(default=0, verbose_name=_("индекс сортировки"))
     preview = models.ImageField(
@@ -49,6 +51,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        """Очистка кэша при добавлении или изменении продукта"""
+        clear_cache_catalog()
+        super().save(*args, **kwargs)
 
     def get_count_reviews(self) -> int:
         """Вывод количества отзывов о продукте"""
@@ -121,13 +128,6 @@ class Review(models.Model):
         verbose_name = _("отзыв")
         verbose_name_plural = _("отзывы")
 
-    # RATING_CHOICES = (
-    #     (1, "1"),
-    #     (2, "2"),
-    #     (3, "3"),
-    #     (4, "4"),
-    #     (5, "5")
-    # )
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_("покупатель"))
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_("продукт"))
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))

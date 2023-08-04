@@ -27,6 +27,7 @@ class OrderTestCase(TestCase):
             "password": "123",
         }
         self.client.post(self.login_url, login_data)
+        self.client.session["cart"] = {}
 
     def test_history_order_view_success(self):
         """Тестирование истории заказа"""
@@ -48,13 +49,13 @@ class OrderTestCase(TestCase):
     def test_pryce_delivery_saccess(self):
         """Тестирование срабатывания функции"""
         result = pryce_delivery(self.user)
-        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result), 5)
 
     def test_save_order_model_saccess(self):
         """Проверка создания  нового заказа"""
         forma_order = {"delivery": "ORDINARY", "city": "Москва", "address": "Пупкина 4", "pay": "ONLINE"}
         expected_result1 = Order.objects.all().count() + 1
-        save_order_model(self.user, forma_order)
+        save_order_model(self.user, forma_order, self.client.session)
         self.assertEqual(expected_result1, Order.objects.all().count())
 
     def test_create_order_view_success(self):

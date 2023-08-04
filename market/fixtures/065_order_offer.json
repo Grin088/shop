@@ -128,5 +128,15 @@
       "count": 8,
       "price": "15.00"
     }
+  },
+  {
+    "model": "shops.orderoffer",
+    "pk": 14,
+    "fields": {
+      "order": 6,
+      "offer": 1,
+      "count": 1,
+      "price": "123.00"
+    }
   }
 ]
