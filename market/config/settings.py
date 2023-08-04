@@ -23,7 +23,7 @@ config = dotenv_values(os.path.join("..", ".env"))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 AUTH_USER_MODEL = "users.CustomUser"
-
+APPEND_SLASH = False
 CART_SESSION_ID = "cart"
 
 # Quick-start development settings - unsuitable for production
@@ -237,7 +237,7 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_DEFAULT_QUEUE = "default"
 CELERY_BEAT_SCHEDULE = {
     "process_payment_queue": {
-        "task": "market.shops.tasks.process_payment_queue",
+        "task": "shops.tasks.process_payment_queue",
         "schedule": timedelta(seconds=60),
     }
 }
