@@ -1,9 +1,8 @@
 from random import randrange
 import requests
-from django.db.models import F
 from django.shortcuts import render, redirect, reverse  # noqa F401
 from django.conf import settings
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page  # noqa F401
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -13,8 +12,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from catalog.models import Catalog
 from products.models import Product
-from cart.models import CartItem
 from users.views import MyLoginView
 from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.forms import OderLoginUserForm, PaymentForm
@@ -41,7 +40,7 @@ SRC_ORDER_STATUS_PK = 5
 DST_ORDER_STATUS_PK = 4
 
 
-@cache_page(settings.CACHE_CONSTANT)
+# @cache_page(settings.CACHE_CONSTANT) # noqa F401
 def home(request):
     """Главная страница"""
     if request.method == "GET":
@@ -53,8 +52,23 @@ def home(request):
         # limited_products = time_and_products['limited_products']  # пока не может использоваться из-за celery
         limited_product = get_random_limited_edition_product()
         limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
+        catalog = Catalog.objects.all()
+        list_catalog = list()
+        for i in catalog:
+            if i.parent:
+                if i.parent in list_catalog:
+                    continue
+                else:
+                    list_catalog.append(i.parent)
+                    print(i.parent)
+                    for a in catalog.filter(parent_id=i.parent.pk):
+                        print("----", a)
+            else:
+                print(i)
+
         context = {
             "products": Product.objects.all()[:8],
+            "categories": Catalog.objects.all(),
             "featured_categories": featured_categories,
             "random_banners": random_banners,
             # 'update_time': update_time,  # пока не может использоваться из-за celery
@@ -105,7 +119,7 @@ class ComparePageView(View):
         """Переключение категории сравнения и удаление из списка сравнений"""
         delete_id = self.request.POST.get("delete_id")
         if delete_id:
-            compare_list_check(request.session, int(delete_id))
+            compare_list_check(request.session, delete_id)
         comp_list = request.session.get("comp_list", [])
         if len(comp_list) > 1:
             category_name = self.request.POST.get("category")
@@ -130,17 +144,12 @@ class CreateOrderView(TemplateView):
         """Оформления заказа если корзина не пуста и пользователь залогинен"""
         cart_list = None
         if self.request.user.is_authenticated:
-            cart_list = (
-                CartItem.objects.filter(cart__user=self.request.user)
-                .annotate(summ_offer=F("offer__price") * F("quantity"))
-                .select_related("offer__product")
-            )
+            cart_list = pryce_delivery(self.request.user)
             if not cart_list:
                 return redirect("catalog:show_product")
         context = {
             "form_log": OderLoginUserForm(),
             "cart_list": cart_list,
-            "delivery": pryce_delivery(self.request.user),
         }
         return render(request, "market/order/order.jinja2", context=context)
 
@@ -164,8 +173,7 @@ class CreateOrderView(TemplateView):
                             "user": self.request.user,
                         },
                     )
-        new_order_pk = save_order_model(self.request.user, self.request.POST)
-
+        new_order_pk = save_order_model(self.request.user, self.request.POST, request.session)
         return redirect("payment", pk=new_order_pk)
 
 

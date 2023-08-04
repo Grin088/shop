@@ -68,5 +68,19 @@
       "pay": "ONLINE",
       "total_cost": "500.00"
     }
+  },
+  {
+    "model": "shops.order",
+    "pk": 6,
+    "fields": {
+      "custom_user": 16,
+      "status": 4,
+      "data": "2023-08-04T08:15:00.214Z",
+      "delivery": "ORDINARY",
+      "city": "a",
+      "address": "a",
+      "pay": "ONLINE",
+      "total_cost": "123.00"
+    }
   }
 ]

@@ -1,7 +1,9 @@
 from django.core.paginator import Paginator
-from django.db.models import Q, Min, Avg
+from django.db.models import Q, Avg, Min
 from django.shortcuts import render
 from catalog.forms import ProductFilterForm
+from catalog.price_and_discounts import check_discount_price, min_price, max_price
+
 from products.models import Product
 from shops.services.compare import compare_list_check
 
@@ -20,8 +22,8 @@ def get_paginator(request, products, forms):
         get = request.POST.get("add_compare")
         compare_list_check(request.session, get)
     # TODO Пагинацию изменить при необходимости (default=4 записи)
-    paginator = Paginator(products, 4)
-    check_discount_price(products=products)
+    paginator = Paginator(products, 20)
+    check_discount_price()
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
     context = {"page_obj": page_obj, "form": forms}
@@ -31,15 +33,14 @@ def get_paginator(request, products, forms):
 def sorted_products(sort, product):
     """Сортировка по критериям"""
     if sort in "offers__price":
-        product = product.annotate(average_stars=Avg("offers__discount_price")).order_by("average_stars")
+        product = (
+            product.prefetch_related("offers")
+            .annotate(average_stars=Avg("offers__discount_price"))
+            .order_by("average_stars")
+        )
         return product
     elif sort in "-offers__date_of_creation":
-        product = {
-            products: price
-            for products in product.order_by(sort)
-            for price in products.offers.aggregate(item=Min("date_of_creation"))
-        }
-        product = list(product.keys())
+        product = product.prefetch_related("offers").annotate(date=Min("offers__date_of_creation")).order_by("-date")
         return product
     elif sort in ("sorting.get_count_history()", "sorting.get_count_reviews()"):
         product = {
@@ -55,50 +56,58 @@ def sorted_products(sort, product):
         return product
 
 
-def check_discount_price(products):
-    """Обновление цены со скидкой"""
-    for product in products:
-        for ii in product.offers.all():
-            ii.discount_price = ii.price_with_discount
-            ii.save()
-
-
 def filter_search(session, products):
     """Фильтрация продуктов"""
     prices = session["price"].split(";")
     sessions = {value: key for value, key in session.items() if (session[value] and value != "price")}
-    product_search = products.annotate(discount=Avg("offers__discount_price")).filter(
-        (
-            Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
-            & Q(discount__range=(prices[0], prices[1]))
+    product_search = (
+        products.prefetch_related("offers")
+        .annotate(discount=Avg("offers__discount_price"))
+        .filter(
+            (
+                Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
+                & Q(discount__range=(prices[0], prices[1]))
+            )
         )
     )
 
     if sessions.get("in_stock"):
-        product_search = products.annotate(discount=Avg("offers__discount_price")).filter(
-            (
-                Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
-                & Q(discount__range=(prices[0], prices[1]))
+        product_search = (
+            products.prefetch_related("offers")
+            .annotate(discount=Avg("offers__discount_price"))
+            .filter(
+                (
+                    Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
+                    & Q(discount__range=(prices[0], prices[1]))
+                )
+                & Q(offers__product_in_stock=None if sessions.get("in_stock") is None else sessions["in_stock"])
             )
-            & Q(offers__product_in_stock=None if sessions.get("in_stock") is None else sessions["in_stock"])
         )
 
     if sessions.get("free_delivery"):
-        product_search = products.annotate(discount=Avg("offers__discount_price")).filter(
-            (
-                Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
-                & Q(discount__range=(prices[0], prices[1]))
+        product_search = (
+            products.prefetch_related("offers")
+            .annotate(discount=Avg("offers__discount_price"))
+            .filter(
+                (
+                    Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
+                    & Q(discount__range=(prices[0], prices[1]))
+                )
+                & Q(offers__free_shipping=None if sessions.get("free_delivery") is None else sessions["free_delivery"])
             )
-            & Q(offers__free_shipping=None if sessions.get("free_delivery") is None else sessions["free_delivery"])
         )
     if sessions.get("in_stock") and sessions.get("free_delivery"):
-        product_search = products.annotate(discount=Avg("offers__discount_price")).filter(
-            (
-                Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
-                & Q(discount__range=(prices[0], prices[1]))
+        product_search = (
+            products.prefetch_related("offers")
+            .annotate(discount=Avg("offers__discount_price"))
+            .filter(
+                (
+                    Q(name__icontains="" if sessions.get("name") is None else sessions["name"])
+                    & Q(discount__range=(prices[0], prices[1]))
+                )
+                & Q(offers__free_shipping=None if sessions.get("free_delivery") is None else sessions["free_delivery"])
+                & Q(offers__product_in_stock=None if sessions.get("in_stock") is None else sessions["in_stock"])
             )
-            & Q(offers__free_shipping=None if sessions.get("free_delivery") is None else sessions["free_delivery"])
-            & Q(offers__product_in_stock=None if sessions.get("in_stock") is None else sessions["in_stock"])
         )
     return product_search.distinct()
 
@@ -113,20 +122,43 @@ class MixinGetPost:
             products = Product.objects.all()
             form = ProductFilterForm(request.session["filter"])
             if form.is_valid():
-                form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1]})
+                form.fields["price"].widget.attrs.update(
+                    {
+                        "data-from": prices[0],
+                        "data-to": prices[1],
+                        "data-min": str(min_price()),
+                        "data-max": str(max_price()),
+                    }
+                )
                 products = filter_search(sessions, products)
         else:
             form = ProductFilterForm()
-            products = Product.objects.all()
+            form.fields["price"].widget.attrs.update(
+                {
+                    "data-from": str(min_price() + (min_price() * 30 / 100)),
+                    "data-to": str(max_price() - (max_price() * 20 / 100)),
+                    "data-min": str(min_price()),
+                    "data-max": str(max_price()),
+                }
+            )
+            products = Product.objects.all().prefetch_related("offers")
         context = get_paginator(request, products, form)
         return render(request, "market/catalog/catalog.jinja2", context=context)
 
     def post(self, request):
-        product = Product.objects.all()
+        product = Product.objects.all().prefetch_related("offers")
         form = ProductFilterForm(request.POST)
         if form.is_valid():
             prices = form.cleaned_data["price"].split(";")
-            form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1]})
+            check_discount_price()
+            form.fields["price"].widget.attrs.update(
+                {
+                    "data-from": prices[0],
+                    "data-to": prices[1],
+                    "data-min": str(min_price()),
+                    "data-max": str(max_price()),
+                }
+            )
             # TODO Время жизни сессии можно изменить при необходимости (default=3 мин.)
             request.session.set_expiry(180)
             request.session["filter"] = form.cleaned_data
