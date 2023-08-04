@@ -1,7 +1,10 @@
+import datetime
+
 from django.test import TestCase
 from django.urls import reverse_lazy, reverse
 
 from products.models import Product, Property, ProductProperty, Review
+from shops.models import Order, OrderStatus, OrderOffer, Offer, Shop
 from users.models import CustomUser as User
 
 
@@ -108,6 +111,12 @@ class ProductPropertyModelTest(TestCase):
 class ProductReviewTest(TestCase):
     """Класс тестов отзывов о товаре"""
 
+    fixtures = [
+        "fixtures/011_users.json",
+        "fixtures/050_order_status.json",
+        "fixtures/040_shops.json"
+    ]
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -163,6 +172,27 @@ class ProductReviewTest(TestCase):
         cls.review5 = Review.objects.create(
             user=cls.user5, product=cls.product1, rating=5, review_text="test text"
         )
+        cls.offer = Offer.objects.create(shop=Shop.objects.get(id=1),
+                                         product=cls.product1,
+                                         price="123",
+                                         product_in_stock=True,
+                                         free_shipping=False,
+                                         date_of_creation="2023-06-21T09:48:35.593Z"
+                                         )
+        cls.order1 = Order.objects.create(custom_user=cls.user6,
+                                          data=datetime.date.today(),
+                                          status=OrderStatus.objects.get(id=4),
+                                          delivery="ORDINARY",
+                                          city="Moscow",
+                                          address="Some",
+                                          pay="ONLINE",
+                                          total_cost="123")
+
+        cls.order_offer = OrderOffer.objects.create(order=cls.order1,
+                                                    offer=cls.offer,
+                                                    count=1,
+                                                    price=123.00
+                                                    )
 
     @classmethod
     def tearDownClass(cls):
@@ -179,6 +209,9 @@ class ProductReviewTest(TestCase):
         cls.review4.delete()
         cls.review5.delete()
         cls.product1.delete()
+        cls.order1.delete()
+        cls.offer.delete()
+        cls.order_offer.delete()
 
     def test_view_reviews(self):
         """Проверка страницы с отзывами"""

@@ -15,4 +15,4 @@ class PaymentForm(forms.ModelForm):
 
     class Meta:
         model = PaymentQueue
-        fields = ["card_number",]
+        fields = ["card_number", ]
