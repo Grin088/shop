@@ -10,6 +10,6 @@ def update_order_status(order_pk: int, src_pk: int, dst_pk: int) -> None:
     """
     status_srs = OrderStatus.objects.get(pk=src_pk)
     Order.objects.filter(pk=order_pk).update(status=status_srs)
-    OrderStatusChange.objects.create(order=Order.objects.get(pk=order_pk),
-                                     src_status=status_srs,
-                                     dst_status=OrderStatus.objects.get(pk=dst_pk))
+    OrderStatusChange.objects.create(
+        order=Order.objects.get(pk=order_pk), src_status=status_srs, dst_status=OrderStatus.objects.get(pk=dst_pk)
+    )

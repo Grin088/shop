@@ -57,11 +57,10 @@ class CartTestLogin(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.credentials = {
-            'username': 'testuser@gmail.com',
-            'password': 'testpass123'}
-        cls.user = CustomUser.objects.create_user(username='testuser', email='testuser@gmail.com',
-                                                  password="testpass123")
+        cls.credentials = {"username": "testuser@gmail.com", "password": "testpass123"}
+        cls.user = CustomUser.objects.create_user(
+            username="testuser", email="testuser@gmail.com", password="testpass123"
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -69,4 +68,4 @@ class CartTestLogin(TestCase):
         CartTestLogin.user.delete()
 
     def test_call_external_api(self):
-        self.client.post('/login/', self.credentials, follow=True)
+        self.client.post("/login/", self.credentials, follow=True)

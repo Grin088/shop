@@ -1,4 +1,3 @@
-
 class OfferDiscount:
     """Класс для получения скидки для продукта в офере"""
 
@@ -14,16 +13,14 @@ class OfferDiscount:
 
     def get_product_discount(self, discounts, **kwargs):
         """Метод для получения максимальной скидки"""
-        discount = (
-                max(
-                    [
-                        discount.discount_amount
-                        if discount.discount_amount_type == 2
-                        else self.price / 100 * discount.discount_amount
-                        for discount in discounts.filter(active=True, **kwargs)
-                    ],
-                    default=0,
-                )
+        discount = max(
+            [
+                discount.discount_amount
+                if discount.discount_amount_type == 2
+                else self.price / 100 * discount.discount_amount
+                for discount in discounts.filter(active=True, **kwargs)
+            ],
+            default=0,
         )
         return discount
 
@@ -32,7 +29,6 @@ class OfferDiscount:
         product_discount = self.product.shopitemdiscount
         product_category_discount = self.product_category.shopitemdiscount
         max_discount = max(
-            self.get_product_discount(product_discount),
-            self.get_product_discount(product_category_discount)
+            self.get_product_discount(product_discount), self.get_product_discount(product_category_discount)
         )
         return max_discount

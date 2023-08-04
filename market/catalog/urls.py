@@ -8,5 +8,5 @@ from catalog.views import ViewShows
 app_name = "catalog"
 
 urlpatterns = [
-    path("", cache_page(settings.CACHE_TIME_PER_DAY, key_prefix='catalog')(ViewShows.as_view()), name="show_product"),
+    path("", cache_page(settings.CACHE_TIME_PER_DAY, key_prefix="catalog")(ViewShows.as_view()), name="show_product"),
 ]

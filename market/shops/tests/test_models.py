@@ -38,9 +38,7 @@ class ShopModelTest(TestCase):
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    shop._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(shop._meta.get_field(field).verbose_name, expected_value)
 
     def test_name_max_length(self):
         shop = ShopModelTest.shop
@@ -76,9 +74,7 @@ class OfferModelTest(TestCase):
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
-                self.assertEqual(
-                    offer._meta.get_field(field).verbose_name, expected_value
-                )
+                self.assertEqual(offer._meta.get_field(field).verbose_name, expected_value)
 
     def test_price_max_digits(self):
         offer = OfferModelTest.offer

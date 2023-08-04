@@ -39,6 +39,6 @@ class ProductsServices:
             "reviews_quantity": reviews_quantity,
             "rating": rating,
             "images": self.images,
-            "can_add_review": self.customer_can_write_review()
+            "can_add_review": self.customer_can_write_review(),
         }
         return context
