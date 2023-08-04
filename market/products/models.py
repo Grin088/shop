@@ -128,13 +128,6 @@ class Review(models.Model):
         verbose_name = _("отзыв")
         verbose_name_plural = _("отзывы")
 
-    # RATING_CHOICES = (
-    #     (1, "1"),
-    #     (2, "2"),
-    #     (3, "3"),
-    #     (4, "4"),
-    #     (5, "5")
-    # )
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_("покупатель"))
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_("продукт"))
     # order = models.ForeignKey("Order", on_delete=models.DO_NOTHING, verbose_name=_("Заказ"))

@@ -18,9 +18,7 @@ class ReviewsAPI(APIView):
         product_id = request.GET.get("product_id")
         offset = int(request.GET.get("offset", 0))
         limit = int(request.GET.get("limit", 3))
-        # fmt: off
         reviews = Review.get_review(product_id=product_id)[offset: offset + limit]
-        # fmt: on
         data = [
             {
                 "number": n + 1,
