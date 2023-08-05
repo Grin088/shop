@@ -215,7 +215,7 @@
                                                 </div>
                                             </div>
                                             <div class="Cart-block Cart-block_price">
-                                                <div class="Cart-price">{{ item_i.summ_offer }}Pуб.
+                                                <div class="Cart-price">{{ item_i.summ_offer }}$.
                                                 </div>
                                             </div>
                                         </div>
@@ -228,11 +228,11 @@
                                     <div class="Cart-total">
                                         <div class="Cart-block Cart-block_total">
                                             <strong class="Cart-title">{% trans %}Доставка{% endtrans %}:
-                                            </strong><span class="Cart-price" id="delivery-cost">{{ cart_list.delivery_ordinary }}Руб</span>
+                                            </strong><span class="Cart-price" id="delivery-cost">{{ cart_list.delivery_ordinary }}$</span>
                                         </div>
                                         <div class="Cart-block Cart-block_total">
                                             <strong class="Cart-title">{% trans %}Итого{% endtrans %}:
-                                            </strong><span class="Cart-price" id="total-express">{{ cart_list.total_cost_ordinary }}Руб</span>
+                                            </strong><span class="Cart-price" id="total-express">{{ cart_list.total_cost_ordinary }}$</span>
                                         </div>
                                         <div class="Cart-block">
                                             <button  class="btn btn_primary btn_lg" type="submit" aria-invalid="true" onclick="validform()" formnovalidate>{% trans %}Создать заказ и оплатить{% endtrans %}

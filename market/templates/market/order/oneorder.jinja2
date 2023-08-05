@@ -100,7 +100,7 @@
                                             </div>
                                         </div>
                                         <div class="Cart-block Cart-block_price">
-                                            <div class="Cart-price">{{ order_offer.price }}Руб.
+                                            <div class="Cart-price">{{ order_offer.price }}$.
                                             </div>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                 {% endfor %}
                                 <div class="Cart-total">
                                     <div class="Cart-block Cart-block_total">
-                                        <strong class="Cart-title">{% trans %}Итого{% endtrans %}:<span class="Cart-price">{{ order.total_cost }} Руб</span>
+                                        <strong class="Cart-title">{% trans %}Итого{% endtrans %}:<span class="Cart-price">{{ order.total_cost }}$</span>
                                         </strong>
                                     </div>
                                     {%  if order.status |string() == "Оплата не выполнена" or "Новый" %}
