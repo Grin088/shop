@@ -14,6 +14,18 @@ def max_price():
     return round(price['price_max_discount__max'] or 0)
 
 
+def min_price_for_category(slug):
+    products = Product.objects.filter(category__slug=slug)
+    price = products.annotate(price_min_discount=Avg('offers__discount_price')).aggregate(Min('price_min_discount'))
+    return round(price['price_min_discount__min'] or 0)
+
+
+def max_price_for_category(slug):
+    products = Product.objects.filter(category__slug=slug)
+    price = products.annotate(price_max_discount=Avg('offers__discount_price')).aggregate(Max('price_max_discount'))
+    return round(price['price_max_discount__max'] or 0)
+
+
 def check_discount_price():
     """Обновление цены со скидкой"""
     products = Product.objects.all()

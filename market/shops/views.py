@@ -53,23 +53,8 @@ def home(request):
         # limited_products = time_and_products['limited_products']  # пока не может использоваться из-за celery
         limited_product = get_random_limited_edition_product()
         limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
-        catalog = Catalog.objects.all()
-        list_catalog = list()
-        for i in catalog:
-            if i.parent:
-                if i.parent in list_catalog:
-                    continue
-                else:
-                    list_catalog.append(i.parent)
-                    print(i.parent)
-                    for a in catalog.filter(parent_id=i.parent.pk):
-                        print('----', a)
-            else:
-                print(i)
-
         context = {
             "products": Product.objects.all()[:8],
-            "categories": Catalog.objects.all(),
             "featured_categories": featured_categories,
             "random_banners": random_banners,
             # 'update_time': update_time,  # пока не может использоваться из-за celery

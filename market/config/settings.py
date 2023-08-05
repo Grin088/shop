@@ -82,7 +82,8 @@ TEMPLATES = [
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
-            "context_processors": ["cart.context_processors.cart"],
+            "context_processors": ["cart.context_processors.cart",
+                                   'catalog.context_processor.get_categories', ],
             "match_extension": ".jinja2",
             "match_regex": None,
             "app_dirname": "templates",
