@@ -1,15 +1,16 @@
 from django.urls import path
-from .views import (BaseView,
-                    seller_detail,
-                    home,
-                    ComparePageView,
-                    CreateOrderView,
-                    OrderLoginView,
-                    HistoryOrderView,
-                    OrderDetailsView,
-                    PaymentView,
-                    process_payment,
-                    )
+from .views import (
+    BaseView,
+    seller_detail,
+    home,
+    ComparePageView,
+    CreateOrderView,
+    OrderLoginView,
+    HistoryOrderView,
+    OrderDetailsView,
+    PaymentView,
+    process_payment,
+)
 
 urlpatterns = [
     path("", BaseView.as_view(), name="index"),

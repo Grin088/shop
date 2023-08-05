@@ -12,15 +12,14 @@ class ProductsServices:
         self.reviews = Review.get_review(user_id=request.user.id, product_id=product_id)
         self.images = self.product.product_images.all()
 
-    @classmethod
-    def customer_can_write_review(cls, request, product_id):
+    def customer_can_write_review(self):
         """Проверка возможности добавления отзыва пользователем"""
 
-        user = request.user
+        user = self.user
+        if user.is_authenticated:
+            order = user.orders.filter(status__id=4, offer__product_id=self.product_id).last()
 
-        order = user.orders.filter(status="paid", order_items__product_id=product_id).last()
-
-        return order
+            return order
 
     def get_context(self, form):
         """Получение необходимого контекста для шаблона"""
@@ -40,6 +39,6 @@ class ProductsServices:
             "reviews_quantity": reviews_quantity,
             "rating": rating,
             "images": self.images,
-            # "can_add_review": self.customer_can_write_review()
+            "can_add_review": self.customer_can_write_review(),
         }
         return context

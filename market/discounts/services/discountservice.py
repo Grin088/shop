@@ -5,6 +5,7 @@ from cart.cart import Cart
 
 class DiscountService:
     """Класс для расчета скидок на товары в корзине"""
+
     def __init__(self, cart: Cart):
         self.cart = cart
         self.products = self.cart.get_products()

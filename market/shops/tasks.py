@@ -3,7 +3,7 @@ from datetime import datetime, time, timedelta
 from celery import shared_task
 from django.core.cache import cache
 from products.models import Product
-from shops.models import PaymentQueue
+from shops.models import PaymentQueue, OrderStatus
 from shops.services.fake_payment import FakePaymentService
 
 
@@ -25,14 +25,15 @@ def process_payment_queue(name="Process payment queue"):
     fake_payment_service = FakePaymentService()
     for job in jobs:
         order = job.order
+        print(type(order))  # мне ничего не выводит в консоль, не знаю как логировать этот момент
         card_number = job.card_number
 
         payment_status = fake_payment_service.pay_order(card_number=card_number)
 
         if payment_status == "success":
-            order.status = "paid"
+            order.status = OrderStatus.objects.get(name="Оплачен")
         else:
-            order.status = "unpaid"
+            order.status = OrderStatus.objects.get(name="Оплата не выполнена")
 
         order.save()
         job.delete()

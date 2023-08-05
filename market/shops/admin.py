@@ -9,17 +9,18 @@ from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
 
 class ShopProductForm(BaseInlineFormSet):
     """Валидация на добавление более 2-х продуктов с одиноковым id.
-        После валидности, кэш Catalog очищается"""
+    После валидности, кэш Catalog очищается"""
+
     def clean(self):
         super(ShopProductForm, self).clean()
         product = list()
         for form in self.forms:
-            if form.cleaned_data and not form.cleaned_data.get('DELETE'):
-                product.append(form.cleaned_data.get('product'))
+            if form.cleaned_data and not form.cleaned_data.get("DELETE"):
+                product.append(form.cleaned_data.get("product"))
         data = Counter(product)
         for ii in data.values():
             if ii > 1:
-                raise ValidationError(f'Ошибка. Продукт{product[-1:]} не может повторяться')
+                raise ValidationError(f"Ошибка. Продукт{product[-1:]} не может повторяться")
             else:
                 clear_cache_catalog()
 
@@ -27,7 +28,7 @@ class ShopProductForm(BaseInlineFormSet):
 class ShopProductInline(admin.TabularInline):
     model = Shop.products.through
     formset = ShopProductForm
-    exclude = ('discount_price',)
+    exclude = ("discount_price",)
 
 
 @admin.register(Shop)
@@ -50,7 +51,7 @@ class OfferAdmin(admin.ModelAdmin):
         "product",
         "price",
     )
-    exclude = ('discount_price',)
+    exclude = ("discount_price",)
 
 
 @admin.register(Banner)

@@ -11,6 +11,7 @@ ListCompare = list[Dict[str, Union[str, float, Dict[str, list[str, bool]], int]]
 
 class CompareMixin:
     """Страница сравнения товара"""
+
     def get(self, request: HttpRequest) -> HttpResponse:
         """Отображение страницы сравнения"""
         comp_list = request.session.get("comp_list", [])
