@@ -1,6 +1,3 @@
-from django.shortcuts import redirect
-from django.urls import reverse
-
 from catalog.models import Catalog
 
 

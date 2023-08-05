@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from catalog.models import Catalog
+from catalog.models import Catalog # noqa F401
 from products.models import Product
 from cart.models import CartItem
 from users.views import MyLoginView

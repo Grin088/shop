@@ -8,4 +8,3 @@ def get_slug(name: str) -> str:
     if detect_language(slug) == 'ru':
         slug = translit(slug, reversed=True)
     return slug
-
