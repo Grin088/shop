@@ -50,7 +50,7 @@
                                         <div class="Order-info">
                                             <div class="Order-infoType">{% trans %}Общая стоимость{% endtrans %}:
                                             </div>
-                                            <div class="Order-infoContent"><span class="Order-price">{{ order.total_cost }} Руб</span>
+                                            <div class="Order-infoContent"><span class="Order-price">{{ order.total_cost }}$</span>
                                             </div>
                                         </div>
                                         {%  if order.status |string() != "Оплата не выполнена" %}
