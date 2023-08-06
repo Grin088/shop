@@ -19,7 +19,7 @@
             <div class="Card-content">
               <strong class="Card-title">
                 <a href="{{ url('products:product_detail' ,product_id=products.product.pk) }}">
-                  {{ product.product.description | truncate(20, False, '...', 0) }}
+                  {{ products.product.description | truncate(20, False, '...', 0) }}
                 </a>
               </strong>
               <div class="Card-description">
