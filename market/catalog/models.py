@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from catalog import utilites
+from catalog.cache_for_catalog import clear_cache_category
 
 
 class Catalog(models.Model):
@@ -19,6 +20,7 @@ class Catalog(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = utilites.get_slug(self.name)
+        clear_cache_category()
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):

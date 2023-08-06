@@ -41,7 +41,7 @@ SRC_ORDER_STATUS_PK = 5
 DST_ORDER_STATUS_PK = 4
 
 
-# @cache_page(settings.CACHE_CONSTANT) # noqa F401
+@cache_page(settings.CACHE_CONSTANT)
 def home(request):
     """Главная страница"""
     if request.method == "GET":
