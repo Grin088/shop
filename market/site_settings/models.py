@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.utils.translation import gettext_lazy as _
+from .signals import clear_home_cache
+from django.conf import settings
+from django.db.models.signals import post_save
 
 
 class OneObjectModel(models.Model):
@@ -57,3 +60,6 @@ class SiteSettings(OneObjectModel):
     class Meta:
         verbose_name = _("настройка сайта")
         verbose_name_plural = _("настройки сайта")
+
+
+post_save.connect(clear_home_cache, sender=SiteSettings)
