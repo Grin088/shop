@@ -95,12 +95,12 @@
                                     <div class="Cart-block Cart-block_row">
                                         <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/media/{{order_offer.offer.product.preview}}" alt="product.png" /></a>
                                         </div>
-                                        <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">{{ order_offer.offer.product.name }}</a>
+                                        <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ url("products:product_detail", product_id=order_offer.offer.product.id)}}">{{ order_offer.offer.product.name }}</a>
                                             <div class="Cart-desc">{{ order_offer.offer.product.description }}
                                             </div>
                                         </div>
                                         <div class="Cart-block Cart-block_price">
-                                            <div class="Cart-price">{{ order_offer.price }}Руб.
+                                            <div class="Cart-price">{{ order_offer.price }}$.
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +117,7 @@
                                         </strong>
                                     </div>
                                     {%  if order.status |string() == "Оплата не выполнена" or "Новый" %}
-                                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="#">{% trans %}Оплатить{% endtrans %}</a>
+                                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{{ url("payment", pk=order.pk) }}">{% trans %}Оплатить{% endtrans %}</a>
                                     </div>
                                     {% endif %}
                                 </div>

@@ -40,3 +40,32 @@ class CartViewTest(TestCase):
         self.client.post("/cart/add/1/0")
         session = self.client.session
         self.assertEqual(session["cart"], {})
+
+
+class MockResponse:
+    def __init__(self):
+        self.status_code = 200
+        self.headers = {"Host": "response.mock"}
+
+    def cart_quantity(self):
+        return 1
+
+
+class CartTestLogin(TestCase):
+    """Проверка страницы профиля"""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.credentials = {"username": "testuser@gmail.com", "password": "testpass123"}
+        cls.user = CustomUser.objects.create_user(
+            username="testuser", email="testuser@gmail.com", password="testpass123"
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        CartTestLogin.user.delete()
+
+    def test_call_external_api(self):
+        self.client.post("/login/", self.credentials, follow=True)

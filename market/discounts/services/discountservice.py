@@ -4,6 +4,8 @@ from cart.cart import Cart
 
 
 class DiscountService:
+    """Класс для расчета скидок на товары в корзине"""
+
     def __init__(self, cart: Cart):
         self.cart = cart
         self.products = self.cart.get_products()
@@ -23,7 +25,8 @@ class DiscountService:
         """ "Метод возвращает итоговую стоимость корзины с учетом скидки"""
         return self._total_price_with_discount
 
-    def discounts_handler(self, product, values, **kwargs):
+    def discounts_handler(self, discounts, values, **kwargs):
+        """Метод для получения списка скидок на товар"""
         products_quantity = values.get("pcs")
         product_price = values.get("unit_price")
 
@@ -33,7 +36,7 @@ class DiscountService:
                     discount.discount_amount
                     if discount.discount_amount_type == 2
                     else round(product_price / 100 * float(discount.discount_amount), 2)
-                    for discount in product.filter(active=True, **kwargs)
+                    for discount in discounts.filter(active=True, **kwargs)
                 ],
                 default=0,
             )
@@ -65,7 +68,7 @@ class DiscountService:
 
     def _get_cart_discount_with_products(self) -> int:
         """Метод для расчета максимальной скидки для корзины
-        В методе высчитываются варианты скидки, где указаны продукты и их категории"""
+        В методе высчитываются варианты скидки, для которых указаны продукты и их категории"""
 
         cart_products_discount = {}
 
@@ -108,7 +111,7 @@ class DiscountService:
         return cart_products_discount
 
     def _get_cart_discount(self) -> int:
-        """Метод для расчета максимальной скидки из всех возможных для корзины"""
+        """Метод для расчета максимальной скидки из всех возможных скидок для корзины"""
 
         common_kwargs = {"active": True, "products": None, "categories": None}
 

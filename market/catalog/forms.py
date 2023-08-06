@@ -12,10 +12,10 @@ class ProductFilterForm(forms.Form):
                 "class": "range-line",
                 "type": "text",
                 "data-type": "double",
-                "data-min": "2000",
-                "data-max": "100000",
-                "data-from": "5000",
-                "data-to": "30000",
+                "data-min": "5000",
+                "data-max": "20000",
+                "data-from": "6000",
+                "data-to": "10000",
             }
         ),
     )

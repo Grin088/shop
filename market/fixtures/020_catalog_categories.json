@@ -6,7 +6,8 @@
     "name": "ноутбуки",
     "parent": null,
     "image": "catalog/icon/bigGoods.png",
-    "is_featured": true
+    "is_featured": true,
+    "slug": "noutbuki"
   }
 },
 {
@@ -16,7 +17,8 @@
     "name": "бытовая техника",
     "parent": null,
     "image": "catalog/icon/bitovaya-tekhnika-1.jpg",
-    "is_featured": true
+    "is_featured": true,
+    "slug": "bytovaja-tehnika"
   }
 },
 {
@@ -26,7 +28,8 @@
     "name": "Laptop",
     "parent": null,
     "image": "catalog/icon/product.png",
-    "is_featured": true
+    "is_featured": true,
+    "slug": "Laptop"
   }
 }
 ]

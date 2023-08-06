@@ -18,9 +18,7 @@ class ReviewsAPI(APIView):
         product_id = request.GET.get("product_id")
         offset = int(request.GET.get("offset", 0))
         limit = int(request.GET.get("limit", 3))
-        # fmt: off
-        reviews = Review.get_review(product_id=product_id)[offset: offset + limit]
-        # fmt: on
+        reviews = Review.get_review(product_id=product_id)[offset : offset + limit]  # noqa F401
         data = [
             {
                 "number": n + 1,
@@ -29,7 +27,7 @@ class ReviewsAPI(APIView):
                     "username": r.user.username,
                     "firstname": r.user.first_name,
                     "lastname": r.user.last_name,
-                    "avatar": r.user.avatar.url,
+                    "avatar": r.user.avatar.image.url,
                 },
                 "product": r.product.name,
                 "rating": r.rating,

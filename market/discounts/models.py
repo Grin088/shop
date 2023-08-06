@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from catalog.price_and_discounts import check_discount_price
+
 
 class StatusDiscount(models.IntegerChoices):
     """Класс для выбора вида скидки"""
@@ -66,6 +68,7 @@ class Discount(models.Model):
 
     def save(self, *args, **kwargs):
         self.active = self.last_discount_time.total_seconds() > 0
+        check_discount_price()
         super().save(*args, **kwargs)
 
 

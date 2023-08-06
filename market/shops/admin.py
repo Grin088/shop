@@ -1,11 +1,34 @@
+from collections import Counter
 from django.contrib import admin  # noqa F401
-from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
 
-from shops.models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
+from catalog.cache_for_catalog import clear_cache_catalog
+from .models import Shop, Offer, Banner, Order, OrderStatus, OrderStatusChange
+
+
+class ShopProductForm(BaseInlineFormSet):
+    """Валидация на добавление более 2-х продуктов с одиноковым id.
+    После валидности, кэш Catalog очищается"""
+
+    def clean(self):
+        super(ShopProductForm, self).clean()
+        product = list()
+        for form in self.forms:
+            if form.cleaned_data and not form.cleaned_data.get("DELETE"):
+                product.append(form.cleaned_data.get("product"))
+        data = Counter(product)
+        for ii in data.values():
+            if ii > 1:
+                raise ValidationError(f"Ошибка. Продукт{product[-1:]} не может повторяться")
+            else:
+                clear_cache_catalog()
 
 
 class ShopProductInline(admin.TabularInline):
     model = Shop.products.through
+    formset = ShopProductForm
+    exclude = ("discount_price",)
 
 
 @admin.register(Shop)
@@ -28,6 +51,7 @@ class OfferAdmin(admin.ModelAdmin):
         "product",
         "price",
     )
+    exclude = ("discount_price",)
 
 
 @admin.register(Banner)
@@ -59,21 +83,8 @@ class OrderAdmin(admin.ModelAdmin):
         "data",
         "delivery",
         "city",
-        "address_short",
+        "address",
     )
-
-    def address_short(self, obj: Order) -> str:
-        """Обрезка текста адреса"""
-
-        if len(obj.address) < 15:
-            return obj.address
-        return obj.address[:15] + "..."
-
-    address_short.short_description = _("адрес")
-
-    def get_queryset(self, request):
-        """Обединение запросов"""
-        return Order.objects.select_related("custom_user")
 
 
 @admin.register(OrderStatus)

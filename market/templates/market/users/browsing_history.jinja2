@@ -1,47 +1,69 @@
 {% extends 'market/base.jinja2' %}
 {% block middle %}
-  <div class="Section-content">
-    <div class="Cards">
-      {% for offer in history %}
-        {% set score = [] %}
-        {% for p in offer.product.offers.all() %}
-          {% if score.append(p.price) %}
-          {% endif %}
-        {% endfor %}
-        <div class="Card">
-          <a class="Card-picture" href="{{ url('products:product_detail' ,product_id=offer.product.pk)}}">
-            <img src="{{ offer.product.preview.url }}" alt="{{ offer.product.preview }}" />
-          </a>
-          <div class="Card-content">
-            <strong class="Card-title">
-              <a href="{{ url('products:product_detail' ,product_id=offer.product.pk)}}">
-                {{ offer.product.description }}
-              </a>
-            </strong>
-            <div class="Card-description">
-              <div class="Card-cost">
-                <span class="Card-price">${{ (score | min ) | round }}</span>
-              </div>
-              <div class="Card-category">
-                {{ offer.product.category.name }}
-              </div>
-              <form class="Card-hover" method="post" action="{{ url('cart:cart_add', offer.id, 1) }}">
-                {% csrf_token %}
-                <input type="hidden" name="value_amount" value="+">
-                <a class="Card-btn" href="#" onclick="$(this).closest('form').submit()">
-                  <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg"/>
+  {% if history %}
+    <div class="Section-content">
+      <div class="Cards">
+        {% for products in history %}
+          {% set product_price = [] %}
+          {% set product_discount_price = [] %}
+          {% for prices in products.product.offers.all() %}
+            {% if product_price.append(prices.price) %}
+            {% endif %}
+            {% if product_discount_price.append(prices.price_with_discount) %}
+            {% endif %}
+          {% endfor %}
+          <div class="Card">
+            <a class="Card-picture" href="{{ url('products:product_detail' ,product_id=products.product.pk) }}">
+              <img src="{{ products.product.preview.url }}" alt="{{ products.product.preview.name }}" />
+            </a>
+            <div class="Card-content">
+              <strong class="Card-title">
+                <a href="{{ url('products:product_detail' ,product_id=products.product.pk) }}">
+                  {{ product.product.description | truncate(20, False, '...', 0) }}
                 </a>
+              </strong>
+              <div class="Card-description">
+                <div class="Card-cost">
+                  {% if (((product_price|sum)|round)/(product_price|count))|round ==
+                    (((product_discount_price|sum)|round)/(product_discount_price|count))|round %}
+                    <span class="Card-price">${{(((product_price|sum)|round)/(product_price|count))|round }}</span>
+                  {% else %}
+                    <span class="Card-priceOld">${{(((product_price|sum)|round)/(product_price|count))|round }}</span>
+                    <span class="Card-price">${{(((product_discount_price|sum)|round)/(product_discount_price|count))|round}}</span>
+                  {% endif %}
+                </div>
+                <div class="Card-category">{{ products.product.category.name }}
+                </div>
+                <form class="Card-hover" method="post" action="{{ url('cart:cart_add', products.product.id, 1) }}">
+                  {% csrf_token %}
+                  <input type="hidden" name="value_amount" value="+">
+                  <a class="Card-btn" href="#" onclick="$(this).closest('form').submit()">
+                    <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" />
+                  </a>
+                </form>
+              </div>
+              <form method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <button type="submit" name="delete" value="{{ products.product.pk }}">
+                  {% trans %}Удалить из просмотренных{% endtrans %}
+                </button>
               </form>
+              <div class="Card-description">
+                <p>Колличество продавцов: {{ product_price|count }}</p>
+                  Отзывы: {% if products.product.get_count_reviews() %}
+                <a class="Tabs-link" href="{{ url('products:product_detail' ,product_id=products.product.pk)}}#reviews">
+                  {{ products.product.get_count_reviews() }}</a> {% else %}
+                <a class="Tabs-link" href="{{ url('products:product_detail' ,product_id=products.product.pk)}}#reviews">
+                  Нет отзывов
+                </a>
+                {% endif %}
+              </div>
             </div>
           </div>
-          <form method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            <button type="submit" name="delete" value="{{ offer.product.pk }}">
-              {% trans %}Удалить из просмотренных{% endtrans %}
-            </button>
-          </form>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
     </div>
-  </div>
+  {% else %}
+    <h1>Список пуст</h1>
+  {% endif %}
 {% endblock %}
