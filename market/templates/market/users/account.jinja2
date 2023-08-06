@@ -40,8 +40,8 @@
                             <div class="Account-column">
                                 <div class="Account-avatar">
                                     <img
-                                        src="{% if user.avatar.image == 'users/avatars/default/default_avatar1.png' %}
-                                            {{ static('market/assets/img/icons/user_icon.png') }}
+                                        src="{% if not user.avatar %}
+                                            {{ static('market/assets/img/icons/default_avatar1.png') }}
                                         {% else %}
                                             {{ user.avatar.image.url }}
                                         {% endif %}"
@@ -57,6 +57,7 @@
                         </div>
                         <div class="Account-group">
                             <div class="Account-column Account-column_full">
+                                {% if order %}
                                 <div class="Order Order_anons">
                                     <div class="Order-personal">
                                         <div class="row">
@@ -97,6 +98,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
