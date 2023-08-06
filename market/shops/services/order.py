@@ -19,9 +19,10 @@ def pryce_delivery(r_user: Any) -> dict:
     )
     if not cart_list:
         return {}
-    min_price_offer = SiteSettings.objects.values_list('free_shipping_min_order_amount', flat=True).first()
-    delivery_express = SiteSettings.objects.values_list('express_shipping_price', flat=True).first()
-    delivery_ordinary = SiteSettings.objects.values_list('standard_shipping_price', flat=True).first()
+    sie_settings = SiteSettings.load()
+    min_price_offer = Decimal(sie_settings.free_shipping_min_order_amount)
+    delivery_express = Decimal(sie_settings.express_shipping_price)
+    delivery_ordinary = Decimal(sie_settings.standard_shipping_price)
     cart_count_shop = cart_list.all().values_list("offer__shop").distinct().count()
     total_cost = cart_list.all().aggregate(summ=Sum("summ_offer"))["summ"]
 

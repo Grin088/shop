@@ -1,13 +1,11 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.utils.translation import gettext_lazy as _
-from .signals import clear_home_cache
-from django.conf import settings
-from django.db.models.signals import post_save
 
 
 class OneObjectModel(models.Model):
     """Модель, которая имеет один объект"""
+
     class Meta:
         abstract = True
 
@@ -24,12 +22,13 @@ class OneObjectModel(models.Model):
 
 
 class SiteSettings(OneObjectModel):
-    """Модель настроек сайта"""
+    """Модель настроек сайта, позволяет установить значение пагинации,
+     количество банеров, горячих предложений, топ товаров, ограниченный тираж,
+     количество просмотренных товаров, минимальная сумма заказа для бесплатной доставки,
+     стандартная цена доставки и стоимость экспресс-доставки"""
 
-    # Пагинация
     pagination_size = models.PositiveIntegerField(validators=[MaxValueValidator(8)], default=4,
                                                   verbose_name=_('размер пагинации, объектов'))
-    # Главная страница
     banners_count = models.PositiveIntegerField(validators=[MaxValueValidator(3)], default=3,
                                                 verbose_name=_('количество баннеров'))
     hot_deals_slider = models.PositiveIntegerField(validators=[MaxValueValidator(9)], default=9,
@@ -38,11 +37,10 @@ class SiteSettings(OneObjectModel):
                                                      verbose_name=_('количество товаров в топе'))
     limited_edition_count = models.PositiveIntegerField(validators=[MaxValueValidator(16)], default=16,
                                                         verbose_name=_('количество ограниченного тиража'))
-    # Детальная страница товара
     maximum_number_of_viewed_products = models.PositiveIntegerField(validators=[MaxValueValidator(20)], default=10,
                                                                     verbose_name=_(
-                                                                    'максимальное количество просмотренных товаров'))
-    # Способ доставки
+                                                                        'максимальное количество просмотренных товаров'
+                                                                    ))
     free_shipping_min_order_amount = models.DecimalField(max_digits=6, decimal_places=2, default=2000.00,
                                                          verbose_name=_(
                                                              'минимальная сумма заказа для бесплатной доставки, $'))
@@ -50,9 +48,6 @@ class SiteSettings(OneObjectModel):
                                                   verbose_name=_('стандартная цена доставки, $'))
     express_shipping_price = models.DecimalField(max_digits=6, decimal_places=2, default=500.00,
                                                  verbose_name=_('стоимость экспресс-доставки, $'))
-    # Кэш
-    cache_time = models.PositiveIntegerField(validators=[MaxValueValidator(3)], default=1,
-                                             verbose_name=_('время кэширования, дни'))
 
     def __str__(self) -> str:
         return "Site settings"
@@ -60,6 +55,3 @@ class SiteSettings(OneObjectModel):
     class Meta:
         verbose_name = _("настройка сайта")
         verbose_name_plural = _("настройки сайта")
-
-
-post_save.connect(clear_home_cache, sender=SiteSettings)
