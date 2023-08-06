@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.db.models import Q, Avg, Min
+from django.http import HttpRequest
 
 from catalog.forms import ProductFilterForm
 from catalog.price_and_discounts import check_discount_price, min_price, max_price
@@ -8,7 +9,7 @@ from site_settings.models import SiteSettings
 from shops.services.compare import compare_list_check
 
 
-def get_paginator(request, products, forms):
+def get_paginator(request: HttpRequest or dict, products, forms) -> dict:
     """Представление пагинации 'Каталог продуктов' и сессия для сортировки"""
     if request.GET.get("sort"):
         request.session["sorted"] = request.GET.get("sort")
@@ -33,7 +34,7 @@ def get_paginator(request, products, forms):
     return context
 
 
-def sorted_products(sort, product):
+def sorted_products(sort: str, product) -> list or dict:
     """Сортировка по критериям"""
     if sort in "offers__price":
         product = product.prefetch_related('offers').annotate(average_stars=Avg('offers__discount_price')). \
@@ -56,7 +57,7 @@ def sorted_products(sort, product):
         return product
 
 
-def filter_search(session, products):
+def filter_search(session: dict, products) -> dict:
     """Фильтрация продуктов"""
     prices = session["price"].split(";")
     sessions = {value: key for value, key in session.items() if (session[value] and value != "price")}
@@ -96,7 +97,8 @@ def filter_search(session, products):
     return product_search.distinct()
 
 
-def session_verification(session):
+def session_verification(session: dict) -> dict or None:
+    """Проверка сессий"""
     if "filter" in session:
         sessions = session["filter"]
         prices = sessions["price"].split(";")

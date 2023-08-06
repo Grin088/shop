@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 
 from catalog.forms import ProductFilterForm
@@ -10,7 +11,7 @@ from products.models import Product
 
 class CatalogMixin:
     """Представление 'Каталог продуктов'"""
-    def get(self, request):
+    def get(self, request: HttpRequest and dict) -> HttpResponse:
         sessions = request.session
         if session_verification(sessions):
             products, form = session_verification(sessions)
@@ -27,7 +28,7 @@ class CatalogMixin:
         context = get_paginator(request, products, form)
         return render(request, "market/catalog/catalog.jinja2", context=context)
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
         if request.session.get('search'):
             product = Product.objects.filter(
                 (Q(name__icontains=request.session.get('search'))))
@@ -51,7 +52,7 @@ class CatalogMixin:
 
 class CatalogCategoryMixin:
     """Представление 'Каталог продуктов по категориям'"""
-    def get(self, request, slug):
+    def get(self, request: HttpRequest, slug: str) -> HttpResponse:
         if "filter" in request.session:
             sessions = request.session["filter"]
             prices = sessions["price"].split(";")
@@ -72,7 +73,7 @@ class CatalogCategoryMixin:
         context = get_paginator(request, products, form)
         return render(request, "market/catalog/catalog.jinja2", context=context)
 
-    def post(self, request, slug):
+    def post(self, request: HttpRequest, slug: str) -> HttpResponse:
         product = Product.objects.filter(category__slug=slug)
         form = ProductFilterForm(request.POST)
         if form.is_valid():

@@ -103,6 +103,7 @@ block
                 <div class="CategoriesButton-arrow"></div>
               </div>
               <div class="CategoriesButton-content">
+              {% cache 86400 categories %}
                 {% for category in categories %}
                   {% if category.parent %}
                     {% if category.parent not in list_category %}
@@ -139,6 +140,7 @@ block
                     {% endif %}
                   {% endif %}
                 {% endfor %}
+              {% endcache %}
               </div>
             </div>
         </div>
