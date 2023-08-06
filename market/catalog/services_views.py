@@ -53,16 +53,17 @@ class CatalogMixin:
 class CatalogCategoryMixin:
     """Представление 'Каталог продуктов по категориям'"""
     def get(self, request: HttpRequest, slug: str) -> HttpResponse:
-        if "filter" in request.session:
-            sessions = request.session["filter"]
-            prices = sessions["price"].split(";")
-            products = Product.objects.filter(category__slug=slug)
-            form = ProductFilterForm(request.session["filter"])
-            if form.is_valid():
-                form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
-                                                          "data-min": str(min_price_for_category(slug)),
-                                                          "data-max": str(max_price_for_category(slug))})
-                products = filter_search(sessions, products)
+        if request.session.get('path') == request.path:
+            if "filter" in request.session:
+                sessions = request.session["filter"]
+                prices = sessions["price"].split(";")
+                products = Product.objects.filter(category__slug=slug)
+                form = ProductFilterForm(request.session["filter"])
+                if form.is_valid():
+                    form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
+                                                              "data-min": str(min_price_for_category(slug)),
+                                                              "data-max": str(max_price_for_category(slug))})
+                    products = filter_search(sessions, products)
         else:
             form = ProductFilterForm()
             form.fields["price"].widget.attrs.update({"data-from": str(min_price_for_category(slug)),
@@ -82,8 +83,9 @@ class CatalogCategoryMixin:
             form.fields["price"].widget.attrs.update({"data-from": prices[0], "data-to": prices[1],
                                                       "data-min": str(min_price_for_category(slug)),
                                                       "data-max": str(max_price_for_category(slug))})
-            request.session.set_expiry(180)
+            request.session.set_expiry(60 * 20)
             request.session["filter"] = form.cleaned_data
+            request.session['path'] = request.path
             session = request.session["filter"]
             product = filter_search(session, product)
         else:
