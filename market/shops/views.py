@@ -1,7 +1,5 @@
-
-from random import randrange
 import requests
-from django.db.models import F
+from random import randrange
 from django.shortcuts import render, redirect, reverse  # noqa F401
 from django.conf import settings
 from django.views.decorators.cache import cache_page  # noqa F401
@@ -16,7 +14,6 @@ from rest_framework.response import Response
 
 from catalog.models import Catalog  # noqa F401
 from products.models import Product
-from cart.models import CartItem
 from users.views import MyLoginView
 from shops.models import Shop, Order, OrderOffer, PaymentQueue
 from shops.forms import OderLoginUserForm, PaymentForm
