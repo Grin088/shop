@@ -7,6 +7,7 @@ from django.db import transaction
 
 from cart.models import CartItem, Cart
 from shops.models import OrderOffer, OrderStatusChange, OrderStatus, Order
+from site_settings.models import SiteSettings
 
 
 def pryce_delivery(r_user: Any) -> dict:
@@ -18,9 +19,10 @@ def pryce_delivery(r_user: Any) -> dict:
     )
     if not cart_list:
         return {}
-    min_price_offer = Decimal(2000.00)
-    delivery_express = Decimal(500.00)
-    delivery_ordinary = Decimal(200.00)
+    sie_settings = SiteSettings.load()
+    min_price_offer = Decimal(sie_settings.free_shipping_min_order_amount)
+    delivery_express = Decimal(sie_settings.express_shipping_price)
+    delivery_ordinary = Decimal(sie_settings.standard_shipping_price)
     cart_count_shop = cart_list.all().values_list("offer__shop").distinct().count()
     total_cost = cart_list.all().aggregate(summ=Sum("summ_offer"))["summ"]
 

@@ -12,6 +12,7 @@ from users.models import CustomUser, UserAvatar
 from users import forms
 from users.services.profile import ProfileMixin
 from users.services.users_service import last_order_request
+from site_settings.models import SiteSettings
 
 
 class UserRegistrationView(CreateView):
@@ -101,14 +102,17 @@ class BrowsingHistory(View):
     """Контроллер истории просмотров товаров"""
 
     def get(self, request):
-        history = Browsing_history.objects.filter(users_id=request.user.id).order_by("-data_at")[:20]
+        site_settings = SiteSettings.load()
+        history = Browsing_history.objects.filter(users_id=request.user.id).order_by("-data_at")[
+                  :site_settings.maximum_number_of_viewed_products]
         history_count = Browsing_history.objects.count()
         contex = {"count": history_count, "history": history}
         return render(request, "market/users/browsing_history.jinja2", context=contex)
 
     def post(self, request):
+        site_settings = SiteSettings.load()
         product_id = self.request.POST.get("delete")
-        history = Browsing_history.objects.all().order_by("-data_at")[:20]
+        history = Browsing_history.objects.all().order_by("-data_at")[:site_settings.maximum_number_of_viewed_products]
         if "delete" in request.POST:
             Browsing_history.objects.filter(product_id=product_id).delete()
         history_count = Browsing_history.objects.count()

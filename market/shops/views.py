@@ -2,7 +2,6 @@ import requests
 from random import randrange
 from django.shortcuts import render, redirect, reverse  # noqa F401
 from django.conf import settings
-from django.views.decorators.cache import cache_page  # noqa F401
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -25,6 +24,8 @@ from shops.services.compare import (
     splitting_into_groups_by_category,
     comparison_lists_and_properties,
 )
+from shops.services.is_member_of_group import is_member_of_group
+from shops.services.get_paginator import get_paginator
 from shops.services.order import save_order_model
 from shops.services.order import pryce_delivery
 from shops.services.limited_products import (
@@ -32,18 +33,19 @@ from shops.services.limited_products import (
     get_top_products,
     get_limited_edition,
 )
-
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
-from shops.services.is_member_of_group import is_member_of_group
+from site_settings.models import SiteSettings
 
 SRC_ORDER_STATUS_PK = 5
 DST_ORDER_STATUS_PK = 4
 
 
-@cache_page(settings.CACHE_CONSTANT)
 def home(request):
     """Главная страница"""
     if request.method == "GET":
+        site_settings = SiteSettings.load()
+        page_number = request.GET.get('page')
+        products = get_paginator(Product.objects.all()[:site_settings.top_elements_count], page_number)
         featured_categories = get_featured_categories()
         random_banners = banner.banner()
         top_products = get_top_products()
@@ -51,9 +53,9 @@ def home(request):
         # update_time = time_and_products['time_left']  # пока не может использоваться из-за celery
         # limited_products = time_and_products['limited_products']  # пока не может использоваться из-за celery
         limited_product = get_random_limited_edition_product()
-        limited_edition = get_limited_edition().exclude(id=limited_product.id)[:16]
+        limited_edition = get_limited_edition().exclude(id=limited_product.id)[:site_settings.limited_edition_count]
         context = {
-            "products": Product.objects.all()[:8],
+            "products": products,
             "featured_categories": featured_categories,
             "random_banners": random_banners,
             # 'update_time': update_time,  # пока не может использоваться из-за celery
