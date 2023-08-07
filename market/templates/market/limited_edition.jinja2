@@ -32,13 +32,6 @@
                                         </div>
                                         <div class="Card-category">{{ product.category.name }}
                                         </div>
-                                        <form class="Card-hover" method="post" action="{{ url('cart:cart_add', product.id, 1) }}">
-                                          {% csrf_token %}
-                                          <input type="hidden" name="value_amount" value="+">
-                                          <a class="Card-btn" href="#" onclick="$(this).closest('form').submit()">
-                                            <img src="{{ static('market/assets/img/icons/card/cart.svg') }}" alt="cart.svg" />
-                                          </a>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
