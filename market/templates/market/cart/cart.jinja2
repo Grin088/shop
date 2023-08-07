@@ -10,12 +10,12 @@
                         <div class="Cart-product">
                             <div class="Cart-block Cart-block_row">
                                 <div class="Cart-block Cart-block_pict">
-                                    <a class="Cart-pict" href="{{ url('products:product_detail' ,product_id=cart_item.offer.pk)}}">
+                                    <a class="Cart-pict" href="{{ url('products:product_detail' ,product_id=cart_item.offer.product.pk)}}">
                                         <img class="Cart-img" src="{{ cart_item.offer.product.preview.url }}" alt="card.jpg" />
                                     </a>
                                 </div>
                                 <div class="Cart-block Cart-block_info">
-                                    <a class="Cart-title" href="{{ url('products:product_detail' ,product_id=cart_item.offer.pk)}}">
+                                    <a class="Cart-title" href="{{ url('products:product_detail' ,product_id=cart_item.offer.product.pk)}}">
                                         {{ cart_item.offer.product }}
                                     </a>
                                     <div class="Cart-desc">{{ cart_item.offer.product.description }}</div>
