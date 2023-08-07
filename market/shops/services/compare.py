@@ -54,6 +54,7 @@ def compare_list_check(session, id_offer) -> None:
     """Добавление/удаление id товаров в список сравнения "comp_list" в сессии."""
 
     value = session.get("comp_list", [])
+    id_offer = str(id_offer)
     if value:
         if id_offer in value:
             value.remove(id_offer)
