@@ -109,13 +109,14 @@ class ComparePageView(View):
         if len(comp_list) > 1:
             category_name = self.request.POST.get("category")
             category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
+            if category_name not in category_offer_dict:
+                category_name = next(iter(category_offer_dict))
             list_compare, list_property = comparison_lists_and_properties(category_offer_dict[category_name])
             context = {"category_offer_dict": category_count_product,
                        "list_compare": list_compare,
                        "list_property": list_property,
                        }
             return render(request, 'market/shops/comparison.jinja2', context=context)
-
         return render(request, "market/shops/comparison.jinja2",
                       context={"text": "Не достаточно данных для сравнения."})
 
@@ -127,14 +128,13 @@ class CreateOrderView(TemplateView):
         """Оформления заказа если корзина не пуста и пользователь залогинен"""
         cart_list = None
         if self.request.user.is_authenticated:
-            cart_list = (CartItem.objects.filter(cart__user=self.request.user)
-                         .annotate(summ_offer=F('offer__price') * F('quantity')).select_related("offer__product"))
+            cart_list = pryce_delivery(self.request.user)
             if not cart_list:
                 return redirect("catalog:show_product")
-        context = {"form_log": OderLoginUserForm(),
-                   "cart_list": cart_list,
-                   "delivery": pryce_delivery(self.request.user),
-                   }
+        context = {
+            "form_log": OderLoginUserForm(),
+            "cart_list": cart_list,
+        }
         return render(request, "market/order/order.jinja2", context=context)
 
     def post(self, request: HttpRequest) -> HttpResponse:
@@ -142,18 +142,25 @@ class CreateOrderView(TemplateView):
         Аутентификация пользователя если незалогиненный.
         Сохранение заказа и истории изменения статуса
         """
+
         if not request.user.is_authenticated:
+
             form_log = OderLoginUserForm(self.request.POST)
             if form_log.is_valid():
                 user = authenticate(email=form_log.cleaned_data["email"], password=form_log.cleaned_data["password"])
                 if user:
                     login(self.request, user)
-                else:
-                    return render(self.request, "market/order/order.jinja2",
-                                  context={"text": "Неправильный ввод эмейла или пароля",
-                                           "user": self.request.user, })
-        new_order_pk = save_order_model(self.request.user, self.request.POST)
-
+                    return redirect("order")
+            else:
+                return render(
+                    self.request,
+                    "market/order/order.jinja2",
+                    context={
+                        "text": "Неправильный ввод эмейла или пароля",
+                        "user": self.request.user,
+                    },
+                )
+        new_order_pk = save_order_model(self.request.user, self.request.POST, request.session)
         return redirect("payment", pk=new_order_pk)
 
 
