@@ -4,7 +4,7 @@ import requests
 from django.db.models import F
 from django.shortcuts import render, redirect, reverse  # noqa F401
 from django.conf import settings
-from django.views.decorators.cache import cache_page # noqa F401
+from django.views.decorators.cache import cache_page  # noqa F401
 from django.views.generic import TemplateView, View
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from catalog.models import Catalog # noqa F401
+from catalog.models import Catalog  # noqa F401
 from products.models import Product
 from cart.models import CartItem
 from users.views import MyLoginView
@@ -23,10 +23,11 @@ from shops.forms import OderLoginUserForm, PaymentForm
 from shops.services.payment import update_order_status
 from shops.services import banner
 from shops.services.catalog import get_featured_categories
-from shops.services.compare import (compare_list_check,
-                                    splitting_into_groups_by_category,
-                                    comparison_lists_and_properties,
-                                    )
+from shops.services.compare import (
+    compare_list_check,
+    splitting_into_groups_by_category,
+    comparison_lists_and_properties,
+)
 from shops.services.order import save_order_model
 from shops.services.order import pryce_delivery
 from shops.services.limited_products import (
@@ -34,6 +35,7 @@ from shops.services.limited_products import (
     get_top_products,
     get_limited_edition,
 )
+
 # from .services.limited_products import time_left  # пока не может использоваться из-за celery
 from shops.services.is_member_of_group import is_member_of_group
 
@@ -86,7 +88,7 @@ class ComparePageView(View):
     """Страница сравнения"""
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        """Отображение страницы сравнения """
+        """Отображение страницы сравнения"""
         comp_list = self.request.session.get("comp_list", [])
         if comp_list and len(comp_list) > 1:
             category_offer_dict, category_count_product = splitting_into_groups_by_category(comp_list)
@@ -94,15 +96,16 @@ class ComparePageView(View):
             context = {
                 "category_offer_dict": category_count_product,
                 "list_compare": list_compare,
-                "list_property": list_property
+                "list_property": list_property,
             }
             return render(request, "market/shops/comparison.jinja2", context=context)
-        return render(request, "market/shops/comparison.jinja2",
-                      context={"text": "Не достаточно данных для сравнения."})
+        return render(
+            request, "market/shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."}
+        )
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Переключение категории сравнения и удаление из списка сравнений"""
-        delete_id = self.request.POST.get('delete_id')
+        delete_id = self.request.POST.get("delete_id")
         if delete_id:
             compare_list_check(request.session, int(delete_id))
         comp_list = request.session.get("comp_list", [])
@@ -112,13 +115,16 @@ class ComparePageView(View):
             if category_name not in category_offer_dict:
                 category_name = next(iter(category_offer_dict))
             list_compare, list_property = comparison_lists_and_properties(category_offer_dict[category_name])
-            context = {"category_offer_dict": category_count_product,
-                       "list_compare": list_compare,
-                       "list_property": list_property,
-                       }
-            return render(request, 'market/shops/comparison.jinja2', context=context)
-        return render(request, "market/shops/comparison.jinja2",
-                      context={"text": "Не достаточно данных для сравнения."})
+            context = {
+                "category_offer_dict": category_count_product,
+                "list_compare": list_compare,
+                "list_property": list_property,
+            }
+            return render(request, "market/shops/comparison.jinja2", context=context)
+
+        return render(
+            request, "market/shops/comparison.jinja2", context={"text": "Не достаточно данных для сравнения."}
+        )
 
 
 class CreateOrderView(TemplateView):
@@ -142,9 +148,7 @@ class CreateOrderView(TemplateView):
         Аутентификация пользователя если незалогиненный.
         Сохранение заказа и истории изменения статуса
         """
-
         if not request.user.is_authenticated:
-
             form_log = OderLoginUserForm(self.request.POST)
             if form_log.is_valid():
                 user = authenticate(email=form_log.cleaned_data["email"], password=form_log.cleaned_data["password"])
@@ -228,22 +232,17 @@ class PaymentView(LoginRequiredMixin, View):
         if query_order.pay == "SOMEONE":
             if self.request.GET.get("flag"):
                 random_cart = randrange(10000000, 99999992, 2)
-                context = {"form": PaymentForm(initial={'card_number': random_cart}),
-                           "pay": "ONLINE",
-                           "order": query_order
-                           }
+                context = {
+                    "form": PaymentForm(initial={"card_number": random_cart}),
+                    "pay": "ONLINE",
+                    "order": query_order,
+                }
                 return render(request, "market/payment/payment.jinja2", context=context)
 
-            context = {"form": PaymentForm(),
-                       "pay": query_order.pay,
-                       "order": query_order
-                       }
+            context = {"form": PaymentForm(), "pay": query_order.pay, "order": query_order}
             return render(request, "market/payment/payment.jinja2", context=context)
 
-        context = {"form": PaymentForm(),
-                   "pay": query_order.pay,
-                   "order": query_order
-                   }
+        context = {"form": PaymentForm(), "pay": query_order.pay, "order": query_order}
         return render(request, "market/payment/payment.jinja2", context=context)
 
     def post(self, request: HttpRequest, pk, *args, **kwargs) -> HttpResponse:
@@ -255,8 +254,5 @@ class PaymentView(LoginRequiredMixin, View):
             return redirect("catalog:show_product")
 
         query_order = Order.objects.get(pk=pk)
-        context = {'form': form,
-                   "pay": query_order.pay,
-                   "order": query_order
-                   }
+        context = {"form": form, "pay": query_order.pay, "order": query_order}
         return render(request, "market/payment/payment.jinja2", context=context)
