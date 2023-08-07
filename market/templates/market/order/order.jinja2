@@ -24,7 +24,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div> ,
+                        </div>
                     </div>
                 </div>
                 <div class="Section-content">
@@ -65,7 +65,8 @@
                             </div>
                         </div>
                         {% else %}
-                        <form method="post">
+                        </form>
+                        <form class="form" id="form-section-content" action="#" method="post">
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="row-block">
                                  <div class="form-group">
