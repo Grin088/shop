@@ -103,31 +103,32 @@ block
                 <div class="CategoriesButton-arrow"></div>
               </div>
               <div class="CategoriesButton-content">
+              {% cache 86400 categories %}
+              {% set list_category = [] %}
                 {% for category in categories %}
-                  {% if category.parent %}
-                    {% if category.parent not in list_category %}
+                  {% if category.parent and category.parent not in list_category %}
+                    {% if list_category.append(category.parent) %}
+                    {% endif %}
                       <div class="CategoriesButton-link">
-                        <a href="{{ category.get_absolute_url()}}">
+                        <a href="{{ category.parent.get_absolute_url()}}">
                           <div class="CategoriesButton-icon">
                             <img src="{{ category.image.url }} " width="25" height="25" alt="{{ category.name }}"/>
                           </div>
                           <span class="CategoriesButton-text">{{ category.parent }}</span>
                         </a>
-                        <a class="CategoriesButton-arrow" href="{{ category.get_absolute_url() }}"></a>
-                        {% for submenu in categories.filter(parent_id=category.parent.pk) %}
-                          <div class="CategoriesButton-submenu">
-                            <a class="CategoriesButton-link" href="{{ category.get_absolute_url() }}">
+                        <a class="CategoriesButton-arrow" href="{{ category.parent.get_absolute_url() }}"></a>
+                        <div class="CategoriesButton-submenu">
+                          {% for submenu in categories.filter(parent_id=category.parent.pk) %}
+                            <a class="CategoriesButton-link" href="{{ submenu.get_absolute_url() }}">
                               <div class="CategoriesButton-icon">
                                 <img src="{{ category.image.url }}" width="25" height="25" alt="{{ category.name }}"/>
                               </div>
                               <span class="CategoriesButton-text">{{ submenu }}</span>
                             </a>
-                          </div>
-                        {% endfor %}
+                          {% endfor %}
+                        </div>
                       </div>
-                    {% endif %}
                   {% else %}
-                    {% if list_category_parent not in list_category %}
                       <div class="CategoriesButton-link">
                         <a href="{{ category.get_absolute_url() }}">
                           <div class="CategoriesButton-icon">
@@ -136,9 +137,9 @@ block
                           <span class="CategoriesButton-text">{{ category }}</span>
                         </a>
                       </div>
-                    {% endif %}
                   {% endif %}
                 {% endfor %}
+              {% endcache %}
               </div>
             </div>
         </div>

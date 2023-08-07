@@ -15,3 +15,10 @@ def clear_cache_catalog():
     select_cache_get = cache.get_many(select_keys_get)
     cache.delete_many(select_cache)
     cache.delete_many(select_cache_get)
+
+
+def clear_cache_category():
+    """Сброс кэша для категорий"""
+    select_keys = cache.keys("template.cache.<QuerySet *.*")
+    select_cache_get = cache.get_many(select_keys)
+    cache.delete_many(select_cache_get)

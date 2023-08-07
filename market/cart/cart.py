@@ -101,7 +101,7 @@ class Cart(object):
             self.cart_quantity_change(offer)
         else:
             self.cart[offer.id] = {
-                "quantity": 1,
+                "quantity": int(self.value),
                 "created_at": json.dumps(datetime.datetime.now(), default=str),
             }
         self.session[settings.CART_SESSION_ID] = self.cart
@@ -125,6 +125,8 @@ class Cart(object):
             self.cart[offer_id]["quantity"] += 1
         if self.value == "-":
             self.cart[offer_id]["quantity"] -= 1
+        if self.value.isnumeric():
+            self.cart[offer_id]["quantity"] += int(self.value)
         if self.cart[offer_id]["quantity"] == 0:
             self.cart.pop(offer_id)
             self.session.modified = True

@@ -36,7 +36,7 @@ class CompareTestCase(TestCase):
             session = self.client.session
             for number_i in [1, 2, 2, 4, 5, 6, 5]:
                 compare_list_check(session, number_i)
-            expected_result = [1, 4]
+            expected_result = ["1", "4"]
             result = session.get("comp_list")
             self.assertEqual(result, expected_result)
 
