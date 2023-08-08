@@ -1,4 +1,5 @@
 from products.models import Browsing_history
+from site_settings.models import SiteSettings
 import datetime
 
 
@@ -16,6 +17,16 @@ def is_valid_history(user_id, product_id):
 def browsing_history(user_id, product_id):
     """Добавление продукта в список просмотренных"""
     try:
-        Browsing_history.objects.create(users_id=user_id, product_id=product_id)
+        site_settings = SiteSettings.load()
+
+        # Получаем список просмотренных товаров для пользователя
+        history = Browsing_history.objects.filter(users_id=user_id)
+
+        # Если список просмотренных товаров для пользователя больше значения в настройках,
+        # то удаляем самый первый просмотренный товар
+        if history.count() >= site_settings.maximum_number_of_viewed_products:
+            history.order_by('data_at').first().delete()
+        Browsing_history.objects.create(users_id=user_id,
+                                        product_id=product_id)
     except Browsing_history.DoesNotExist:
         Browsing_history.objects.create(users_id=user_id, product_id=product_id)

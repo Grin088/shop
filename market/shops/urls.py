@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.views.decorators.cache import cache_page # noqa 401
 from .views import (
     BaseView,
     seller_detail,
@@ -15,7 +17,7 @@ from .views import (
 urlpatterns = [
     path("", BaseView.as_view(), name="index"),
     path("comparison/", ComparePageView.as_view(), name="comparison"),
-    path("home/", home, name="home"),
+    path("home/", cache_page(settings.CACHE_CONSTANT, key_prefix='home')(home), name="home"),
     path("seller/", seller_detail, name="seller_detail"),
     path("order/", CreateOrderView.as_view(), name="order"),
     path("order/login/", OrderLoginView.as_view(), name="order_login"),

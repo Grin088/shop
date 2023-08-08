@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from catalog.forms import ProductFilterForm
 from catalog.price_and_discounts import check_discount_price, min_price, max_price
 from products.models import Product
+from site_settings.models import SiteSettings
 from shops.services.compare import compare_list_check
 
 
@@ -21,7 +22,8 @@ def get_paginator(request: HttpRequest or dict, products, forms) -> dict:
     if request.POST.get("add_compare"):
         get = request.POST.get("add_compare")
         compare_list_check(request.session, get)
-    paginator = Paginator(products, 20)
+    pagination_value = SiteSettings.objects.values_list('pagination_size', flat=True).first()
+    paginator = Paginator(products, pagination_value)
     check_discount_price()
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
