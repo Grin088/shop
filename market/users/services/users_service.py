@@ -8,10 +8,8 @@ from shops.models import OrderOffer
 
 def last_order_request(user):
     """Возвращает последний заказ если он есть"""
-    order = OrderOffer.objects.filter(offer__orders__custom_user=user).order_by("-order__data")
-    if order:
-        return order[0]
-    return None
+    order = OrderOffer.objects.filter(offer__orders__custom_user=user).last()
+    return order
 
 
 class MyProfileService:
@@ -33,9 +31,10 @@ class MyProfileService:
         """Метод для проверки формы при и сохранения аватара"""
         if form.is_valid() and second_form.is_valid():
             select_avatar = second_form.cleaned_data.get("avatar")
-            if not select_avatar:
-                return True
-            avatar = UserAvatar.objects.get(user_id=request.user.pk)
-            avatar.image = select_avatar
-            avatar.save()
+            if select_avatar:
+                avatar = UserAvatar.objects.filter(user_id=request.user.pk).first()
+                if not avatar:
+                    avatar = UserAvatar.objects.create(user=request.user)
+                avatar.image = select_avatar
+                avatar.save()
             return True
