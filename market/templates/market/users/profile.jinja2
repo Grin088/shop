@@ -55,34 +55,27 @@
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <div class="row">
                                 <div class="row-block">
-
-                                    {% if user.avatar.image != 'users/avatars/default/default_avatar1.png' %}
+                                    {% if user.avatar %}
                                         <div class="Profile-avatar">
                                             <div class="Profile-img">
-                                                <img src="{{ user.avatar.image.url }}"
-                                                                          alt="card.jpg"/>
-                                            </div>
                                             <label class="Profile-fileLabel"
                                                    for="{{ second_form.avatar.id_for_label }}">
+                                                   <img src="{{ user.avatar.image.url }}"alt="card.jpg"/>
                                                 {% trans %}Выберите аватар{% endtrans %}
                                             </label>
+                                            </div>
                                             {{ second_form.avatar }}
                                         </div>
                                     {% else %}
-                                        <div class="form-group">
-                                            <label class="form-label" for="{{ second_form.avatar.id_for_label }}">
-                                                    Аватар
+                                        <div class="Profile-avatar">
+                                            <label class="Profile-fileLabel"
+                                               for="{{ second_form.avatar.id_for_label }}"><img
+                                                src="{{ static('market/assets/img/icons/upload.png') }}"
+                                                alt="upload.png"/>
+                                              {% trans %}Загрузить фото{% endtrans %}
                                             </label>
-                                            <div class="Profile-avatar Profile-avatar_noimg">
-
-                                                <label class="Profile-fileLabel"
-                                                       for="{{ second_form.avatar.id_for_label }}"><img
-                                                        src="{{ static('market/assets/img/icons/upload.png') }}"
-                                                        alt="upload.png"/>{% trans %}Загрузить фото{% endtrans %}
-                                                </label>
-                                                {{ second_form.avatar }}
-                                            </div>
                                         </div>
+                                        {{ second_form.avatar }}
                                     {% endif %}
                                     <div class="form-group">
                                         <label class="form-label" for="{{ second_form.first_name.id_for_label }}">

@@ -1,4 +1,3 @@
-from catalog.price_and_discounts import min_price
 from products.models import Browsing_history
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
@@ -35,7 +34,7 @@ class UserRegistrationView(CreateView):
 class MyLoginView(LoginView):
     """Вход пользователя"""
 
-    LoginView.next_page = reverse_lazy("users:users_register")
+    LoginView.next_page = reverse_lazy("index")
     redirect_authenticated_user = True
     template_name = "market/users/login.jinja2"
     authentication_form = forms.CustomAuthenticationForm
@@ -75,9 +74,7 @@ class RestorePasswordView(FormView):
 class AccountView(View):
     """Личный кабинет"""
 
-    def get(self, request, *args, **kwargs):
-        print(min_price())
-
+    def get(self, request):
         user_account = get_object_or_404(CustomUser, email=request.user.email)
         if user_account.email != request.user.email:
             return render(request, "market/base.jinja2")

@@ -111,7 +111,11 @@ class ProductPropertyModelTest(TestCase):
 class ProductReviewTest(TestCase):
     """Класс тестов отзывов о товаре"""
 
-    fixtures = ["fixtures/011_users.json", "fixtures/050_order_status.json", "fixtures/040_shops.json"]
+    fixtures = [
+        "fixtures/011_users.json",
+        "fixtures/050_order_status.json",
+        "fixtures/040_shops.json"
+                ]
 
     @classmethod
     def setUpClass(cls):

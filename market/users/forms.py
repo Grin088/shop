@@ -5,7 +5,8 @@ from django.contrib.auth.forms import (
     UserChangeForm,
 )
 from django.core.exceptions import ValidationError
-from .models import CustomUser, PhoneNumberValidator, ValidateImageSize
+from users.models import CustomUser
+from users.validators import PhoneNumberValidator, ValidateImageSize
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
 from django.core import validators
@@ -124,3 +125,11 @@ class UserProfileForm(UserChangeForm):
         if user:
             raise ValidationError(_("Этот электронный адрес уже используется."))
         return email
+
+    def clean_phone_number(self):
+        """Валидация данных и проверка отсутствия номера телефона в базе данных"""
+        phone_number = self.cleaned_data["phone_number"]
+        user = CustomUser.objects.filter(phone_number=phone_number).exclude(pk=self.instance.pk).first()
+        if user and user.phone_number != "+0000000000":
+            raise ValidationError(f"Пользователь с номером {user.phone_number} уже существует.")
+        return phone_number
